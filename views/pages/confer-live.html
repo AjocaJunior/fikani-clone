@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conferência</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            height: 100%;
+        }
+
+
+      .videoContainer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+    }
+
+      iframe {
+            /* optional */
+            width: 100%;
+            height: 100%; 
+      }
+    </style>
+</head>
+<body>
+
+    <div class="videoContainer">
+        <iframe class="videoContainer__video" width="1920" height="1080" src="http://www.youtube.com/embed/d7Jnmi2BkS8?modestbranding=1&autoplay=1&controls=0&fs=0&loop=1&rel=0&showinfo=0&disablekb=1&playlist=d7Jnmi2BkS8" frameborder="0"></iframe>
+    </div>
+
+      
+</body>
+</html>
