@@ -30,24 +30,39 @@ app.get('/register' , (req , res)=> {
     res.render('pages/register');
 });
 
+app.post('/login' , (req , res)=> {
+    
+})
+
 // register post
 app.post('/register' , urlencodedParser, [
-    check('name', 'This username must be 3+ characters long')
+    check('name', 'O nome deve ter 3 letras no minimo')
         .exists()
         .isLength({min: 3}),
-    check('email', 'Email is not valid')
+    check('email', 'Email invalido')
         .isEmail()
-        .normalizeEmail()
+        .normalizeEmail(),
+    check('password', 'O nome deve ter 4 letras no minimo')
+        .exists()
+        .isLength({min:4}),
+    check('contact' , 'Contacto invalido')
+        .exists()
+        .isMobilePhone()
 ] ,(req , res)=> {
     
     const errors = validationResult(req)
     if(!errors.isEmpty()){
-          // return res.status(422).jsonp(errors.array())
+         
+        const alert = errors.array();
+              
+        res.render('pages/register' , {
+            alert
+        })
 
-          const alert = errors.array();
+    }else {
+        // todo set
 
-        
-
+        res.render('pages/index');
     }
 
 });

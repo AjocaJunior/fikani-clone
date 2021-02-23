@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="wide" lang="en">
   <head>
-    <title>About</title>
+    <title>Cadatro</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,7 +19,7 @@
         <div class="cssload-container">
           <div class="cssload-speeding-wheel"></div>
         </div>
-        <p>Loading...</p>
+        <p>Carregando...</p>
       </div>
     </div>
     <div class="page">
@@ -36,7 +36,7 @@
 
             <div class="col-md-10 col-lg-6">
                 <!-- <div class="img-separated"> -->
-                    <iframe width="562" height="588" src="https://www.youtube.com/embed/WVi7gR3-_V8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe width="562" height="540" src="https://www.youtube.com/embed/WVi7gR3-_V8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 <!-- </div> -->
               </div>
             <div class="col-md-10 col-lg-6">
@@ -44,6 +44,21 @@
               <h3>Seja bem-vindo a fikani digital</h3>
               <br>
 
+
+              <% if(typeof alert != 'undefined') { %>
+                <% alert.forEach(function(error) { %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="background-color: #f8d7da; color:#721c24;">
+                        <%= error.msg %>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      </div>
+                <% }) %>
+            <% } %>
+                  
+                  
+
+              
               <form action="/register" method="POST">
                 <div class="contact_input_area">
                     <div class="row">
@@ -106,32 +121,32 @@
                                     id="password" placeholder="Password">
                             </div>
                         </div>
+
+                         <!-- Form Group -->
+                         <div class="col-12 col-lg-6">
+                          <div class="form-group">
+                              <input type="password" class="form-control mb-30" name="password"
+                                  id="password" placeholder="Confirmar password">
+                          </div>
+                      </div>
                       
                     </div>
                 </div>
                 <!-- Button -->
                 <button type="submit" class="btn btn-primary btn-lg btn-block">Cadastrar</button>
+               
 
             </form>
+            
+            <div class="row d-flex justify-content-center " style="margin: 2px;">
+              <p class="text-info">Ja tens uma conta?</p>
+            </div>
+          <!-- Button -->
+           <button  class="btn btn-info btn-lg btn-block" onclick="location.href='/register';">Login</button>
+
               
               
-              <ul class="list list-md">
-                <li>
-                  <div class="unit">
-                    <div class="unit-left">
-                      <div class="icon-rect icon-rect-secodanry" data-triangle=".icon-rect-overlay">
-                        <div class="icon-rect-overlay"></div>
-                        <svg class="svg-icon-sm-1" role="img">
-                          <use xlink:href="images/svg/sprite.svg#tick"></use>
-                        </svg>
-                      </div>
-                    </div>
-                    <div class="unit-body">
-                      <h5>A MAIOR CONFERÊNCIA DE TURISMO<br> EM MOÇAMBIQUE
-                      </h5>
-                    </div>
-                  </div>
-                </li>
+             
                 <!-- <li>
                   <div class="unit">
                     <div class="unit-left">
