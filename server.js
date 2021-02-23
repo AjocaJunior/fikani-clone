@@ -31,11 +31,26 @@ app.get('/register' , (req , res)=> {
 });
 
 // register post
-app.post('/register' , urlencodedParser ,(req , res)=> {
+app.post('/register' , urlencodedParser, [
+    check('name', 'This username must be 3+ characters long')
+        .exists()
+        .isLength({min: 3}),
+    check('email', 'Email is not valid')
+        .isEmail()
+        .normalizeEmail()
+] ,(req , res)=> {
     
+    const errors = validationResult(req)
+    if(!errors.isEmpty()){
+          // return res.status(422).jsonp(errors.array())
+
+          const alert = errors.array();
+
+        
+
+    }
+
 });
-
-
 
 
 app.listen(3000);
