@@ -1,6 +1,4 @@
 # dependencies
-node_modules/
-
-# env
-.env
-fikani-firebase-adminsdk-nhqwx-30a29e774a.json
+/node_modules
+**node_modules
+# dependencies
