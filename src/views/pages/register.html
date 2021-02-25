@@ -45,6 +45,7 @@
               <br>
 
 
+              <!-- form validation error -->
               <% if(typeof alert != 'undefined') { %>
                 <% alert.forEach(function(error) { %>
                     <div class="alert alert-danger alert-dismissible fade show" role="alert" style="background-color: #f8d7da; color:#721c24;">
@@ -54,11 +55,21 @@
                         </button>
                       </div>
                 <% }) %>
-            <% } %>
-                  
-                  
+              <% } %>
 
-              
+
+              <!-- auth and database error -->      
+              <% if(typeof error != 'undefined') { %>         
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="background-color: #f8d7da; color:#721c24;">
+                        <%= error %>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      </div>
+              <% } %>
+                  
+                  
+                         
               <form action="/register" method="POST">
                 <div class="contact_input_area">
                     <div class="row">
@@ -125,8 +136,8 @@
                          <!-- Form Group -->
                          <div class="col-12 col-lg-6">
                           <div class="form-group">
-                              <input type="password" class="form-control mb-30" name="password"
-                                  id="password" placeholder="Confirmar password">
+                              <input type="password" class="form-control mb-30" name="confirme-password"
+                                  id="confirme-password" placeholder="Confirmar password">
                           </div>
                       </div>
                       

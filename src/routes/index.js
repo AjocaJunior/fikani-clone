@@ -5,6 +5,7 @@ const { Router} = require('express');
 const router = Router();
 
 
+
 const urlencodedParser = bodyParser.urlencoded({extended:false})
 
 
@@ -14,6 +15,9 @@ var serviceAccount = require('../../fikani-firebase-adminsdk-nhqwx-30a29e774a.js
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
+
+const db = admin.firestore();
+
 
 // index page
 router.get('/' , (req , res)=> {
@@ -30,8 +34,23 @@ router.get('/register' , (req , res)=> {
     res.render('pages/register');
 });
 
-router.post('/login' , (req , res)=> {
-    
+router.post('/login' , urlencodedParser, [
+    check('email' , "Email invalido")
+        .isEmail()
+        .normalizeEmail(),
+    check('password' , "Password invalido")
+        .isString()
+] ,(req , res)=> {
+   const errors = validationResult(req)
+   if(!errors.isEmpty()) {
+    const alert = errors.array();
+              
+    res.render('pages/login' , {
+        alert
+    })
+   } else {
+       console.log(req.body)
+   }
 })
 
 // register post
@@ -42,12 +61,15 @@ router.post('/register' , urlencodedParser, [
     check('email', 'Email invalido')
         .isEmail()
         .normalizeEmail(),
-    check('password', 'O nome deve ter 4 letras no minimo')
+    check('password', 'O password deve ter 6 letras no minimo')
         .exists()
-        .isLength({min:4}),
+        .isLength({min:6}),
+
+    check('password' , "O password deve ter letras")
+        .isString(),
     check('contact' , 'Contacto invalido')
         .exists()
-        .isMobilePhone()
+        .isLength({min:5})
 ] ,(req , res)=> {
     
     const errors = validationResult(req)
@@ -60,37 +82,65 @@ router.post('/register' , urlencodedParser, [
         })
 
     }else {
-        // todo set
-        register()
-        res.render('pages/index');
-        
 
+      var  displayName = req.body.name +" "+req.body.last_name;
+      var  urlphoto = "https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/perfil%2Funnamed.jpg?alt=media&token=234789f8-f514-4ef0-aee4-36f534f03507"; //default perfil img
+
+      register(req.body.name , req.body.last_name, req.body.residence,req.body.email , req.body.contact , req.body.password , displayName, urlphoto, res ) 
 
     }
 
 });
 
 
-function register() {
+function register(name , last_name, localization,email , phoneNumber , password ,displayName,photoURL ,res ) {
 
-    admin
+    var user = {
+        name: name ,  
+        last_name: last_name,
+        localization: localization,
+        email: email,
+        emailVerified: false,
+        password: password,
+        displayName: displayName,
+        photoURL: photoURL,
+        disabled: false
+    };
+
+  admin
   .auth()
-  .createUser({
-    email: 'user@example.com',
-    emailVerified: false,
-    phoneNumber: '+11234567890',
-    password: 'secretPassword',
-    displayName: 'John Doe',
-    photoURL: 'http://www.example.com/12345678/photo.png',
-    disabled: false,
-  })
+  .createUser(user)
   .then((userRecord) => {
-    // See the UserRecord reference doc for the contents of userRecord.
-    console.log('Successfully created new user:', userRecord.uid);
+      
+    user['uid'] =  userRecord.uid; // add user uid //
+    user['phoneNumber'] = phoneNumber; // add user phone//
+
+    registerUser(user , res)
   })
   .catch((error) => {
-    console.log('Error creating new user:', error);
+
+    res.render('pages/register' , {
+        error
+    })
+
   });
+
+}
+
+
+async function registerUser(user , res) {
+    delete user.password;
+    const newUser = await db.collection('users').doc(user.uid).set(user)
+         .then(function() {
+             // redirect to homepage //
+            res.redirect('/');               
+        })
+        .catch(function(error) {
+            //reload page and show error
+            res.render('pages/register' , {
+                error
+            })
+        });
 
 }
 
