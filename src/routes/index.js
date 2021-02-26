@@ -1,45 +1,82 @@
 const bodyParser = require('body-parser');
 const {check , validationResult} = require('express-validator');
-const admin = require("firebase-admin");
 const { Router} = require('express');
+const session = require('express-session');
 const router = Router();
-
+const firebase = require("firebase/app");
+const admin = require("firebase-admin");
+require("firebase/auth");
+require("firebase/firestore");
 
 
 const urlencodedParser = bodyParser.urlencoded({extended:false})
-
-
-//firebase auth
 var serviceAccount = require('../../fikani-firebase-adminsdk-nhqwx-30a29e774a.json');
+const { render } = require('ejs');
 
+// Initialize Firebase admin
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
+var firebaseConfig = {
+    apiKey: "AIzaSyBEJWJCm8OnSYYu2-VYqeRi03JprBcaUkg",
+    authDomain: "fikani.firebaseapp.com",
+    projectId: "fikani",
+    storageBucket: "fikani.appspot.com",
+    messagingSenderId: "146961453473",
+    appId: "1:146961453473:web:7fec98e5503384f08c7be0"
+};
+  
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 const db = admin.firestore();
 
+router.get('/confer' , (req , res)=> {
+    res.locals.title = "Conferencia";
+    res.render('pages/confer');
+});
 
-// index page
+router.get('/confer-live' , (req , res)=> {
+    res.locals.title = "live";
+    res.render('pages/confer-live');
+});
+
 router.get('/' , (req , res)=> {
+    res.locals.title = "Seja bem vindo";    
     res.render('pages/index');
 });
 
-// login page
-router.get('/login' , (req ,res)=> {
+router.get('/login' , (req , res)=> {
+    res.locals.title = "Seja bem vindo";
     res.render('pages/login');
 });
 
-// register page
 router.get('/register' , (req , res)=> {
     res.render('pages/register');
 });
+
+router.get('/exhibitor' , (req , res) => {
+    res.render('pages/exhibitor.html');
+});
+
+router.get('/exhibitor-page' , (req, res) => {
+    res.render('/exhibitor-page.html');
+});
+
+router.get('/contact' , (req , res) => {
+    res.render('/contact.html');
+});
+
+
 
 router.post('/login' , urlencodedParser, [
     check('email' , "Email invalido")
         .isEmail()
         .normalizeEmail(),
     check('password' , "Password invalido")
-        .isString()
+        .exists()
+        .isLength({min:4})
+        
 ] ,(req , res)=> {
    const errors = validationResult(req)
    if(!errors.isEmpty()) {
@@ -49,7 +86,23 @@ router.post('/login' , urlencodedParser, [
         alert
     })
    } else {
-       console.log(req.body)
+
+    firebase.auth().signInWithEmailAndPassword(req.body.email.trim() , req.body.password.trim())
+    .then((user) => {
+        console.log(user.uid);
+        res.redirect('/'); 
+    })
+    .catch((error) => {
+    //   var errorCode = error.code;
+    //   var errorMessage = error.message;
+    //   console.log(errorMessage)
+
+      res.render('pages/login' , {
+          error
+      })
+    });
+
+
    }
 })
 
@@ -86,7 +139,7 @@ router.post('/register' , urlencodedParser, [
       var  displayName = req.body.name +" "+req.body.last_name;
       var  urlphoto = "https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/perfil%2Funnamed.jpg?alt=media&token=234789f8-f514-4ef0-aee4-36f534f03507"; //default perfil img
 
-      register(req.body.name , req.body.last_name, req.body.residence,req.body.email , req.body.contact , req.body.password , displayName, urlphoto, res ) 
+      register(req.body.name , req.body.last_name, req.body.residence,req.body.email.trim() , req.body.contact , req.body.password.trim() , displayName, urlphoto, res ) 
 
     }
 
@@ -106,6 +159,9 @@ function register(name , last_name, localization,email , phoneNumber , password 
         photoURL: photoURL,
         disabled: false
     };
+
+
+    firebase.auth.signInWithEmailAndPassword(email , password) 
 
   admin
   .auth()
