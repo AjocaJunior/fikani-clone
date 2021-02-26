@@ -46,6 +46,28 @@ router.get('/' , (req , res)=> {
     res.render('pages/index');
 });
 
+
+
+router.get('/info' , (req , res) => {
+    res.locals.title = "Informações";
+    res.render('pages/info')
+})
+
+router.get('/contact' , (req , res) => {
+    res.locals.title = "Contacto";
+    res.render('pages/contact.html');
+})
+
+router.get('/register-exhibitor' , (req , res) => {
+    res.locals.tittle = "Register Expositor";
+    res.render('pages/register-exhibitor.html');
+});
+
+router.get('/schedule' , (req , res) => {
+    res.locals.title = "Agenda";
+    res.render('pages/schedule.html');
+})
+
 router.get('/login' , (req , res)=> {
     res.locals.title = "Seja bem vindo";
     res.render('pages/login');
@@ -60,7 +82,7 @@ router.get('/exhibitor' , (req , res) => {
 });
 
 router.get('/exhibitor-page' , (req, res) => {
-    res.render('/exhibitor-page.html');
+    res.render('pages/exhibitor-page.html');
 });
 
 router.get('/contact' , (req , res) => {
