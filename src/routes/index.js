@@ -63,6 +63,7 @@ router.get('/register-exhibitor' , (req , res) => {
     res.render('pages/register-exhibitor.html');
 });
 
+
 router.get('/schedule' , (req , res) => {
     res.locals.title = "Agenda";
     res.render('pages/schedule.html');
@@ -90,6 +91,35 @@ router.get('/contact' , (req , res) => {
 });
 
 
+router.post('/register-exhibitor' , urlencodedParser , [
+    check('name' , 'Nome invalido')
+        .exists()
+        .isString(),
+    check('location' , 'Localizacao invalida' )
+        .exists()
+        .isLength({min: 4}),
+    check('contact' , 'Contacto invalido')
+        .exists()
+        .isLength({min:8}),
+    check('email' , 'email invalido')
+        .isEmail()
+        .normalizeEmail(),
+    check('password' , "Password invalido")
+        .exists(),
+    check('verfication_code' , "Codigo de verificação errada")
+        .equals('2020')
+    
+], (req , res) => {
+    const errors = validationResult(req)
+    if(!errors.isEmpty()) {
+        const alert = errors.array();
+        res.render('pages/register-exhibitor', {
+            alert
+        })
+    } else {
+        console.log(req.body)
+    }
+})
 
 router.post('/login' , urlencodedParser, [
     check('email' , "Email invalido")
