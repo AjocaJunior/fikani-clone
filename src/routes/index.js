@@ -6,6 +6,7 @@ const router = Router();
 const firebase = require("firebase/app");
 const admin = require("firebase-admin");
 require("firebase/auth");
+require("firebase/storage")
 require("firebase/firestore");
 
 
@@ -86,8 +87,36 @@ router.get('/exhibitor-page' , (req, res) => {
     res.render('pages/exhibitor-page.html');
 });
 
-router.get('/contact' , (req , res) => {
-    res.render('/contact.html');
+router.get('/register-exhibitor-second' , (req , res) => {
+    res.render('pages/register-exhibitor-secondpage.html');
+});
+
+router.post('/register-exhibitor-second' ,urlencodedParser ,[
+    check('description' , "Description invalidada")
+    .exists()
+    .isString()
+] ,(req , res) => {
+    const errors = validationResult(req)
+    if(!errors.isEmpty()) {
+        const alert = errors.array();
+        res.render('pages/register-exhibitor', {
+            alert
+        })
+    } else {
+
+        // Create a root reference
+// var storageRef = firebase.storage().ref();
+
+// // // Create a reference to 'mountains.jpg'
+// // var mountainsRef = storageRef.child('mountains.jpg');
+
+//        var storageRef =  firebase.storage.ref();
+//        var photoRef = storageRef.child("perfil/unnamed.jpg");
+//        console.log(photoRef)
+
+
+
+     }
 });
 
 
@@ -107,7 +136,8 @@ router.post('/register-exhibitor' , urlencodedParser , [
     check('password' , "Password invalido")
         .exists(),
     check('verfication_code' , "Codigo de verificação errada")
-        .equals('2020')
+        .trim()
+        .equals('2020a')
     
 ], (req , res) => {
     const errors = validationResult(req)
@@ -117,7 +147,11 @@ router.post('/register-exhibitor' , urlencodedParser , [
             alert
         })
     } else {
-        console.log(req.body)
+  
+        registerExhibitor(req.body);
+
+        // res.render('pages/register-exhibitor-secondpage');
+        // console.log(req.body)
     }
 })
 
@@ -198,6 +232,40 @@ router.post('/register' , urlencodedParser, [
 });
 
 
+function registerExhibitor(body) {
+
+   var institution = {
+       name : body.name,
+       location: body.location,
+       contact: body.contact,
+       website: body.website,
+       category: body.category,
+       email : body.email,
+       password : body.password,
+       code : body.verfification_code
+   }
+
+   console.log("Test");
+   console.log(institution);
+
+
+//     admin
+//   .auth()
+//   .createUser(user)
+//   .then((userRecord) => {
+//    user['uid'] =  userRecord.uid; // add user uid //
+//    addregisterExhibitor()
+//   })
+//   .catch((error) => {
+
+//     res.render('pages/register-exhibitor' , {
+//         error
+//     })
+
+//   });
+}
+
+
 function register(name , last_name, localization,email , phoneNumber , password ,displayName,photoURL ,res ) {
 
     var user = {
@@ -213,7 +281,7 @@ function register(name , last_name, localization,email , phoneNumber , password 
     };
 
 
-    firebase.auth.signInWithEmailAndPassword(email , password) 
+  //  firebase.auth.signInWithEmailAndPassword(email , password) 
 
   admin
   .auth()

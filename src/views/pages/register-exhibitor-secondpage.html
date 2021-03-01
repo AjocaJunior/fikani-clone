@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/fonts.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css">
+    <script src="//cdn.jsdelivr.net/npm/medium-editor@5.23.2/dist/js/medium-editor.min.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/medium-editor@5.23.2/dist/css/medium-editor.min.css" type="text/css" media="screen" charset="utf-8">
      <style>.ie-panel{display: none;background: #212121;padding: 10px 0;box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3);clear: both;text-align:center;position: relative;z-index: 1;} html.ie-10 .ie-panel, html.lt-ie-10 .ie-panel {display: block;}</style>
   </head>
   <body>
@@ -37,12 +40,9 @@
                 <!-- </div> -->
               </div>
             <div class="col-md-10 col-lg-6">
-              <h6>fikani digital</h6>
-              <h3>Cadastro do Expositor</h3>
-              <br>
-
-
-                       
+             
+          
+     
               <!-- form validation error -->
               <% if(typeof alert != 'undefined') { %>
                 <% alert.forEach(function(error) { %>
@@ -65,95 +65,34 @@
                         </button>
                       </div>
               <% } %>
-                  
 
+              
+              <div class="form-group row">
 
-              <form action="/register-exhibitor" method="POST">
-                <div class="contact_input_area">
-                    <div class="row">
-                        <!-- Form Group -->
-                        <div class="col-12 col-lg-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control mb-30" name="name" id="name"
-                                    placeholder="Nome da instituição">
-                            </div>
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <img src="images/expo/noimg.png" class="input-group-text" style="height: 38px;" />
                         </div>
-
-                         <!-- Form Group -->
-                         <div class="col-12 col-lg-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control mb-30" name="location" id="location"
-                                    placeholder="localização">
-                            </div>
+                        <div class="custom-file">
+                            <input type="file" name="photo" class="custom-file-input" id="photo" aria-describedby="inputGroupFileAddon01">
+                            <label class="custom-file-label" for="photo">Foto de perfil</label>
                         </div>
-
-                        <!-- Form Group -->
-                        <div class="col-12 col-lg-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control mb-30" name="contact" id="contact"
-                                    placeholder="Contacto">
-                            </div>
-                        </div>
-
-                        
-                        <!-- Form Group -->
-                        <div class="col-12 col-lg-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control mb-30" name="website"
-                                    id="website" placeholder="Website">
-                            </div>
-                        </div>
-
-                        
-
-                      
-                            
-                        <!-- Form Group -->
-                        <div class="col-12 col-lg-12">
-                            <div class="form-group" style="height: 80px;">
-                              <select class="form-control mb-30" >
-                                <option selected>Categoria</option>
-                                <option value="1">Turismo</option>
-                                <option value="2">Hotelaria</option>
-                              </select>
-                            </div>
-                        </div>
-                        
-                        
-                           
-                        <!-- Form Group -->
-                        <div class="col-12 col-lg-6">
-                          <div class="form-group">
-                              <input type="text" class="form-control mb-30" name="verification_code"
-                                  id="verification_code" placeholder="Codigo de verificação">
-                          </div>
-                        </div>
-
-
-                        <!-- Form Group -->
-                        <div class="col-12 col-lg-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control mb-30" name="email"
-                                    id="email" placeholder="Email">
-                            </div>
-                        </div>
-
-
-                        <!-- Form Group -->
-                        <div class="col-12 col-lg-6">
-                            <div class="form-group">
-                                <input type="password" class="form-control mb-30" name="password" id="password"
-                                    placeholder="Password">
-                            </div>
-                        </div>
-                       
                     </div>
                 </div>
-                <!-- Button -->
-                <button type="submit" class="btn btn-primary btn-lg btn-block">Cadastrar</button>
+            </div>
 
+
+            <form action="/register-exhibitor-second" method="POST">
+              <div class = "form-group">
+                <textarea class="form-control" name="description" id="description" rows="10" required placeholder = "Descrição da instituição"></textarea>
+             </div>
+
+              <!-- Button -->
+              <button type="submit" class="btn btn-primary btn-lg btn-block">Proximo</button>
             </form>
-        
+
+
             </div>   
           </div>
         </div>
@@ -161,11 +100,11 @@
       
 
 
-
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places" defer></script>
 
+  
 
 
   </body>
