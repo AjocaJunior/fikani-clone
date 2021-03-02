@@ -8,7 +8,11 @@ const admin = require("firebase-admin");
 require("firebase/auth");
 require("firebase/storage")
 require("firebase/firestore");
-
+//const googleStorage = require('@google-cloud/storage');
+const {Storage} = require('@google-cloud/storage');
+const Multer = require('multer');
+const path = require('path');
+const { uuid } = require('uuidv4');
 
 const urlencodedParser = bodyParser.urlencoded({extended:false})
 var serviceAccount = require('../../fikani-firebase-adminsdk-nhqwx-30a29e774a.json');
@@ -16,7 +20,8 @@ const { render } = require('ejs');
 
 // Initialize Firebase admin
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: "gs://fikani.appspot.com"
 });
 
 var firebaseConfig = {
@@ -31,6 +36,27 @@ var firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = admin.firestore();
+
+// storage
+
+const storage  = new Storage({
+    projectId: "fikani",
+    keyFilename: serviceAccount 
+  });
+
+
+const multer = Multer({
+    storage: Multer.memoryStorage(),
+    limits: {
+      fileSize: 5 * 1024 * 1024 // no larger than 5mb, you can change as needed.
+    }
+});
+
+
+const bucket = storage.bucket("fikani.appspot.com");
+
+
+
 
 router.get('/confer' , (req , res)=> {
     res.locals.title = "Conferencia";
@@ -91,33 +117,45 @@ router.get('/register-exhibitor-second' , (req , res) => {
     res.render('pages/register-exhibitor-secondpage.html');
 });
 
-router.post('/register-exhibitor-second' ,urlencodedParser ,[
-    check('description' , "Description invalidada")
-    .exists()
-    .isString()
-] ,(req , res) => {
-    const errors = validationResult(req)
-    if(!errors.isEmpty()) {
-        const alert = errors.array();
-        res.render('pages/register-exhibitor', {
-            alert
-        })
-    } else {
-
-        // Create a root reference
-// var storageRef = firebase.storage().ref();
-
-// // // Create a reference to 'mountains.jpg'
-// // var mountainsRef = storageRef.child('mountains.jpg');
-
-//        var storageRef =  firebase.storage.ref();
-//        var photoRef = storageRef.child("perfil/unnamed.jpg");
-//        console.log(photoRef)
+router.post('/register-exhibitor-second', (req , res) => {
 
 
 
-     }
-});
+
+
+    var bucket = admin.storage().bucket();
+
+    var filename = "test.txt";
+    console.log(filename)
+    
+    async function uploadFile() {
+    
+      const metadata = {
+        metadata: {
+          // This line is very important. It's to create a download token.
+          firebaseStorageDownloadTokens: uuid()
+        },
+        contentType: 'image/png',
+        cacheControl: 'public, max-age=31536000',
+      };
+    
+      // Uploads a local file to the bucket
+      await bucket.upload(filename, {
+        // Support for HTTP requests made with `Accept-Encoding: gzip`
+        gzip: true,
+        metadata: metadata,
+      });
+    
+    console.log(`${filename} uploaded.`);
+    
+
+    }
+
+    uploadFile().catch(console.error);
+
+
+
+})
 
 
 router.post('/register-exhibitor' , urlencodedParser , [
@@ -148,10 +186,7 @@ router.post('/register-exhibitor' , urlencodedParser , [
         })
     } else {
   
-        registerExhibitor(req.body);
-
-        // res.render('pages/register-exhibitor-secondpage');
-        // console.log(req.body)
+        registerExhibitor(req.body, res);
     }
 })
 
@@ -232,7 +267,7 @@ router.post('/register' , urlencodedParser, [
 });
 
 
-function registerExhibitor(body) {
+function registerExhibitor(body , res) {
 
    var institution = {
        name : body.name,
@@ -242,27 +277,44 @@ function registerExhibitor(body) {
        category: body.category,
        email : body.email,
        password : body.password,
-       code : body.verfification_code
    }
 
-   console.log("Test");
-   console.log(institution);
+
+    admin
+    .auth()
+    .createUser(institution)
+    .then((data) => {
+        institution['uid'] =  data.uid;
+        console.log(data.uid)
+        delete institution.password;
+        createInstitution(institution , res);
+    })
+    .catch((error) => {
+  
+      res.render('pages/register-exhibitor' , {
+          error
+      })
+  
+    });
 
 
-//     admin
-//   .auth()
-//   .createUser(user)
-//   .then((userRecord) => {
-//    user['uid'] =  userRecord.uid; // add user uid //
-//    addregisterExhibitor()
-//   })
-//   .catch((error) => {
+}
+ 
+async function  createInstitution(institution , res) {
 
-//     res.render('pages/register-exhibitor' , {
-//         error
-//     })
+    console.log(institution);
 
-//   });
+    const newInstitution = await db.collection('institution').doc(institution.uid).set(institution)
+         .then(function() {
+             // redirect to homepage //
+            res.redirect('/register-exhibitor-second');               
+        })
+        .catch(function(error) {
+            //reload page and show error
+            res.render('pages/register-exhibitor' , {
+                error
+            })
+        });
 }
 
 
@@ -281,7 +333,6 @@ function register(name , last_name, localization,email , phoneNumber , password 
     };
 
 
-  //  firebase.auth.signInWithEmailAndPassword(email , password) 
 
   admin
   .auth()

@@ -138,14 +138,14 @@
                             </div>
                         </div>
 
-
                         <!-- Form Group -->
                         <div class="col-12 col-lg-6">
                             <div class="form-group">
                                 <input type="password" class="form-control mb-30" name="password" id="password"
                                     placeholder="Password">
                             </div>
-                        </div>
+                        </div>     
+
                        
                     </div>
                 </div>
@@ -165,7 +165,29 @@
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.2.0/firebase.js"></script>
 
+    <script>
+
+
+   
+
+
+      
+    firebase.auth().createUserWithEmailAndPassword(email, password )
+    .then(function(data){
+        userId = data.user.uid;
+    
+        create(userId ,name , email ,  password , imageUrl ,  contact ,  genre , date_of_birth , category , residence , school);
+        
+        //Here if you want you can sign in the user
+        }).catch(function(error) {
+            alert(""+error);
+        //Handle error
+     });
+
+    </script>
 
 
   </body>

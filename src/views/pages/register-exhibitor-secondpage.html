@@ -41,8 +41,7 @@
               </div>
             <div class="col-md-10 col-lg-6">
              
-          
-     
+
               <!-- form validation error -->
               <% if(typeof alert != 'undefined') { %>
                 <% alert.forEach(function(error) { %>
@@ -67,23 +66,25 @@
               <% } %>
 
               
+              
+
+            <form action="/register-exhibitor-second" method="POST"  enctype="multipart/form-data">
+
               <div class="form-group row">
 
-                <div class="col-sm-12">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <img src="images/expo/noimg.png" class="input-group-text" style="height: 38px;" />
-                        </div>
-                        <div class="custom-file">
-                            <input type="file" name="photo" class="custom-file-input" id="photo" aria-describedby="inputGroupFileAddon01">
-                            <label class="custom-file-label" for="photo">Foto de perfil</label>
-                        </div>
+              <div class="col-sm-12">
+                <div class="input-group" >
+                    <div class="input-group-prepend">
+                        <img src="images/expo/noimg.png" class="input-group-text" style="height: 38px;" />
+                    </div>
+                    <div class="custom-file">
+                        <input type="file" name="photo" class="custom-file-input" id="photo" aria-describedby="inputGroupFileAddon01">
+                        <label class="custom-file-label" for="photo">Foto de perfil</label>
                     </div>
                 </div>
-            </div>
+              </div>
+             </div>
 
-
-            <form action="/register-exhibitor-second" method="POST">
               <div class = "form-group">
                 <textarea class="form-control" name="description" id="description" rows="10" required placeholder = "Descrição da instituição"></textarea>
              </div>
