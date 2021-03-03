@@ -3,6 +3,7 @@ const app = express();
 const path = require('path');
 const bodyParser = require('body-parser');
 const port =  3000 || process.env.PORT;
+const session = require('express-session');
 
 
 // set static file
@@ -16,6 +17,22 @@ app.engine('html',require('ejs').renderFile);
 const urlencodedParser = bodyParser.urlencoded({extended:false})
 
 // routes
+// app.use(session({
+//     secret: 'secret-key',
+//     resave: false,
+//     saveUninitialized: false,
+// }));
+
+app.use(
+    session({
+        resave: false,
+        saveUninitialized: true,
+        secret: "anyrandomstring",
+        cookie: { secure: true},
+      })
+    );
+    
+
 app.use(require('./routes/index.js'));
 
 app.listen(3000);

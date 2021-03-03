@@ -1,7 +1,6 @@
 const bodyParser = require('body-parser');
 const {check , validationResult} = require('express-validator');
 const { Router} = require('express');
-const session = require('express-session');
 const router = Router();
 const firebase = require("firebase/app");
 const admin = require("firebase-admin");
@@ -10,10 +9,10 @@ require("firebase/storage")
 require("firebase/firestore");
 //const googleStorage = require('@google-cloud/storage');
 const {Storage} = require('@google-cloud/storage');
-const Multer = require('multer');
+const multer = require('multer');
 const path = require('path');
 const { uuid } = require('uuidv4');
-
+const formidable = require('formidable');
 const urlencodedParser = bodyParser.urlencoded({extended:false})
 var serviceAccount = require('../../fikani-firebase-adminsdk-nhqwx-30a29e774a.json');
 const { render } = require('ejs');
@@ -45,17 +44,21 @@ const storage  = new Storage({
   });
 
 
-const multer = Multer({
-    storage: Multer.memoryStorage(),
-    limits: {
-      fileSize: 5 * 1024 * 1024 // no larger than 5mb, you can change as needed.
+
+  const storageMulter = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now()+'-'+file.originalname);
     }
-});
+  });
+  
+  const upload = multer({ storage: storageMulter });
+  
 
 
 const bucket = storage.bucket("fikani.appspot.com");
-
-
 
 
 router.get('/confer' , (req , res)=> {
@@ -69,7 +72,12 @@ router.get('/confer-live' , (req , res)=> {
 });
 
 router.get('/' , (req , res)=> {
-    res.locals.title = "Seja bem vindo";    
+    res.locals.title = "Seja bem vindo";   
+    
+    // req.session.uid = 1;
+
+    console.log(req.session);
+    
     res.render('pages/index');
 });
 
@@ -117,45 +125,40 @@ router.get('/register-exhibitor-second' , (req , res) => {
     res.render('pages/register-exhibitor-secondpage.html');
 });
 
-router.post('/register-exhibitor-second', (req , res) => {
-
-
-
-
-
-    var bucket = admin.storage().bucket();
-
-    var filename = "test.txt";
-    console.log(filename)
-    
-    async function uploadFile() {
-    
-      const metadata = {
-        metadata: {
-          // This line is very important. It's to create a download token.
-          firebaseStorageDownloadTokens: uuid()
-        },
-        contentType: 'image/png',
-        cacheControl: 'public, max-age=31536000',
-      };
-    
-      // Uploads a local file to the bucket
-      await bucket.upload(filename, {
-        // Support for HTTP requests made with `Accept-Encoding: gzip`
-        gzip: true,
-        metadata: metadata,
-      });
-    
-    console.log(`${filename} uploaded.`);
-    
-
-    }
-
-    uploadFile().catch(console.error);
-
-
+router.post('/register-exhibitor-second', upload.single('file') , (req , res) => {
+     let file = path.join(__dirname , "../../uploads/"+req.file.filename)
+     uploadFile(path.normalize(file) , req.file.filename).catch(console.error);
 
 })
+
+
+// upload file
+async function uploadFile(filepath , filename ) {
+    var bucket = admin.storage().bucket();
+    var token = uuid();
+    const metadata = {
+      metadata: {
+        // This line is very important. It's to create a download token.
+        firebaseStorageDownloadTokens: token
+      },
+      contentType: 'image/png',
+      cacheControl: 'public, max-age=31536000',
+    };
+  
+    // Uploads a local file to the bucket
+    await bucket.upload(filepath, {
+      // Support for HTTP requests made with `Accept-Encoding: gzip`
+      gzip: true,
+      metadata: metadata,
+    });
+  
+//   console.log(`${filename} uploaded.`);
+
+  console.log("https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/"+filename+"?alt=media&token="+token);
+  
+
+  }
+
 
 
 router.post('/register-exhibitor' , urlencodedParser , [
@@ -260,8 +263,13 @@ router.post('/register' , urlencodedParser, [
       var  displayName = req.body.name +" "+req.body.last_name;
       var  urlphoto = "https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/perfil%2Funnamed.jpg?alt=media&token=234789f8-f514-4ef0-aee4-36f534f03507"; //default perfil img
 
+      req.session.uid = 1;
+
+      console.log(req.session.uid);
+
       register(req.body.name , req.body.last_name, req.body.residence,req.body.email.trim() , req.body.contact , req.body.password.trim() , displayName, urlphoto, res ) 
 
+     
     }
 
 });
