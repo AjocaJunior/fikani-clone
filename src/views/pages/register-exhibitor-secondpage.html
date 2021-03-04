@@ -84,6 +84,8 @@
                 </div>
               </div>
              </div>
+              
+             <input type="hidden" id="itemId" name="itemId" value="  ">
 
               <div class = "form-group">
                 <textarea class="form-control" name="description" id="description" rows="10" required placeholder = "Descrição da instituição"></textarea>
@@ -101,6 +103,16 @@
       
 
 
+    <script>
+      
+      var query = window.location.search.substring(1);
+        var vars = query.split("=");
+        var id = vars[1];
+        var itemId =  document.getElementById("itemId");
+        itemId.value = id;
+        console.log(itemId.value);
+
+    </script>
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places" defer></script>

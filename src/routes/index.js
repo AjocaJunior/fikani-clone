@@ -82,7 +82,6 @@ router.get('/' , (req , res)=> {
 });
 
 
-
 router.get('/info' , (req , res) => {
     res.locals.title = "Informações";
     res.render('pages/info')
@@ -122,18 +121,22 @@ router.get('/exhibitor-page' , (req, res) => {
 });
 
 router.get('/register-exhibitor-second' , (req , res) => {
+    console.log( req.query.id);
+
     res.render('pages/register-exhibitor-secondpage.html');
 });
 
 router.post('/register-exhibitor-second', upload.single('file') , (req , res) => {
-     let file = path.join(__dirname , "../../uploads/"+req.file.filename)
-     uploadFile(path.normalize(file) , req.file.filename).catch(console.error);
-
+    
+    
+    console.log(req.body);
+     let file = path.join(__dirname , "../../uploads/"+req.file.filename);
+     uploadFile(path.normalize(file) , req.file.filename , req, res ).catch(console.error);
 })
 
 
 // upload file
-async function uploadFile(filepath , filename ) {
+async function uploadFile(filepath , filename , req, res ) {
     var bucket = admin.storage().bucket();
     var token = uuid();
     const metadata = {
@@ -152,10 +155,26 @@ async function uploadFile(filepath , filename ) {
       metadata: metadata,
     });
   
-//   console.log(`${filename} uploaded.`);
 
-  console.log("https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/"+filename+"?alt=media&token="+token);
-  
+  var imgUrl = "https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/"+filename+"?alt=media&token="+token;
+  var instData = {
+    description: req.body.description,
+    imgUrl: imgUrl 
+  }
+
+  const newInstitution = await db.collection('institution').doc(req.body.itemId).update(instData)
+         .then(function() {
+             // todo redirect to dashboard //
+
+            res.redirect('/');               
+        })
+        .catch(function(error) {
+            //reload page and show error
+        
+            res.render('pages/register-exhibitor-secondp?id='+req.body.itemId , {
+                error
+        })
+     });
 
   }
 
@@ -283,6 +302,9 @@ function registerExhibitor(body , res) {
        contact: body.contact,
        website: body.website,
        category: body.category,
+       imgUrl: '',
+       videoUrl: '',
+       description: '',
        email : body.email,
        password : body.password,
    }
@@ -295,7 +317,7 @@ function registerExhibitor(body , res) {
         institution['uid'] =  data.uid;
         console.log(data.uid)
         delete institution.password;
-        createInstitution(institution , res);
+        createInstitution(institution , res );
     })
     .catch((error) => {
   
@@ -308,21 +330,21 @@ function registerExhibitor(body , res) {
 
 }
  
-async function  createInstitution(institution , res) {
+async function  createInstitution(institution , res ) {
 
     console.log(institution);
 
     const newInstitution = await db.collection('institution').doc(institution.uid).set(institution)
          .then(function() {
              // redirect to homepage //
-            res.redirect('/register-exhibitor-second');               
+            res.redirect('/register-exhibitor-second?id='+institution.uid);               
         })
         .catch(function(error) {
             //reload page and show error
             res.render('pages/register-exhibitor' , {
                 error
-            })
-        });
+        })
+     });
 }
 
 
