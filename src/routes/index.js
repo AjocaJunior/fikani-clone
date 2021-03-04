@@ -72,13 +72,25 @@ router.get('/confer-live' , (req , res)=> {
 });
 
 router.get('/' , (req , res)=> {
-    res.locals.title = "Seja bem vindo";   
-    
-    // req.session.uid = 1;
+    var instReference = db.collection("institution");
+    var list = [];
+        instReference.get().then((querySnapshot) => {
+            querySnapshot.forEach((instDoc) => {
+                var instDocData = instDoc.data()
+                if(instDocData.imgUrl == null || instDocData.imgUrl == '' ) {
+                    console.log(instDocData.imgUrl);
+                    instDocData.imgUrl = 'https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/perfil%2Funnamed.jpg?alt=media&token=234789f8-f514-4ef0-aee4-36f534f03507';
+                }
+                list.push( instDocData);  
+            })         
 
-    console.log(req.session);
-    
-    res.render('pages/index');
+            res.locals.title = "Seja bem vindo";   
+            res.render('pages/index.html' , {
+                list
+            });
+
+        })
+
 });
 
 
@@ -112,8 +124,30 @@ router.get('/register' , (req , res)=> {
     res.render('pages/register');
 });
 
+
 router.get('/exhibitor' , (req , res) => {
-    res.render('pages/exhibitor.html');
+  
+    var instReference = db.collection("institution");
+            //Get them
+        var list = [];
+        instReference.get().then((querySnapshot) => {
+            //querySnapshot is "iteratable" itself
+            querySnapshot.forEach((instDoc) => {
+                var instDocData = instDoc.data()
+                if(instDocData.imgUrl == null || instDocData.imgUrl == '' ) {
+                    console.log(instDocData.imgUrl);
+                    instDocData.imgUrl = 'https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/perfil%2Funnamed.jpg?alt=media&token=234789f8-f514-4ef0-aee4-36f534f03507';
+                }
+                list.push( instDocData);
+    
+            })         
+
+            res.render('pages/exhibitor.html' , {
+                list
+            });
+
+        })
+
 });
 
 router.get('/exhibitor-page' , (req, res) => {
@@ -133,6 +167,61 @@ router.post('/register-exhibitor-second', upload.single('file') , (req , res) =>
      let file = path.join(__dirname , "../../uploads/"+req.file.filename);
      uploadFile(path.normalize(file) , req.file.filename , req, res ).catch(console.error);
 })
+
+getExhibitor();
+
+function getExhibitor() {
+        var instReference = db.collection("institution");
+            //Get them
+        instReference.get().then((querySnapshot) => {
+            //querySnapshot is "iteratable" itself
+            querySnapshot.forEach((instDoc) => {
+                var instDocData = instDoc.data()
+
+            return instDocData
+           
+        })
+
+    })
+
+}
+
+
+// function getUsers() {
+//     //Get them
+//     usersReference.get().then((querySnapshot) => {
+
+//     //querySnapshot is "iteratable" itself
+//     querySnapshot.forEach((userDoc) => {
+
+//         //userDoc contains all metadata of Firestore object, such as reference and id
+//         //console.log(userDoc.id)
+
+//         //If you want to get doc data
+//         var userDocData = userDoc.data()
+
+//         return userDocData
+//         // console.dir(userDocData)
+
+//     })
+// }
+
+
+
+    
+    // const exhibitor = await db.collection('institution')    .doc(institution.uid).set(institution)
+    //      .then(function() {
+    //          // redirect to homepage //
+    //         res.redirect('/register-exhibitor-second?id='+institution.uid);               
+    //     })
+    //     .catch(function(error) {
+    //         //reload page and show error
+    //         res.render('pages/register-exhibitor' , {
+    //             error
+    //     })
+    //  });
+    //     return  null;
+    // }
 
 
 // upload file
@@ -331,8 +420,6 @@ function registerExhibitor(body , res) {
 }
  
 async function  createInstitution(institution , res ) {
-
-    console.log(institution);
 
     const newInstitution = await db.collection('institution').doc(institution.uid).set(institution)
          .then(function() {
