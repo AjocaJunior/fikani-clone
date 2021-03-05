@@ -140,19 +140,26 @@
                   </li>
                   <li class="post-single-meta-comments"><span>2 Comentarios</span></li>
                 </ul> -->
-                <h3 class="post-single-title">Conheça o Parque Nacional de Gorongosa.</h3>
-                <p class="post-single-text">Sed quia conse quuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>
+                <h3 class="post-single-title"> <%= data.name %> </h3>
+                <p class="post-single-text" style="white-space: pre-line"> <%= data.description %> </p>
+
+
+                <p class="post-single-quote heading-4"> "Visita ao <%=data.name %>  a recordar por toda a vida.
+                  Experiência única contactando a natureza de uma forma inesquecível e inigualável" </p>
+              
+<!--               
                 <p class="post-single-quote heading-4">“Visita ao Parque Nacional da Gorongosa a recordar por toda a vida.
                     Experiência única contactando a natureza de uma forma inesquecível e inigualável.”</p>
                 <p class="post-single-text">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident.</p>
+                 -->
                 <div class="post-single-social">
                   <div class="row row-20 align-items-center">
                     <div class="col-sm-6">
-                      <!-- <dl class="post-single-terms">
+                      <dl class="post-single-terms">
                         <dt>Tags:</dt>
                         <dd><a href="#">Feira</a> <span>,</span> <a href="#">Turismo</a> <span>,</span> <a href="#">Promoção turística</a>
                         </dd>
-                      </dl> -->
+                      </dl>
                     </div>
                     <div class="col-sm-6 text-sm-right">
                       <ul class="list-inline list-inline-xs">
@@ -176,7 +183,7 @@
             <div class="col-lg-5 col-xl-4">
               <div class="row row-30">
                 <div class="col-lg-12">  
-                  <div class="button button-icon button-icon-right button-primary col-lg-12" data-triangle=".button-overlay"><span class="icon fa-wechat"></span>Agendar chat<span class="button-overlay"></span></div>
+                  <a class="button button-icon button-icon-right button-primary col-lg-12" data-triangle=".button-overlay"  href="/schedule-chat?id=<%= data.uid %>" role="button">  <span class="icon fa-wechat"></span>  Agendar chat<span class="button-overlay"></span>  </a>
                 </div>
                 
                 <div class="col-sm-7 col-md-6 col-lg-12">
@@ -210,9 +217,9 @@
                           <div class="unit-left"><img src="images/single-news-07-59x59.jpg" alt="" width="59" height="59"/>
                           </div>
                           <div class="unit-body">
-                            <p class="post-mini-author"><a href="#">Galeria</a>
+                            <p class="post-mini-author"><a href="#gallery">Galeria</a>
                             </p>
-                            <p class="post-mini-title"><a href="#">Veja algumas fotos do <%= data.name %></a></p>
+                            <p class="post-mini-title"><a href="#gallery">Veja algumas fotos do/a <%= data.name %></a></p>
                           </div>
                         </div>
                       </div>
@@ -233,19 +240,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-sm-5 col-md-6 col-lg-12">
-                  <div class="post-aside">
-                    <h5 class="post-aside-title">Tags</h5>
-                    <div class="post-aside-content">
-                      <ul class="post-aside-list-tag">
-                        <li><a href="#">Feiras de turismo</a></li>
-                        <li><a href="#">Turismo</a></li>
-                        <li><a href="#">Promoção turística</a></li>
-                        <li><a href="#">Turismo de Mocambique </a></li>
-                        <li><a href="#">Workshop</a></li>
-                      </ul>
-                    </div>
-                  </div>
+               
                 </div>
               </div>
             </div>

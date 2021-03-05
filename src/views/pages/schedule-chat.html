@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+	<title> Agendar conversa </title>
+
+	<!-- Google font -->
+	<link href="https://fonts.googleapis.com/css?family=Poppins:400" rel="stylesheet">
+
+	<!-- Bootstrap -->
+	<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" />
+
+	<!-- Custom stlylesheet -->
+	<link type="text/css" rel="stylesheet" href="css/style-schedule.css" />
+
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+</head>
+
+<body>
+	<div id="booking" class="section">
+		<div class="section-center">
+			<div class="container">
+				<div class="row">
+					<div class="booking-form">
+						<form method="POST" action="/schedule-chat">
+							<div class="row no-margin">
+								<div class="col-md-3">
+									<div class="form-group">
+										<span class="form-label">Email</span>
+										<input class="form-control" type="text" id="email" name="email" placeholder="Digite seu email">
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="row no-margin">
+										<div class="col-md-5">
+											<div class="form-group">
+												<span class="form-label">Dia</span>
+												<input class="form-control"  id="day" name="day" type="date" required>
+											</div>
+										</div>
+
+										<div class="col-md-5">
+											<div class="form-group">
+												<span class="form-label">Hora</span>
+												<input class="form-control"  id="time" name="time" type="time" required>
+											</div>
+										</div>
+
+										<input type="hidden" id="itemId" name="itemId" value="  ">
+										
+										
+									</div>
+								</div>
+								<div class="col-md-3">
+									<div class="form-btn">
+										<button class="submit-btn">Agendar</button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<!-- custom lib popup -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+
+
+<script>
+      
+	  var query = window.location.search.substring(1);
+	  var vars = query.split("=");
+	  var id = vars[1];
+	  var itemId =  document.getElementById("itemId");
+	  itemId.value = id;
+	  
+	  document
+            .getElementById("booking")
+            .addEventListener("submit", (event) => {
+				showSucess();
+			 });
+	  function showSucess() {
+ 
+		Swal.fire({
+		position: 'center',
+		icon: 'success',
+		title: 'Agendado com sucesso',
+		showConfirmButton: false,
+		timer: 1500
+		})
+
+	  }
+
+  </script>
+
+</body>
+
+</html>

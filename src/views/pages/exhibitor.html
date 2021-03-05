@@ -36,14 +36,14 @@
             <% if(typeof list != 'undefined') { %>
               <% list.forEach(function(exhibitor) { %>
                 <% if(exhibitor.category == 1) { %>
-     
+             
                   <div class="col-md-6 col-lg-4">
                     <!-- Speaker-->
                     <div class="speaker">
                       <div class="speaker-img">
-                        <div class="speaker-overlay"></div><a href="/exhibitor-page"><img src=" <%=exhibitor.imgUrl %> " alt="" width="330" height="354"/></a>
+                        <div class="speaker-overlay"></div><a href="exhibitor-page?id=<%=exhibitor.uid %>"><img src=" <%=exhibitor.imgUrl %> " alt="" width="330" height="354"/></a>
                       </div>
-                      <h5 class="speaker-title"><a href="/exhibitor-page"> <%= exhibitor.name %> </a></h5>
+                      <h5 class="speaker-title"><a href="exhibitor-page?id=<%=exhibitor.uid %>"> <%= exhibitor.name %> </a></h5>
                       <p class="speaker-position"> </p>
                     </div>
                   </div>
@@ -70,10 +70,10 @@
                   <div class="col-sm-6 col-lg-3">
                     <!-- Speaker Classic-->
                     <div class="speaker-classic">
-                      <div class="speaker-classic-img" style="height:303px; width:270px;  overflow: hidden" ><a href="#"><img src="<%=exhibitor.imgUrl %>" alt="" width="270" height="303"  style="height:303px; width:270px; object-position: center ; object-fit: cover;" /></a>
+                      <div class="speaker-classic-img" style="height:303px; width:270px;  overflow: hidden" ><a href="exhibitor-page?id=<%=exhibitor.uid %>"><img src="<%=exhibitor.imgUrl %>" alt="" width="270" height="303"  style="height:303px; width:270px; object-position: center ; object-fit: cover;" /></a>
                       
                       </div>
-                      <h5 class="speaker-classic-title"><a href="#"> <%=exhibitor.name %> </a></h5>
+                      <h5 class="speaker-classic-title"><a href="exhibitor-page?id=<%=exhibitor.uid %>"> <%=exhibitor.name %> </a></h5>
                       <p class="speaker-classic-position"></p>
                     </div>
                   </div>

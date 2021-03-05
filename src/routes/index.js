@@ -155,12 +155,47 @@ router.get('/exhibitor' , (req , res) => {
 
         })
 
-});
+}); 
+
+
+router.post('/schedule-chat', urlencodedParser , (req , res) => {
+    addSchedule(req , res);
+})
+
+
+async function addSchedule(req , res) {
+    var scheduleUid = uuid();
+
+    //todo get user name//
+    var data = {
+        uid : scheduleUid,
+        day : req.body.day,
+        time : req.body.time,
+        email : req.body.email  
+    }
+
+    console.log(data)
+
+    const newSchedule = await db.collection('institution').doc(req.body.itemId).collection('schedule').doc( scheduleUid ).set(data)
+        .then(function() {
+            res.redirect('exhibitor-page?id='+req.body.itemId);               
+        })
+        .catch(function(error) {   
+            res.render('pages/schedule-chat?id='+req.body.itemId , {
+                error
+        })
+    });
+
+}
+
+router.get('/schedule-chat' , (req , res) => {
+    res.render('pages/schedule-chat.html');
+})
 
 router.get('/exhibitor-page' , (req, res) => {
 
     if(req.query.id == null) {
-        res.redirect('/');
+        res.redirect('/404');
     } 
     var data = null;
     db.collection('institution').doc(''+req.query.id).get().then(function(doc) {
@@ -190,7 +225,7 @@ router.post('/register-exhibitor-second', upload.single('file') , (req , res) =>
      uploadFile(path.normalize(file) , req.file.filename , req, res ).catch(console.error);
 })
 
-getExhibitor();
+//getExhibitor();
 
 function getExhibitor() {
         var instReference = db.collection("institution");
