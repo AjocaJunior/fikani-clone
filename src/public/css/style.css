@@ -4252,7 +4252,7 @@ textarea.form-input {
 }
 
 .post-mini-author > a {
-	text-decoration: underline;
+	text-decoration: none;
 }
 
 .post-mini-author > a, .post-mini-author > a:focus, .post-mini-author > a:active {

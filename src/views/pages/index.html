@@ -213,22 +213,7 @@
             <h6 class="text-secondary">exposições</h6>
             <h3>EXPOSITORES DA FEIRA</h3>
             <div class="row row-30">
-              <div class="col-md-6 col-lg-4">
-                <div>
-                  <!-- Speaker-->
-                  <div class="speaker">
-                    <div class="speaker-img">
-                      <div class="speaker-overlay"></div><a href="/exhibitor-page.html"><img src="images/expo/Expositor-Parque Nacional da Gorongosa.jpg" alt="" width="330" height="354"/></a>
-                      
-                    </div>
-                    <h5 class="speaker-title"><a href="exhibitor-page.html">Parque Nacional da Gorongosa</a></h5>
-                    <p class="speaker-position">Turismo</p>
-                  </div>
-                </div>
-              </div>
-
-
-
+              
               <% if(typeof list != 'undefined') { %>
                 <% list.forEach(function(exhibitor) { %>
                   <% 
@@ -245,10 +230,10 @@
                         <!-- Speaker-->
                         <div class="speaker">
                           <div class="speaker-img" >
-                            <div class="speaker-overlay"></div><a href="exhibitor-page.html"><img src="images/expo/Expositor- reserva do Niassa.jpg" alt="" width="330" height="354"/></a>
+                            <div class="speaker-overlay"></div><a href="exhibitor-page?id=<%=exhibitor.uid %>"><img src="<%= exhibitor.imgUrl %>" alt="" width="330" height="354"/></a>
                           
                           </div>
-                          <h5 class="speaker-title"><a href="exhibitor-page.html">Reserva do Niassa</a></h5>
+                          <h5 class="speaker-title"><a href="exhibitor-page?id=<%=exhibitor.uid %>">Reserva do Niassa</a></h5>
                           <p class="speaker-position"> <%= category %> </p>
                         </div>
                       </div>
@@ -258,76 +243,6 @@
               <% } %>
   
 
-
-              <div class="col-md-6 col-lg-4">
-                <div>
-                  <!-- Speaker-->
-                  <div class="speaker">
-                    <div class="speaker-img" >
-                      <div class="speaker-overlay"></div><a href="exhibitor-page.html"><img src="images/expo/Expositor- reserva do Niassa.jpg" alt="" width="330" height="354"/></a>
-                    
-                    </div>
-                    <h5 class="speaker-title"><a href="exhibitor-page.html">Reserva do Niassa</a></h5>
-                    <p class="speaker-position">Turismo</p>
-                  </div>
-                </div>
-              </div>
-
-
-
-
-              <div class="col-md-6 col-lg-4">
-                <div>
-                  <!-- Speaker-->
-                  <div class="speaker">
-                    <div class="speaker-img">
-                      <div class="speaker-overlay"></div><a href="exhibitor-page.html"><img src="images/expo/Expositor-Radisson Blu Hotel.jpg" alt="" width="330" height="354"/></a>
-                     
-                    </div>
-                    <h5 class="speaker-title"><a href="exhibitor-page.html">Radisson Blu Hotel</a></h5>
-                    <p class="speaker-position">Hotelaria</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div>
-                  <!-- Speaker-->
-                  <div class="speaker">
-                    <div class="speaker-img" >
-                      <div class="speaker-overlay"></div><a href="exhibitor-page.html"><img src="images/expo/Expositor-Southern Sun Maputo.jpg" alt="" width="330" height="354"/></a>
-                  
-                    </div>
-                    <h5 class="speaker-title"><a href="exhibitor-page.html">Southern Sun Maputo</a></h5>
-                    <p class="speaker-position">Hotelaria</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div>
-                  <!-- Speaker-->
-                  <div class="speaker">
-                    <div class="speaker-img" >
-                      <div class="speaker-overlay"></div><a href="exhibitor-page.html"><img src="images/expo/Expositor-Ilha de ilha de benguerra.jpg" alt="" width="330" height="354"/></a>
-                   
-                    </div>
-                    <h5 class="speaker-title"><a href="exhibitor-page.html">Ilha de ilha de benguerra</a></h5>
-                    <p class="speaker-position">Hotelaria</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6 col-lg-4">
-                <div>
-                  <!-- Speaker-->
-                  <div class="speaker">
-                    <div class="speaker-img">
-                      <div class="speaker-overlay"></div><a href="exhibitor-page.html"><img src="images/expo/Expositor-Hotel Maputo.jpg" alt="" width="330" height="354"/></a>
-                
-                    </div>
-                    <h5 class="speaker-title"><a href="exhibitor-page.html">Hotel Maputo</a></h5>
-                    <p class="speaker-position">Hotelaria</p>
-                  </div>
-                </div>
-              </div>
             </div><a class="button button-secondary box-with-triangle-right wow fadeScale" href="/exhibitor" data-triangle=".button-overlay"><span>Ver todos expositores</span><span class="button-overlay"></span></a>
           </div>
         </div>

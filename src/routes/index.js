@@ -74,12 +74,19 @@ router.get('/confer-live' , (req , res)=> {
 router.get('/' , (req , res)=> {
     var instReference = db.collection("institution");
     var list = [];
+    var count = 0;
+
+    //todo count
         instReference.get().then((querySnapshot) => {
             querySnapshot.forEach((instDoc) => {
                 var instDocData = instDoc.data()
+                count++;
                 if(instDocData.imgUrl == null || instDocData.imgUrl == '' ) {
-                    console.log(instDocData.imgUrl);
                     instDocData.imgUrl = 'https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/perfil%2Funnamed.jpg?alt=media&token=234789f8-f514-4ef0-aee4-36f534f03507';
+                }
+                // todo random 
+                if(count == 6) {
+                   return
                 }
                 list.push( instDocData);  
             })         
@@ -151,8 +158,26 @@ router.get('/exhibitor' , (req , res) => {
 });
 
 router.get('/exhibitor-page' , (req, res) => {
-    res.render('pages/exhibitor-page.html');
+
+    if(req.query.id == null) {
+        res.redirect('/');
+    } 
+    var data = null;
+    db.collection('institution').doc(''+req.query.id).get().then(function(doc) {
+        data = doc.data()
+
+        res.render('pages/exhibitor-page.html' , {
+            data
+        });
+
+    });
+ 
+   
 });
+
+router.get('/404' , (req , res) => {
+    res.render('pages/404.html');
+})
 
 router.get('/register-exhibitor-second' , (req , res) => {
     console.log( req.query.id);
@@ -161,9 +186,6 @@ router.get('/register-exhibitor-second' , (req , res) => {
 });
 
 router.post('/register-exhibitor-second', upload.single('file') , (req , res) => {
-    
-    
-    console.log(req.body);
      let file = path.join(__dirname , "../../uploads/"+req.file.filename);
      uploadFile(path.normalize(file) , req.file.filename , req, res ).catch(console.error);
 })

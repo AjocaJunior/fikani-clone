@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html class="wide" lang="en">
   <head>
+    
     <title>Pagina de expositores </title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
@@ -11,8 +12,10 @@
     <link rel="stylesheet" href="css/fonts.css">
     <link rel="stylesheet" href="css/style.css">
     <style>.ie-panel{display: none;background: #212121;padding: 10px 0;box-shadow: 3px 3px 5px 0 rgba(0,0,0,.3);clear: both;text-align:center;position: relative;z-index: 1;} html.ie-10 .ie-panel, html.lt-ie-10 .ie-panel {display: block;}</style>
+  
   </head>
   <body>
+
     <div class="ie-panel"><a href="http://windows.microsoft.com/en-US/internet-explorer/"><img src="images/ie8-panel/warning_bar_0000_us.jpg" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div>
     <div class="preloader">
       <div class="preloader-body">
@@ -110,12 +113,12 @@
       <section class="breadcrumbs-custom bg-image context-dark" style="background-image: url(images/bg-breadcrumbs-01-1894x424.jpg);">
         <div class="container">
           <ul class="breadcrumbs-custom-path">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="#">Feira</a></li>
-            <li><a href="#">Expositores</a></li>
-            <li class="active">Parque Nacional..</li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/confer">Feira</a></li>
+            <li><a href="/exhibitor">Expositores</a></li>
+            <li class="active"> <%= data.name %></li>
           </ul>
-          <h3 class="breadcrumbs-custom-title">Parque Nacional da Gorongosa</h3>
+          <h3 class="breadcrumbs-custom-title"> <%= data.name %> </h3>
         </div>
       </section>
       <!-- Section Our News-->
@@ -145,11 +148,11 @@
                 <div class="post-single-social">
                   <div class="row row-20 align-items-center">
                     <div class="col-sm-6">
-                      <dl class="post-single-terms">
+                      <!-- <dl class="post-single-terms">
                         <dt>Tags:</dt>
                         <dd><a href="#">Feira</a> <span>,</span> <a href="#">Turismo</a> <span>,</span> <a href="#">Promoção turística</a>
                         </dd>
-                      </dl>
+                      </dl> -->
                     </div>
                     <div class="col-sm-6 text-sm-right">
                       <ul class="list-inline list-inline-xs">
@@ -168,28 +171,26 @@
             
                 
             </div>
+
+            
             <div class="col-lg-5 col-xl-4">
               <div class="row row-30">
-                <div class="col-lg-12">
-                  <form class="rd-form rd-search rd-form-inline" action="search-results.html" method="GET">
-                    <div class="form-wrap">
-                      <label class="form-label" for="rd-search-form-input">Pesquisar</label>
-                      <input class="form-input" id="rd-search-form-input" type="text" name="s" autocomplete="off">
-                    </div>
-                  </form>
+                <div class="col-lg-12">  
+                  <div class="button button-icon button-icon-right button-primary col-lg-12" data-triangle=".button-overlay"><span class="icon fa-wechat"></span>Agendar chat<span class="button-overlay"></span></div>
                 </div>
+                
                 <div class="col-sm-7 col-md-6 col-lg-12">
                   <div class="post-aside">
-                    <h5 class="post-aside-title"> ÚLTIMAS PUBLICAÇÕES</h5>
+                    <h5 class="post-aside-title"> Navegar </h5>
                     <div class="post-aside-content">
                       <div class="post-mini">
                         <div class="unit">
                           <div class="unit-left"><img src="images/single-news-05-59x59.jpg" alt="" width="59" height="59"/>
                           </div>
                           <div class="unit-body">
-                            <p class="post-mini-author"> por <a href="#">Agostinho Dos Santos</a>
+                            <p class="post-mini-author"><a href="#">Localização</a>
                             </p>
-                            <p class="post-mini-title"><a href="#">A Serra da Gorongosa.</a></p>
+                            <p class="post-mini-title"><a href="#"> <%= data.location %></a></p>
                           </div>
                         </div>
                       </div>
@@ -198,9 +199,9 @@
                           <div class="unit-left"><img src="images/single-news-06-59x59.jpg" alt="" width="59" height="59"/>
                           </div>
                           <div class="unit-body">
-                            <p class="post-mini-author">por <a href="#">Assis Junior</a>
+                            <p class="post-mini-author"><a href="#">Contacto</a>
                             </p>
-                            <p class="post-mini-title"><a href="#">O novo Parque deu passos significativos de melhorias.</a></p>
+                            <p class="post-mini-title"><a href="#"> <%= data.contact %> </a></p>
                           </div>
                         </div>
                       </div>
@@ -209,32 +210,25 @@
                           <div class="unit-left"><img src="images/single-news-07-59x59.jpg" alt="" width="59" height="59"/>
                           </div>
                           <div class="unit-body">
-                            <p class="post-mini-author">por <a href="#">Almirando</a>
+                            <p class="post-mini-author"><a href="#">Galeria</a>
                             </p>
-                            <p class="post-mini-title"><a href="#">Experimente a rica vida selvagem e as paisagens da..</a></p>
+                            <p class="post-mini-title"><a href="#">Veja algumas fotos do <%= data.name %></a></p>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+
                 <div class="col-sm-5 col-md-6 col-lg-12">
-                  <div class="post-aside">
-                    <h5 class="post-aside-title">Navegar</h5>
-                    <div class="post-aside-content">
-                      <ul class="list-marked">
-                        <li><a href="#">Localização</a></li>
-                        <li><a href="contact-exhibitor.html">Contactos</a></li>
-                        <li><a href="#gallery">Galeria</a></li>
-                        <li><a href="#">Map</a></li>
-                      </ul>
-                    </div>
-                  </div>
+                      <img src="<%= data.imgUrl %>" alt="">
                 </div>
+
+
                 <div class="col-sm-7 col-md-6 col-lg-12">
                   <div class="post-aside">
                     <h5 class="post-aside-title">Publicidade</h5>
-                    <div class="post-aside-content" style="height: 170px;">
+                    <div class="post-aside-content" style="height: 180px;">
                       
                     </div>
                   </div>
