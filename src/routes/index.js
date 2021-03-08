@@ -192,6 +192,10 @@ router.get('/schedule-chat' , (req , res) => {
     res.render('pages/schedule-chat.html');
 })
 
+router.get('/admin' , (req ,res) => {
+    res.render('pages/admin.html');
+})
+
 router.get('/exhibitor-page' , (req, res) => {
 
     if(req.query.id == null) {
