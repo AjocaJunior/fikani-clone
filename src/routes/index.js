@@ -193,6 +193,9 @@ router.get('/schedule-chat' , (req , res) => {
     res.render('pages/schedule-chat.html');
 })
 
+router.get('/schedule' , (req ,res) => {
+    res.render('pages/schedule.html');
+})
 
 router.get('/login-exhibitor' , (req , res) => {
     res.render('pages/login-exhibitor.html')
@@ -200,23 +203,20 @@ router.get('/login-exhibitor' , (req , res) => {
 
 router.get('/admin' , (req ,res) => {
 
+    if(req.query.id == null) {
+        res.redirect('/login-exhibitor');
+    } 
+    var data = null;
+    db.collection('institution').doc(''+req.query.id).get().then(function(doc) {
+        data = doc.data()
 
-    if(req.query.id == null ) {
-        res.redirect("/login-exhibitor")
-    }
+        res.render('pages/admin.html' , {
+            data
+        });
 
-    var instReference = db.collection("institution");
+    });
+ 
 
-    instReference.get().then((querySnapshot) => {
-        querySnapshot.forEach((instDoc) => {
-            var instDocData = instDoc.data()
-
-
-        })    
-
-    })
-
-    res.render('pages/admin.html');
 })
 
 

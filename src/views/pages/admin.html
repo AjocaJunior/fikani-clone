@@ -306,7 +306,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"> Douglas McGee </span>
                                 <img class="img-profile rounded-circle"
                                     src="img/undraw_profile.svg">
                             </a>
@@ -372,7 +372,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 Visitas </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">100</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"> <%=data.visits %> </div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-eye fa-2x text-gray-300"></i>
@@ -392,7 +392,7 @@
                                             </div>
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50</div>
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"> <%=data.countContact %></div>
                                                 </div>
                                                 <div class="col">
                                                     <!-- <div class="progress progress-sm mr-2">
@@ -460,8 +460,21 @@
                                 <div class="card-body">
                                    
                                     <div>
-                                        <h3> Exemplo </h3>
-                                        <p style="white-space: pre-line" contentEditable="true" id="about">Lorem ipsum dolor quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+                                        <h3> <%= data.name %> </h3>
+
+                                        <% 
+
+                                        description = "";
+                                        if(data.description.length > 230) {
+                                            description = data.description.substring(0, 230)+"..";
+                                        } else {
+                                            description = data.description;
+                                        }
+                                        
+                                        %>
+                                        
+                                        <p id="fullDescription" style="visibility: hidden; display:none;">  data.description  </p>
+                                        <p style="white-space: pre-line"  contentEditable="true" id="about"> <%= description %> </p>
                                         <button type="button" onClick="updateDescription()" class="btn btn-primary">Actualizar</button>
                                       </div>
 
@@ -622,6 +635,20 @@
             </div>
         </div>
     </div>
+
+    <script> 
+    
+    var description = document.getElementById("about");
+    var fullDescription = document.getElementById("fullDescription");
+
+    description.addEventListener("click" , setFullDescription);
+
+
+    function setFullDescription() {
+        console.log(fullDescription.value);
+    }
+    
+    </script>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
