@@ -188,13 +188,39 @@ async function addSchedule(req , res) {
 
 }
 
+
 router.get('/schedule-chat' , (req , res) => {
     res.render('pages/schedule-chat.html');
 })
 
+
+router.get('/login-exhibitor' , (req , res) => {
+    res.render('pages/login-exhibitor.html')
+})
+
 router.get('/admin' , (req ,res) => {
+
+
+    if(req.query.id == null ) {
+        res.redirect("/login-exhibitor")
+    }
+
+    var instReference = db.collection("institution");
+
+    instReference.get().then((querySnapshot) => {
+        querySnapshot.forEach((instDoc) => {
+            var instDocData = instDoc.data()
+
+
+        })    
+
+    })
+
     res.render('pages/admin.html');
 })
+
+
+
 
 router.get('/exhibitor-page' , (req, res) => {
 
@@ -457,6 +483,8 @@ function registerExhibitor(body , res) {
        description: '',
        email : body.email,
        password : body.password,
+       visits: 33,
+       countContact: 120
    }
 
 
