@@ -197,6 +197,10 @@ router.get('/schedule' , (req ,res) => {
     res.render('pages/schedule.html');
 })
 
+router.get('/webinar', (req , res) => {
+    res.render('pages/webinar.html');
+})
+
 router.get('/login-exhibitor' , (req , res) => {
     res.render('pages/login-exhibitor.html')
 })

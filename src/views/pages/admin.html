@@ -473,7 +473,7 @@
                                         
                                         %>
                                         
-                                        <p id="fullDescription" style="visibility: hidden; display:none;">  data.description  </p>
+                                        <p id="fullDescription" style="visibility: hidden; display:none;">  <%= data.description %>  </p>
                                         <p style="white-space: pre-line"  contentEditable="true" id="about"> <%= description %> </p>
                                         <button type="button" onClick="updateDescription()" class="btn btn-primary">Actualizar</button>
                                       </div>
@@ -639,13 +639,13 @@
     <script> 
     
     var description = document.getElementById("about");
-    var fullDescription = document.getElementById("fullDescription");
+    var fullDescription = document.getElementById("fullDescription").value;
 
     description.addEventListener("click" , setFullDescription);
 
 
     function setFullDescription() {
-        console.log(fullDescription.value);
+        console.log(fullDescription);
     }
     
     </script>
