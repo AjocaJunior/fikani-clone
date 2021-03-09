@@ -302,13 +302,25 @@
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 
+                        <% 
+
+                        name = "";
+                        if(data.name.length > 13) {
+                            name = data.name.substring(0, 13).trim()+"..";
+                        } else {
+                            name = data.name;
+                        }
+                        
+                        %>
+                        
+
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"> Douglas McGee </span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"> <%= name %> </span>
                                 <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                    src="<%= data.imgUrl %>">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -475,7 +487,10 @@
                                         
                                         <p id="fullDescription" style="visibility: hidden; display:none;">  <%= data.description %>  </p>
                                         <p style="white-space: pre-line"  contentEditable="true" id="about"> <%= description %> </p>
-                                        <button type="button" onClick="updateDescription()" class="btn btn-primary">Actualizar</button>
+                                       
+                                        <button type="button" id="btnEdit" class="btn btn-outline-default waves-effect"><i class="fas fa-edit pr-2" aria-hidden="true"></i>Editar</button>                
+                                        <button type="button" id="btnUpdate" class="btn btn-outline-primary waves-effect" style="visibility: hidden;"><i class="fas fa-check pr-2" aria-hidden="true"></i>Actualizar</button>
+
                                       </div>
 
                                 </div>
@@ -532,26 +547,26 @@
 
                                         <div class="form-group row">
                                           <div class="col-sm-12">
-                                            <input type="email" class="form-control" id="inputEmail" value="" placeholder="Email">
+                                            <input type="email" class="form-control" id="inputEmail" value=" <%=data.email %> " placeholder="Email">
                                           </div>
                                         </div>
                     
                                         <div class="form-group row">
                                           <div class="col-sm-12">
-                                            <input type="contact" class="form-control" id="inputContact" value="" placeholder="Contacto">
+                                            <input type="contact" class="form-control" id="inputContact" value="<%=data.contact %>" placeholder="Contacto">
                                           </div>
                                         </div>
 
                                                     
                                         <div class="form-group row">
                                             <div class="col-sm-12">
-                                              <input type="site" class="form-control" id="inputContact" value="" placeholder="Website">
+                                              <input type="site" class="form-control" id="inputContact" value="<%=data.website %>" placeholder="Website">
                                             </div>
                                           </div>
                     
                                         <div class="form-group row">
                                           <div class="col-sm-12">
-                                            <input type="text" class="form-control" id="inputLocalization" value="" placeholder="Localização">
+                                            <input type="text" class="form-control" id="inputLocalization" value="<%=data.location %>" placeholder="Localização">
                                           </div>
                                         </div>
                     
@@ -639,13 +654,23 @@
     <script> 
     
     var description = document.getElementById("about");
-    var fullDescription = document.getElementById("fullDescription").value;
+    var fullDescription = document.getElementById("fullDescription").textContent;
+    var btnEdit = document.getElementById("btnEdit");
+    var btnUpdate = document.getElementById("btnUpdate");
+    var fullDescriptionUpdated = false;
 
+    btnEdit.addEventListener('click' , setFullDescription);
     description.addEventListener("click" , setFullDescription);
 
-
     function setFullDescription() {
-        console.log(fullDescription);
+        description.focus();
+        btnEdit.style.display = "none";
+        btnUpdate.style.visibility = "visible";
+        if(fullDescriptionUpdated == false) {
+            description.innerHTML = fullDescription;
+            fullDescriptionUpdated = true;
+        } 
+      
     }
     
     </script>
