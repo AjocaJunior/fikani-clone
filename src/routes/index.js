@@ -201,6 +201,39 @@ router.get('/webinar', (req , res) => {
     res.render('pages/webinar.html');
 })
 
+router.get('/tables-schedule', (req , res) => {
+
+
+
+
+    if(req.query.id == null) {
+        res.redirect('/login-exhibitor');
+    } 
+
+    var data = [];
+    var dataSchedule = [] ;
+
+    db.collection('institution').doc(''+req.query.id).get().then(function(doc) {
+        data = doc.data()
+    });
+
+    db.collection("institution").doc(req.query.id).collection("schedule").get()
+        .then(querySnapshot => {
+            querySnapshot.forEach(doc => {
+                dataSchedule.push(doc.data())
+        });
+
+        res.render('pages/tables-schedule.html', {
+              data,dataSchedule
+        });
+      
+    });
+
+ 
+
+
+})
+
 router.get('/login-exhibitor' , (req , res) => {
     res.render('pages/login-exhibitor.html')
 })
