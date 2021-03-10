@@ -37,28 +37,25 @@ firebase.initializeApp(firebaseConfig);
 const db = admin.firestore();
 
 // storage
-
 const storage  = new Storage({
     projectId: "fikani",
     keyFilename: serviceAccount 
   });
 
+const bucket = storage.bucket("fikani.appspot.com");
 
 
-  const storageMulter = multer.diskStorage({
+// Multer config
+const storageMulter = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, 'uploads/');
     },
     filename: function (req, file, cb) {
       cb(null, Date.now()+'-'+file.originalname);
     }
-  });
+});
   
-  const upload = multer({ storage: storageMulter });
-  
-
-
-const bucket = storage.bucket("fikani.appspot.com");
+const upload = multer({ storage: storageMulter });
 
 
 router.get('/confer' , (req , res)=> {
@@ -167,14 +164,16 @@ async function addSchedule(req , res) {
     var scheduleUid = uuid();
 
     //todo get user name//
+    //todo get link
     var data = {
         uid : scheduleUid,
         day : req.body.day,
         time : req.body.time,
-        email : req.body.email  
+        email : req.body.email,
+        isHappened : false,
+        linkChat: "",
+        name : ""
     }
-
-    console.log(data)
 
     const newSchedule = await db.collection('institution').doc(req.body.itemId).collection('schedule').doc( scheduleUid ).set(data)
         .then(function() {
@@ -201,10 +200,8 @@ router.get('/webinar', (req , res) => {
     res.render('pages/webinar.html');
 })
 
+
 router.get('/tables-schedule', (req , res) => {
-
-
-
 
     if(req.query.id == null) {
         res.redirect('/login-exhibitor');
@@ -212,6 +209,8 @@ router.get('/tables-schedule', (req , res) => {
 
     var data = [];
     var dataSchedule = [] ;
+
+    console.log(dataSchedule.length);
 
     db.collection('institution').doc(''+req.query.id).get().then(function(doc) {
         data = doc.data()
@@ -229,10 +228,32 @@ router.get('/tables-schedule', (req , res) => {
       
     });
 
- 
-
-
 })
+
+
+router.post('/openVideoChat' , urlencodedParser , (req ,res) => {
+    openVideoChat( req.body.uidExhibitor, req.body.uidSchedule, req.body.link)
+})
+
+
+async function  openVideoChat( uidExhibitor, uidSchedule, link) {
+    var isHappened = {
+        isHappened : true
+    }
+
+  
+    const updateSchedule = await db.collection('institution').doc( req.body.uidExhibitor ).collection('schedule').doc( req.body.uidSchedule ).set(data)
+    .then(function() {
+        res.redirect();               
+    })
+    .catch(function(error) {   
+       
+  
+});
+
+
+}
+
 
 router.get('/login-exhibitor' , (req , res) => {
     res.render('pages/login-exhibitor.html')
@@ -255,8 +276,6 @@ router.get('/admin' , (req ,res) => {
  
 
 })
-
-
 
 
 router.get('/exhibitor-page' , (req, res) => {
@@ -291,61 +310,6 @@ router.post('/register-exhibitor-second', upload.single('file') , (req , res) =>
      let file = path.join(__dirname , "../../uploads/"+req.file.filename);
      uploadFile(path.normalize(file) , req.file.filename , req, res ).catch(console.error);
 })
-
-//getExhibitor();
-
-function getExhibitor() {
-        var instReference = db.collection("institution");
-            //Get them
-        instReference.get().then((querySnapshot) => {
-            //querySnapshot is "iteratable" itself
-            querySnapshot.forEach((instDoc) => {
-                var instDocData = instDoc.data()
-
-            return instDocData
-           
-        })
-
-    })
-
-}
-
-
-// function getUsers() {
-//     //Get them
-//     usersReference.get().then((querySnapshot) => {
-
-//     //querySnapshot is "iteratable" itself
-//     querySnapshot.forEach((userDoc) => {
-
-//         //userDoc contains all metadata of Firestore object, such as reference and id
-//         //console.log(userDoc.id)
-
-//         //If you want to get doc data
-//         var userDocData = userDoc.data()
-
-//         return userDocData
-//         // console.dir(userDocData)
-
-//     })
-// }
-
-
-
-    
-    // const exhibitor = await db.collection('institution')    .doc(institution.uid).set(institution)
-    //      .then(function() {
-    //          // redirect to homepage //
-    //         res.redirect('/register-exhibitor-second?id='+institution.uid);               
-    //     })
-    //     .catch(function(error) {
-    //         //reload page and show error
-    //         res.render('pages/register-exhibitor' , {
-    //             error
-    //     })
-    //  });
-    //     return  null;
-    // }
 
 
 // upload file
@@ -420,7 +384,6 @@ router.post('/register-exhibitor' , urlencodedParser , [
             alert
         })
     } else {
-  
         registerExhibitor(req.body, res);
     }
 })
@@ -436,8 +399,8 @@ router.post('/login' , urlencodedParser, [
 ] ,(req , res)=> {
    const errors = validationResult(req)
    if(!errors.isEmpty()) {
-    const alert = errors.array();
-              
+
+    const alert = errors.array();         
     res.render('pages/login' , {
         alert
     })
@@ -495,13 +458,8 @@ router.post('/register' , urlencodedParser, [
       var  displayName = req.body.name +" "+req.body.last_name;
       var  urlphoto = "https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/perfil%2Funnamed.jpg?alt=media&token=234789f8-f514-4ef0-aee4-36f534f03507"; //default perfil img
 
-      req.session.uid = 1;
-
-      console.log(req.session.uid);
-
       register(req.body.name , req.body.last_name, req.body.residence,req.body.email.trim() , req.body.contact , req.body.password.trim() , displayName, urlphoto, res ) 
 
-     
     }
 
 });
@@ -545,6 +503,7 @@ function registerExhibitor(body , res) {
 
 }
  
+// add institution in database
 async function  createInstitution(institution , res ) {
 
     const newInstitution = await db.collection('institution').doc(institution.uid).set(institution)
@@ -575,8 +534,6 @@ function register(name , last_name, localization,email , phoneNumber , password 
         disabled: false
     };
 
-
-
   admin
   .auth()
   .createUser(user)
@@ -599,7 +556,7 @@ function register(name , last_name, localization,email , phoneNumber , password 
 
 
 async function registerUser(user , res) {
-    delete user.password;
+    delete user.password; // delete password in user class
     const newUser = await db.collection('users').doc(user.uid).set(user)
          .then(function() {
              // redirect to homepage //

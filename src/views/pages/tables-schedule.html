@@ -181,13 +181,25 @@
                        
                         <div class="topbar-divider d-none d-sm-block"></div>
 
+                        <% 
+
+                        name = "";
+                        if(data.name.length > 13) {
+                            name = data.name.substring(0, 13).trim()+"..";
+                        } else {
+                            name = data.name;
+                        }
+                        
+                        %>
+                        
+
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"> <%=name%> </span>
                                 <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                    src=" <%= data.imgUrl %>">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -254,19 +266,43 @@
                                     </tfoot>
                                     <tbody>
 
+                                    <% if(typeof dataSchedule != 'undefined' ) { %>
+
+                                       <% if(dataSchedule.length == 0) { %>
+                                            <td class="text-danger">Agenda vazia</td>
+                                        <%} %>
+                                         
                                         
+                                        <% dataSchedule.forEach(function(schedule) { %>                         
                                         <tr>
                                             <td>Tiger Nixon</td>
-                                            <td>System Architect</td>
-                                            <td>Edinburgh</td>
-                                            <td>61</td>
+                                            <td><%= schedule.email %> </td>
+                                            <td><%= schedule.day   %> </td>
+                                            <td><%= schedule.time  %> </td>
                                             <td> 
-                                                <button type="button" class="btn btn-outline-primary waves-effect col-12" ><i class="fas  fa-video pr-2" aria-hidden="true"></i>Iniciar</button>
+                                                <form method="POST" id="openChatForm" action="/openVideoChat">
+                                                    <input type="hidden"  name="uidSchedule" value="<%= schedule.uid %>" />
+                                                    <input type="hidden" name="uidExhibitor" value="<%= data.uid %>" />
+                                                    <input type="hidden" name="link" value="<%= schedule.linkChat %>" />
+                                                    <button type="submit" onclick="openChat()"  class="btn btn-outline-primary waves-effect col-12">  <i class="fas  fa-video pr-2" aria-hidden="true"></i>Iniciar  </button>
+                                                </form>
                                              </td>
                                         </tr>
-
+                                        <% }) %>
+                                    <% } else { %>
+                                        
+                                       
+                                        <tr>
+                                            <td>Tiger Nixon</td>
+                                            <!-- <td> ff </td>
+                                            <td><%= schedule.day   %> </td>
+                                            <td><%= schedule.time  %> </td> -->
+                                        
+                                        </tr>
+                                        
+                                    <% } %>
                                   
-                                    </tbody>
+                                 </tbody>
                                 </table>
                             </div>
                         </div>
@@ -319,6 +355,11 @@
         </div>
     </div>
 
+
+    <!-- custom lib popup -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -335,6 +376,41 @@
 
     <!-- Page level custom scripts -->
     <script src="js/demo/datatables-demo.js"></script>
+
+    <script>
+
+        function openChat() {
+
+            let timerInterval
+            Swal.fire({
+            title: 'A preparar',
+            html: 'poderá participar dentro de <b></b> milissegundos.',
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                timerInterval = setInterval(() => {
+                const content = Swal.getContent()
+                if (content) {
+                    const b = content.querySelector('b')
+                    if (b) {
+                    b.textContent = Swal.getTimerLeft()
+                    }
+                }
+                }, 100)
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+            }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log('I was closed by the timer')
+            }
+            })
+
+        }
+    </script>
 
 </body>
 
