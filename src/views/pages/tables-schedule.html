@@ -81,7 +81,7 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Minha galeria:</h6>
-                        <a class="collapse-item" href="utilities-color.html"> Ver fotos </a>
+                        <a class="collapse-item" href="/gallery"> Ver fotos </a>
                         <a class="collapse-item" href="utilities-border.html"> Publicar fotos</a>
                     </div>
                 </div>
@@ -275,7 +275,7 @@
                                         
                                         <% dataSchedule.forEach(function(schedule) { %>                         
                                         <tr>
-                                            <td>Tiger Nixon</td>
+                                            <td><%= schedule.name %></td>
                                             <td><%= schedule.email %> </td>
                                             <td><%= schedule.day   %> </td>
                                             <td><%= schedule.time  %> </td>
@@ -284,7 +284,12 @@
                                                     <input type="hidden"  name="uidSchedule" value="<%= schedule.uid %>" />
                                                     <input type="hidden" name="uidExhibitor" value="<%= data.uid %>" />
                                                     <input type="hidden" name="link" value="<%= schedule.linkChat %>" />
-                                                    <button type="submit" onclick="openChat()"  class="btn btn-outline-primary waves-effect col-12">  <i class="fas  fa-video pr-2" aria-hidden="true"></i>Iniciar  </button>
+                                                    <% if(schedule.isHappened != true){%>
+                                                        <button type="submit" onclick="openChat()"  class="btn btn-outline-primary waves-effect col-12">  <i class="fas  fa-video pr-2" aria-hidden="true"></i>Iniciar </button>
+                                                    <% } else { %>
+                                                        <button type="submit" onclick="openChat()"  class="btn btn-outline-info waves-effect col-12">  <i class="fas  fa-check pr-2" aria-hidden="true"></i>Iniciado </button>
+                                                    <% }%>
+                                                   
                                                 </form>
                                              </td>
                                         </tr>

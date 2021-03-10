@@ -124,10 +124,16 @@ router.get('/login' , (req , res)=> {
     res.render('pages/login');
 });
 
+
+
 router.get('/register' , (req , res)=> {
     res.render('pages/register');
 });
 
+router.get('/gallery', (req , res) => {
+    res.locals.title = "Galeria";
+    res.render('pages/gallery.html');
+})
 
 router.get('/exhibitor' , (req , res) => {
   
@@ -171,8 +177,8 @@ async function addSchedule(req , res) {
         time : req.body.time,
         email : req.body.email,
         isHappened : false,
-        linkChat: "",
-        name : ""
+        linkChat: "https://meet.google.com/zpd-jprv-vre",
+        name : "Agostinho Dos Santos"
     }
 
     const newSchedule = await db.collection('institution').doc(req.body.itemId).collection('schedule').doc( scheduleUid ).set(data)
@@ -232,17 +238,16 @@ router.get('/tables-schedule', (req , res) => {
 
 
 router.post('/openVideoChat' , urlencodedParser , (req ,res) => {
-    openVideoChat( req.body.uidExhibitor, req.body.uidSchedule, req.body.link)
+    openVideoChat( req.body.uidExhibitor, req.body.uidSchedule, req.body.link , res)
 })
 
 
-async function  openVideoChat( uidExhibitor, uidSchedule, link) {
+async function  openVideoChat( uidExhibitor, uidSchedule, link , res) {
     var isHappened = {
         isHappened : true
     }
 
-  
-    const updateSchedule = await db.collection('institution').doc( req.body.uidExhibitor ).collection('schedule').doc( req.body.uidSchedule ).set(data)
+    const updateSchedule = await db.collection('institution').doc( uidExhibitor ).collection('schedule').doc( uidSchedule ).update(isHappened)
     .then(function() {
         if(link != null && link != "") {
             res.redirect(link);       
