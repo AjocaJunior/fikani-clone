@@ -244,12 +244,22 @@ async function  openVideoChat( uidExhibitor, uidSchedule, link) {
   
     const updateSchedule = await db.collection('institution').doc( req.body.uidExhibitor ).collection('schedule').doc( req.body.uidSchedule ).set(data)
     .then(function() {
-        res.redirect();               
+        if(link != null && link != "") {
+            res.redirect(link);       
+        } else {
+            res.redirect("/404");   
+        }
+               
     })
     .catch(function(error) {   
-       
-  
-});
+
+        if(link != null && link != "") {
+            res.redirect(link);       
+        } else {
+            res.redirect("/404");   
+        }
+
+    });
 
 
 }
