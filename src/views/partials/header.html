@@ -1,3 +1,4 @@
+
 <header class="section page-header">
   <!--RD Navbar-->
   <div class="rd-navbar-wrap">
@@ -18,15 +19,15 @@
           <div class="rd-navbar-main-element">
             <div class="rd-navbar-nav-wrap">
               <ul class="rd-navbar-nav">
-                <li class="rd-nav-item active"><a class="rd-nav-link" href="/">Home</a>
+                <li class="rd-nav-item <%= typeof currentMenu != 'undefined' && currentMenu === 'home' ? 'active' : '' %>"><a class="rd-nav-link" href="/">Home</a>
                  
                 </li>
                
-                <li class="rd-nav-item"><a class="rd-nav-link" href="/info">Informações</a>
+                <li class="rd-nav-item <%= typeof currentMenu != 'undefined' && currentMenu === 'info' ? 'active' : '' %>"><a class="rd-nav-link" href="/info">Informações</a>
                 </li>
-                <li class="rd-nav-item"><a class="rd-nav-link" href="/schedule">Agenda</a>
+                <li class="rd-nav-item <%= typeof currentMenu != 'undefined' && currentMenu === 'schedule' ? 'active' : '' %>"><a class="rd-nav-link" href="/schedule">Agenda</a>
                 </li>
-                <li class="rd-nav-item"><a class="rd-nav-link" href="/confer">Feira</a>
+                <li class="rd-nav-item <%= typeof currentMenu != 'undefined' && currentMenu === 'confer' ? 'active' : '' %>"><a class="rd-nav-link" href="/confer">Feira</a>
                   <ul class="rd-menu rd-navbar-dropdown">
                     <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="/exhibitor">Exposição</a>
                     </li>
@@ -37,7 +38,7 @@
                   </ul>
                 </li>
 
-                <li class="rd-nav-item"><a class="rd-nav-link" href="/buyers">Buyers</a>
+                <li class="rd-nav-item <%= typeof currentMenu != 'undefined' && currentMenu === 'buyers' ? 'active' : '' %>"><a class="rd-nav-link" href="/buyers">Buyers</a>
                   <ul class="rd-menu rd-navbar-dropdown">
                     <li class="rd-dropdown-item"><a class="rd-dropdown-link" href="/buyers"> Buyers</a>
                     </li>
@@ -46,7 +47,7 @@
                   </ul>
                 </li>
 
-                <li class="rd-nav-item"><a class="rd-nav-link" href="/contact">Contacto</a>
+                <li class="rd-nav-item  <%= typeof currentMenu != 'undefined' && currentMenu === 'buyers' ? 'contact' : '' %>"><a class="rd-nav-link" href="/contact">Contacto</a>
                 </li>
               </ul>
             </div>
