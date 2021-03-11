@@ -129,6 +129,11 @@ router.get('/buyers', (req, res) => {
     res.render('pages/buyers.html')
 })
 
+router.get('/perfil' , (req , res) => {
+    res.locals.title = "Perfil";
+    res.render("pages/perfil.html");
+})
+
 router.get('/about' , (req , res) => {
     res.render('pages/about.html');
 })
