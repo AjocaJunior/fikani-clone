@@ -124,7 +124,14 @@ router.get('/login' , (req , res)=> {
     res.render('pages/login');
 });
 
+router.get('/buyers', (req, res) => {
+    res.locals.title = "Buyers";
+    res.render('pages/buyers.html')
+})
 
+router.get('/about' , (req , res) => {
+    res.render('pages/about.html');
+})
 
 router.get('/register' , (req , res)=> {
     res.render('pages/register');
