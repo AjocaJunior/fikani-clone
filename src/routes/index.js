@@ -40,11 +40,13 @@ function authChecker(req, res, next) {
         if(req.path == "/register-exhibitor" ||
            req.path == "/login-exhibitor" || 
            req.path == "/admin" || 
-           req.path == "/tables-schedule"
+           req.path == "/tables-schedule" ||
+           req.path == "/register" || 
+           req.path == "/login"
         ) {
             next();
          } else {
-            res.redirect("/register");
+            res.redirect("/login");
         }
        
     } else {
@@ -94,6 +96,12 @@ const storageMulter = multer.diskStorage({
   
 const upload = multer({ storage: storageMulter });
 
+
+
+router.get("/sessionLogout", (req, res) => {
+    res.clearCookie("session");
+    res.redirect("/login");
+});
 
 router.get('/confer' , (req , res)=> {
     res.locals.title = "Conferencia";
