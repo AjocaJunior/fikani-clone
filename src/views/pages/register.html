@@ -196,21 +196,24 @@
     </div>
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
+    
     <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+    <!-- custom lib popup -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
 
 
     <script>
 
-      var firebaseConfig = {
+        var firebaseConfig = {
             apiKey: "AIzaSyBEJWJCm8OnSYYu2-VYqeRi03JprBcaUkg",
             authDomain: "fikani.firebaseapp.com",
             projectId: "fikani",
             storageBucket: "fikani.appspot.com",
             messagingSenderId: "146961453473",
             appId: "1:146961453473:web:7fec98e5503384f08c7be0",
-     
         };
 
         firebase.initializeApp(firebaseConfig);
@@ -220,6 +223,7 @@
         document.getElementById("registerForm")
                 .addEventListener("submit" , (event) => {
                   event.preventDefault();
+                  progress();
                   const name = event.target.name.value;
                   const last_name = event.target.last_name.value;
                   const residence = event.target.residence.value;
@@ -241,7 +245,7 @@
                             "Content-Type": "application/json",
                             "CSRF-Token": Cookies.get("XSRF-TOKEN"),
                           },
-                          body: JSON.stringify({ idToken }),
+                          body: JSON.stringify({ idToken}),
                         });
                       });
                     })
@@ -249,10 +253,61 @@
                       return firebase.auth().signOut();
                     })
                     .then(() => {
-                      window.location.assign("/");
+
+                      let data = {
+                        name: name,
+                        last_name: last_name,
+                        residence: residence,
+                        email: email,
+                        contact: contact,
+                        displayName : displayName,
+                        urlphoto : ""
+                      };
+
+                      fetch("/register", {
+                          method: "POST",
+                          headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json",
+                            "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+                          },
+                          body: JSON.stringify(data),
+                      });
+                          
                     });
                   return false;
                 });
+
+
+                function progress() {
+                  let timerInterval
+                  Swal.fire({
+                    title: 'Cadastrando!',
+                    html: '',
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                      Swal.showLoading()
+                      timerInterval = setInterval(() => {
+                        const content = Swal.getContent()
+                        if (content) {
+                          // const b = content.querySelector('b')
+                          // if (b) {
+                          //   b.textContent = Swal.getTimerLeft()
+                          // }
+                        }
+                      }, 100)
+                    },
+                    willClose: () => {
+                      clearInterval(timerInterval)
+                    }
+                  }).then((result) => {
+                    /* Read more about handling dismissals below */
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                      console.log('I was closed by the timer')
+                    }
+                  })
+                }
     </script>
   </body>
 </html>

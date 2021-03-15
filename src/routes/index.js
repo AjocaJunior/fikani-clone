@@ -20,7 +20,6 @@ const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
 const express = require("express");
 
-
 const csrfMiddleware = csrf({ cookie: true });
 
 router.use(bodyParser.json());
@@ -35,23 +34,20 @@ router.all("*", (req, res, next) => {
 // middleware that checks if the user is logged in
 function authChecker(req, res, next) {
     const sessionCookie = req.cookies.session || "";
-      if(sessionCookie == "") {
 
-        if(req.path == "/register-exhibitor" ||
-           req.path == "/login-exhibitor" || 
-           req.path == "/admin" || 
-           req.path == "/tables-schedule" ||
-           req.path == "/register" || 
-           req.path == "/login"
-        ) {
-            next();
-         } else {
+    if(req.path == "/perfil" || 
+       req.path == "/" || 
+       req.path == "/exhibitor-page" ||
+       req.path == "/admin"
+       ) {
+         if(sessionCookie == "") {
             res.redirect("/login");
-        }
-       
-    } else {
-        next();
+         }
+        next()
+    }else {
+        next()
     }
+
 }
 
 router.use(authChecker)
@@ -183,15 +179,25 @@ const sessionCookie = req.cookies.session || "";
     .auth()
     .verifySessionCookie(sessionCookie, true /** checkRevoked */)
     .then((user) => {
-      console.log(user.uid);
-      res.locals.title = "Perfil";
-      res.render("pages/perfil.html");
+
+        db.collection('users').doc(user.uid).get().then(function(doc) {
+            var data = doc.data()
+            res.locals.title = "Perfil";  
+            
+            console.log(data);
+            res.render('pages/perfil.html' , {
+                data
+            });
+        });
+   
     })
     .catch((error) => {
       res.redirect("/register");
     });
 
 })
+
+
 
 router.get('/about' , (req , res) => {
     res.render('pages/about.html');
@@ -535,44 +541,40 @@ router.post('/login' , urlencodedParser, [
 })
 
 // register post
-router.post('/register' , urlencodedParser, [
-    check('name', 'O nome deve ter 3 letras no minimo')
-        .exists()
-        .isLength({min: 3}),
-    check('email', 'Email invalido')
-        .isEmail()
-        .normalizeEmail(),
-    check('password', 'O password deve ter 6 letras no minimo')
-        .exists()
-        .isLength({min:6}),
+router.post('/register' , (req, res) => { 
+    const sessionCookie = req.cookies.session || "";
+    var data = req.body;
 
-    check('password' , "O password deve ter letras")
-        .isString(),
-    check('contact' , 'Contacto invalido')
-        .exists()
-        .isLength({min:5})
-] ,(req , res)=> {
-    
-    const errors = validationResult(req)
-    if(!errors.isEmpty()){
-         
-        const alert = errors.array();
-              
-        res.render('pages/register' , {
-            alert
-        })
-
-    }else {
-
-      var  displayName = req.body.name +" "+req.body.last_name;
-      var  urlphoto = "https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/perfil%2Funnamed.jpg?alt=media&token=234789f8-f514-4ef0-aee4-36f534f03507"; //default perfil img
-
-      register(req.body.name , req.body.last_name, req.body.residence,req.body.email.trim() , req.body.contact , req.body.password.trim() , displayName, urlphoto, res ) 
-
-    }
+    admin
+    .auth()
+    .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+    .then((user) => {
+        data["uid"] = user.uid;
+        addUser(data ,res);
+    })
+    .catch((error) => {
+        res.redirect("/register" , {
+            error
+        });
+    });
 
 });
 
+// add user to the database //
+async function addUser(data , res) {
+    const newUser = await db.collection('users').doc(data.uid).set(data)
+    .then(function() {
+        // todo redirect to home
+       res.redirect('/');            
+    })
+   .catch(function(error) {
+    console.log("errpr")
+       res.render('pages/register' , {
+           error
+       })
+   });
+
+}
 
 function registerExhibitor(body , res) {
 

@@ -2,9 +2,6 @@
 <html class="wide" lang="en">
   <head>
     <%- include('../partials/head.html') %>
-    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js" defer ></script>
-    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js" defer ></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js" defer ></script>
 
   </head>
   <body>
@@ -102,10 +99,14 @@
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
 
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js"  ></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+
 
     <script>
-      window.addEventListener("DOMContentLoaded", () => {
-        const firebaseConfig = {
+     
+      const firebaseConfig = {
           apiKey: "AIzaSyBEJWJCm8OnSYYu2-VYqeRi03JprBcaUkg",
           authDomain: "fikani.firebaseapp.com",
           projectId: "fikani",
@@ -115,7 +116,6 @@
         };
 
         firebase.initializeApp(firebaseConfig);
-
         firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
 
         document
@@ -129,6 +129,7 @@
               .auth()
               .signInWithEmailAndPassword(login, password)
               .then(({ user }) => {
+                console.log(user);
                 return user.getIdToken().then((idToken) => {
                   return fetch("/sessionLogin", {
                     method: "POST",
@@ -149,7 +150,7 @@
               });
             return false;
           });
-      });
+
     </script>
 
   </body>
