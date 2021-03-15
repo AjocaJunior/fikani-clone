@@ -57,7 +57,7 @@
                   
                   
                          
-              <form action="/register" method="POST">
+              <form id="registerForm" method="POST">
                 <div class="contact_input_area">
                     <div class="row">
                         <!-- Form Group -->
@@ -72,7 +72,7 @@
                          <div class="col-12 col-lg-6">
                             <div class="form-group">
                                 <input type="text" class="form-control mb-30" name="last_name" id="last_name"
-                                    placeholder="Apelido">
+                                    placeholder="Apelido" required>
                             </div>
                         </div>
 
@@ -81,7 +81,7 @@
                             <div class="form-group">
                                 <input type="text" class="form-control mb-30 textbox-n"
                                     onfocus="(this.type='date')" name="date_of_birth" id="date_of_birth"
-                                    placeholder="Data de nascimento">
+                                    placeholder="Data de nascimento" required>
                             </div>
                         </div>
 
@@ -90,7 +90,7 @@
                         <div class="col-12 col-lg-6">
                             <div class="form-group">
                                 <input type="text" class="form-control mb-30" name="residence"
-                                    id="residence" placeholder="Residência">
+                                    id="residence" placeholder="Residência" required>
                             </div>
                         </div>
 
@@ -100,7 +100,7 @@
                         <div class="col-12 col-lg-6">
                             <div class="form-group">
                                 <input type="text" class="form-control mb-30" name="contact"
-                                    id="contact" placeholder="Contacto">
+                                    id="contact" placeholder="Contacto" required>
                             </div>
                         </div>
 
@@ -109,14 +109,14 @@
                         <div class="col-12 col-lg-6">
                             <div class="form-group">
                                 <input type="email" class="form-control mb-30" name="email" id="email"
-                                    placeholder="E-mail">
+                                    placeholder="E-mail" required>
                             </div>
                         </div>
                         <!-- Form Group -->
                         <div class="col-12 col-lg-6">
                             <div class="form-group">
                                 <input type="password" class="form-control mb-30" name="password"
-                                    id="password" placeholder="Password">
+                                    id="password" placeholder="Password" required>
                             </div>
                         </div>
 
@@ -124,7 +124,7 @@
                          <div class="col-12 col-lg-6">
                           <div class="form-group">
                               <input type="password" class="form-control mb-30" name="confirme-password"
-                                  id="confirme-password" placeholder="Confirmar password">
+                                  id="confirme-password" placeholder="Confirmar password" required>
                           </div>
                       </div>
                       
@@ -196,9 +196,63 @@
     </div>
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+
 
     <script>
-        var btn = document.findViewById("login");
+
+      var firebaseConfig = {
+            apiKey: "AIzaSyBEJWJCm8OnSYYu2-VYqeRi03JprBcaUkg",
+            authDomain: "fikani.firebaseapp.com",
+            projectId: "fikani",
+            storageBucket: "fikani.appspot.com",
+            messagingSenderId: "146961453473",
+            appId: "1:146961453473:web:7fec98e5503384f08c7be0",
+     
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+
+        document.getElementById("registerForm")
+                .addEventListener("submit" , (event) => {
+                  event.preventDefault();
+                  const name = event.target.name.value;
+                  const last_name = event.target.last_name.value;
+                  const residence = event.target.residence.value;
+                  const email = event.target.email.value;
+                  const contact = event.target.contact.value;
+                  const password = event.target.password.value;
+                  const displayName = name.trim() +" "+last_name.trim();
+                  const urlphoto = "";
+
+                  firebase
+                    .auth()
+                    .createUserWithEmailAndPassword(email, password)
+                    .then(({ user }) => {
+                      return user.getIdToken().then((idToken) => {
+                        return fetch("/sessionLogin", {
+                          method: "POST",
+                          headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json",
+                            "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+                          },
+                          body: JSON.stringify({ idToken }),
+                        });
+                      });
+                    })
+                    .then(() => {
+                      return firebase.auth().signOut();
+                    })
+                    .then(() => {
+                      window.location.assign("/");
+                    });
+                  return false;
+                });
     </script>
   </body>
 </html>

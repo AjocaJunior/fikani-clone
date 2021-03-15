@@ -16,6 +16,43 @@ const formidable = require('formidable');
 const urlencodedParser = bodyParser.urlencoded({extended:false})
 var serviceAccount = require('../../fikani-firebase-adminsdk-nhqwx-30a29e774a.json');
 const { render } = require('ejs');
+const cookieParser = require("cookie-parser");
+const csrf = require("csurf");
+const express = require("express");
+
+
+const csrfMiddleware = csrf({ cookie: true });
+
+router.use(bodyParser.json());
+router.use(cookieParser());
+router.use(csrfMiddleware);
+
+router.all("*", (req, res, next) => {
+    res.cookie("XSRF-TOKEN", req.csrfToken());
+    next();
+});
+
+// middleware that checks if the user is logged in
+function authChecker(req, res, next) {
+    const sessionCookie = req.cookies.session || "";
+      if(sessionCookie == "") {
+
+        if(req.path == "/register-exhibitor" ||
+           req.path == "/login-exhibitor" || 
+           req.path == "/admin" || 
+           req.path == "/tables-schedule"
+        ) {
+            next();
+         } else {
+            res.redirect("/register");
+        }
+       
+    } else {
+        next();
+    }
+}
+
+router.use(authChecker)
 
 // Initialize Firebase admin
 admin.initializeApp({
@@ -98,6 +135,8 @@ router.get('/' , (req , res)=> {
 });
 
 
+
+
 router.get('/info' , (req , res) => {
     res.locals.title = "Informações";
     res.render('pages/info')
@@ -130,8 +169,20 @@ router.get('/buyers', (req, res) => {
 })
 
 router.get('/perfil' , (req , res) => {
-    res.locals.title = "Perfil";
-    res.render("pages/perfil.html");
+const sessionCookie = req.cookies.session || "";
+
+  admin
+    .auth()
+    .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+    .then((user) => {
+      console.log(user.uid);
+      res.locals.title = "Perfil";
+      res.render("pages/perfil.html");
+    })
+    .catch((error) => {
+      res.redirect("/register");
+    });
+
 })
 
 router.get('/about' , (req , res) => {
@@ -146,6 +197,29 @@ router.get('/gallery', (req , res) => {
     res.locals.title = "Galeria";
     res.render('pages/gallery.html');
 })
+
+
+router.post("/sessionLogin", (req, res) => {
+    const idToken = req.body.idToken.toString();
+  
+    const expiresIn = 60 * 60 * 24 * 5 * 1000;
+  
+    admin
+      .auth()
+      .createSessionCookie(idToken, { expiresIn })
+      .then(
+        (sessionCookie) => {
+          const options = { maxAge: expiresIn, httpOnly: true };
+          res.cookie("session", sessionCookie, options);
+          res.end(JSON.stringify({ status: "success" }));
+        },
+        (error) => {
+          res.status(401).send("UNAUTHORIZED REQUEST!");
+        }
+      );
+  });
+  
+
 
 router.get('/exhibitor' , (req , res) => {
   

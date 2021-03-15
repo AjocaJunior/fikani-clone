@@ -14,8 +14,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 app.engine('html',require('ejs').renderFile);
 
-const urlencodedParser = bodyParser.urlencoded({extended:false})
-
 // routes
 // app.use(session({
 //     secret: 'secret-key',
