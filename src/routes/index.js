@@ -262,11 +262,13 @@ router.get('/exhibitor' , (req , res) => {
 
 
 router.post('/schedule-chat', urlencodedParser , (req , res) => {
-    addSchedule(req , res);
+    console.log(req.body)
+    // todo addSchedule(req , res);
 })
 
 
 async function addSchedule(req , res) {
+    console.log("Console schedule chat");
     var scheduleUid = uuid();
     const sessionCookie = req.cookies.session || "";
 
@@ -275,46 +277,80 @@ async function addSchedule(req , res) {
         .verifySessionCookie(sessionCookie, true )
         .then((user) => {
 
+            console.log(user);
             db.collection('users').doc(user.uid).get().then(function(doc) {
-                var data = doc.data()  
-        });
+                var userData = doc.data()  
+
+                var data = {
+                    uid : scheduleUid,
+                    userUid: userData,
+                    exhibitorUid: req.body.itemId,
+                    day : req.body.day,
+                    time : req.body.time,
+                    email : req.body.email,
+                    isHappened : false,
+                    linkChat: "https://meet.google.com/zpd-jprv-vre", /** todo get link */
+                    name : userData.displayName
+                } 
+
+                scheduleChat(data, res);
+            });
     
     })
      .catch((error) => {
         res.redirect("/register");
     });
+ 
+}
 
 
-
-
-
-    //todo get user name//
-    //todo get link
-    var data = {
-        uid : scheduleUid,
-        day : req.body.day,
-        time : req.body.time,
-        email : req.body.email,
-        isHappened : false,
-        linkChat: "https://meet.google.com/zpd-jprv-vre",
-        name : "Agostinho Dos Santos"
-    }
-
-    const newSchedule = await db.collection('institution').doc(req.body.itemId).collection('schedule').doc( scheduleUid ).set(data)
+async function scheduleChat(data, res) {
+    
+    await db.collection('institution').doc(data.exhibitorUid).collection('schedule').doc( data.scheduleUid ).set(data)
         .then(function() {
-            res.redirect('exhibitor-page?id='+req.body.itemId);               
+            res.redirect('exhibitor-page?id='+data.exhibitorUid);               
         })
         .catch(function(error) {   
-            res.render('pages/schedule-chat?id='+req.body.itemId , {
+            res.render('pages/schedule-chat?id='+data.exhibitorUid , {
                 error
         })
     });
+
+   await db.collection('users').doc(data.exhibitorUid).collection('schedule').doc( data.scheduleUid ).set(data)
+        .then(function() {
+            res.redirect('exhibitor-page?id='+data.exhibitorUid);               
+        })
+        .catch(function(error) {   
+            res.render('pages/schedule-chat?id='+data.exhibitorUid , {
+                error
+        })
+    })
+
+    console.log(newSchedule)
 
 }
 
 
 router.get('/schedule-chat' , (req , res) => {
-    res.render('pages/schedule-chat.html');
+ const sessionCookie = req.cookies.session || "";
+  admin
+    .auth()
+    .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+    .then((user) => {
+
+        db.collection('users').doc(user.uid).get().then(function(doc) {
+            var data = doc.data()
+            res.locals.title = "Agendar";  
+            res.render('pages/schedule-chat.html' , {
+                data
+            });
+        });
+   
+    })
+    .catch((error) => {
+      res.redirect("/login");
+    });
+
 })
 
 router.get('/schedule' , (req ,res) => {
