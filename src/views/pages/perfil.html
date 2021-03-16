@@ -40,6 +40,7 @@
 
                 <section>
                   <section class="section" style="margin-top: 40px;">
+                    <h3>Agenda</h3>
                     <div >
                       <div class="table-custom-responsive">
                         <table class="table-custom table-custom-bordered">
@@ -52,38 +53,23 @@
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                              <td>Item #1</td>
-                              <td>Description</td>
-                              <td>Subtotal</td>
-                              <td> 
-                                 <button type="submit" onclick="openChat()"  class="btn btn-outline-primary waves-effect col-12">  <i class="fas  fa-video pr-2" aria-hidden="true"></i>Iniciar </button>
-                               </td>
-                            </tr>
-                            <tr>
-                              <td>Item #2</td>
-                              <td>Description</td>
-                              <td>Discount</td>
-                              <td>
-                                <button type="submit" onclick="openChat()"  class="btn btn-outline-primary waves-effect col-12">  <i class="fas  fa-video pr-2" aria-hidden="true"></i>Iniciar </button>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>Item #3</td>
-                              <td>Description</td>
-                              <td>Shipping</td>
-                              <td>
-                                <button type="submit" onclick="openChat()"  class="btn btn-outline-primary waves-effect col-12">  <i class="fas  fa-video pr-2" aria-hidden="true"></i>Iniciar </button>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>Item #4</td>
-                              <td>Description</td>
-                              <td>Tax</td>
-                              <td>
-                                <button type="submit" onclick="openChat()"  class="btn btn-outline-primary waves-effect col-12">  <i class="fas  fa-video pr-2" aria-hidden="true"></i>Iniciar </button>
-                              </td>
-                            </tr>
+
+                            <% if(typeof dataSchedule != 'undefined' && dataSchedule.length != 0 ) { %>
+                              <% dataSchedule.forEach(function(schedule) { %>
+                                
+                                <tr>
+                                  <td><%= schedule.name  %></td>
+                                  <td><%= schedule.day   %></td>
+                                  <td><%= schedule.time  %></td>
+                                  <td> 
+                                     <button type="submit" onclick="openChat()"  class="btn btn-outline-primary waves-effect col-12">  <i class="fas  fa-video pr-2" aria-hidden="true"></i>Iniciar </button>
+                                   </td>
+                                </tr>
+
+                              <% }) %>
+                            <% } else {%>  
+                              <td class="text-danger">Agenda vazia</td>
+                            <% } %>
                           </tbody>
                           <!-- <tfoot>
                             <tr>
@@ -115,11 +101,10 @@
                         </a>
                        
                       </div>
-                      <h5 class="speaker-classic-title text-center" >Agostinho dos santos</h5>
+                      <h5 class="speaker-classic-title text-center" > <%= data.name %> </h5>
                       <p class="text-center text-primary">Editar</p>
                     </div>
              
-
 
                 </div>
                 <div class="col-sm-7 col-md-6 col-lg-12">
@@ -132,7 +117,7 @@
                           <div class="unit-body">
                             <p class="post-mini-author"> <a href="#">Localização</a>
                             </p>
-                            <p class="post-mini-title">Maputo, Mocambique.</p>
+                            <p class="post-mini-title"> <%= data.location %> </p>
                           </div>
                         </div>
                       </div>
@@ -143,7 +128,7 @@
                           <div class="unit-body">
                             <p class="post-mini-author"> <a href="#">Contacto</a>
                             </p>
-                            <p class="post-mini-title">(+258) 843 655 568</p>
+                            <p class="post-mini-title"> <%= data.contact %> </p>
                           </div>
                         </div>
                       </div>
@@ -154,7 +139,7 @@
                           <div class="unit-body">
                             <p class="post-mini-author"><a href="#">E-mail</a>
                             </p>
-                            <p class="post-mini-title">agostinhodossantos27@gmail.com</p>
+                            <p class="post-mini-title"> <%= data.email %> </p>
                           </div>
                         </div>
                       </div>

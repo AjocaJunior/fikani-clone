@@ -268,6 +268,25 @@ router.post('/schedule-chat', urlencodedParser , (req , res) => {
 
 async function addSchedule(req , res) {
     var scheduleUid = uuid();
+    const sessionCookie = req.cookies.session || "";
+
+    admin
+        .auth()
+        .verifySessionCookie(sessionCookie, true )
+        .then((user) => {
+
+            db.collection('users').doc(user.uid).get().then(function(doc) {
+                var data = doc.data()  
+        });
+    
+    })
+     .catch((error) => {
+        res.redirect("/register");
+    });
+
+
+
+
 
     //todo get user name//
     //todo get link
