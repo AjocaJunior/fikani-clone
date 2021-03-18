@@ -280,14 +280,15 @@
                                             <td><%= schedule.day   %> </td>
                                             <td><%= schedule.time  %> </td>
                                             <td> 
-                                                <form method="POST" id="openChatForm" action="/openVideoChat">
-                                                    <input type="hidden"  name="uidSchedule" value="<%= schedule.uid %>" />
-                                                    <input type="hidden" name="uidExhibitor" value="<%= data.uid %>" />
-                                                    <input type="hidden" name="link" value="<%= schedule.linkChat %>" />
+                                                <form method="POST" id="openChatForm" onsubmit="startMeeting()">  <!-- action="/openVideoChat" -->
+                                                    <input type="hidden"  name="uidSchedule" id="uidSchedule" value="<%= schedule.uid %>" />
+                                                    <input type="hidden" name="uidExhibitor" id="uidExhibitor" value="<%= data.uid %>" />
+                                                    <input type="hidden" name="userUid" id="userUid" value="<%= schedule.userUid %>" />
+                                                    <input type="hidden" name="link" id="link" value="<%= schedule.linkChat %>" />
                                                     <% if(schedule.isHappened != true){%>
-                                                        <button type="submit" onclick="openChat()"  class="btn btn-outline-primary waves-effect col-12">  <i class="fas  fa-video pr-2" aria-hidden="true"></i>Iniciar </button>
+                                                        <button type="submit"  class="btn btn-outline-primary waves-effect col-12">  <i class="fas  fa-video pr-2" aria-hidden="true"></i>Iniciar </button>
                                                     <% } else { %>
-                                                        <button type="submit" onclick="openChat()"  class="btn btn-outline-info waves-effect col-12">  <i class="fas  fa-check pr-2" aria-hidden="true"></i>Iniciado </button>
+                                                        <button type="submit" class="btn btn-outline-info waves-effect col-12">  <i class="fas  fa-check pr-2" aria-hidden="true"></i>Iniciado </button>
                                                     <% }%>
                                                    
                                                 </form>
@@ -381,8 +382,51 @@
 
     <!-- Page level custom scripts -->
     <script src="js/demo/datatables-demo.js"></script>
+     <!-- Cookie -->
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
 
     <script>
+
+        document
+        .querySelector("#openChatForm")
+        .addEventListener("submit", (event) => {
+			event.preventDefault();
+			
+		});
+
+        function startMeeting() {
+            openChat()
+           
+            var link = document.getElementById("link").value;
+            var uidSchedule = document.getElementById("uidSchedule").value;
+            var uidExhibitor =document.getElementById("uidExhibitor").value;
+            var userUid = document.getElementById("userUid").value;
+
+            var data = {
+                link: link,
+                uidSchedule: uidSchedule,
+                uidExhibitor: uidExhibitor,
+                userUid: userUid
+            }
+            console.log(data);
+
+            // fetch("/openVideoChat", {
+            // method: "POST",
+            // headers: {
+            //     Accept: "application/json",
+            //     "Content-Type": "application/json",
+            //     "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+            //   },
+            //   body: JSON.stringify(data),
+            // }).then(function(res) {
+			// 	if(res.ok){
+            //         console.log("success");
+			// 	}else {
+			// 		console.log("error");
+			// 	}
+				
+			// })
+        }
 
         function openChat() {
 

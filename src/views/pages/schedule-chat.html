@@ -104,7 +104,7 @@
 		icon: 'success',
 		title: 'Agendado com sucesso',
 		showConfirmButton: false,
-		timer: 1900
+		timer: 2200
 		})
 
 	  }
@@ -129,16 +129,6 @@
         } 
 
 
-// 		.then(function(response) {
-//   if(response.ok) {
-//     response.blob().then(function(myBlob) {
-//       var objectURL = URL.createObjectURL(myBlob);
-//       myImage.src = objectURL;
-//     });
-//   } else {
-//     console.log('Network response was not ok.');
-//   }
-
 		fetch("/schedule-chat", {
             method: "POST",
             headers: {
@@ -156,11 +146,8 @@
 					alert("opss ocorreu uma falha");
 				}
 
-				console.log(res);
 				
 			})
-
-		console.log(data);
 
 	  }
 

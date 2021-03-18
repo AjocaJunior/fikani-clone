@@ -174,6 +174,8 @@ router.get('/buyers', (req, res) => {
 
 router.get('/perfil' , (req , res) => {
 const sessionCookie = req.cookies.session || "";
+var data = [];
+var dataSchedule = [] ;
 
   admin
     .auth()
@@ -181,19 +183,32 @@ const sessionCookie = req.cookies.session || "";
     .then((user) => {
 
         db.collection('users').doc(user.uid).get().then(function(doc) {
-            var data = doc.data()
-            res.locals.title = "Perfil";  
-            
-            console.log(data);
-            res.render('pages/perfil.html' , {
-                data
+            data = doc.data()
+             
+        db.collection("users").doc(data.uid).collection("schedule").get()
+            .then(querySnapshot => {
+                querySnapshot.forEach(doc => {
+                    dataSchedule.push(doc.data())
             });
+
+            res.locals.title = data.name;
+            res.render('pages/perfil.html', {
+                data,dataSchedule
+            });
+        
         });
+
+    });
+
    
     })
     .catch((error) => {
-      res.redirect("/register");
+        console.log(error);
+      //res.redirect("/register");
     });
+
+
+   
 
 })
 
@@ -262,9 +277,7 @@ router.get('/exhibitor' , (req , res) => {
 
 
 router.post('/schedule-chat', urlencodedParser , (req , res) => {
-  
-    res.end(JSON.stringify({ status: "success" }));
-   // addSchedule(req , res);
+   addSchedule(req , res);
 })
 
 
@@ -311,16 +324,19 @@ async function scheduleChat(data, res) {
 }
 
 async function scheduleChatUsers(data, res) {
-    await db.collection('users').doc(data.exhibitorUid).collection('schedule').doc( data.uid ).set(data)
-        .then(function() {
-            console.log("GooD User");
-            res.redirect('exhibitor-page?id='+data.exhibitorUid);               
-        })
-        .catch(function(error) {   
-            res.render('pages/schedule-chat?id='+data.exhibitorUid , {
-                error
-        })
+
+    await db.collection('institution').doc(data.exhibitorUid).get().then(function(doc) {
+        var instData = doc.data();
+        data["name"] = instData.name;
     })
+    await db.collection('users').doc(data.userUid).collection('schedule').doc( data.uid ).set(data)
+        .then(function() {
+            res.end(JSON.stringify({ status: "success" }));             
+        })
+        .catch(function(error) {
+            res.end(JSON.stringify({ status: "error" }));
+        })
+
 
 }
 
@@ -387,7 +403,9 @@ router.get('/tables-schedule', (req , res) => {
 
 
 router.post('/openVideoChat' , urlencodedParser , (req ,res) => {
-    openVideoChat( req.body.uidExhibitor, req.body.uidSchedule, req.body.link , res)
+    const sessionCookie = req.cookies.session || "";
+    console.log(req.body);
+   // openVideoChat( req.body.uidExhibitor, req.body.uidSchedule, req.body.link , res)
 })
 
 
@@ -431,6 +449,10 @@ router.get('/admin' , (req ,res) => {
     var data = null;
     db.collection('institution').doc(''+req.query.id).get().then(function(doc) {
         data = doc.data()
+
+        if(data == null || data == undefined) {
+            res.redirect('/login-exhibitor');
+        }
 
         res.render('pages/admin.html' , {
             data
