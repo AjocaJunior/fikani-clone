@@ -33,7 +33,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="booking-form">
-						<form method="POST" action="/schedule-chat">
+					<form id="booking-form" method="POST"> 	<!--  action="/schedule-chat" -->
 							<div class="row no-margin">
 								<div class="col-md-3">
 									<div class="form-group">
@@ -89,11 +89,13 @@
 	  var id = vars[1];
 	  var itemId =  document.getElementById("itemId");
 	  itemId.value = id;
-	  
+
 	  document
-            .getElementById("booking")
+            .getElementById("booking-form")
             .addEventListener("submit", (event) => {
+				event.preventDefault();
 				showSucess();
+				scheduleChat();
 			 });
 	  function showSucess() {
  
@@ -102,8 +104,63 @@
 		icon: 'success',
 		title: 'Agendado com sucesso',
 		showConfirmButton: false,
-		timer: 1500
+		timer: 1900
 		})
+
+	  }
+
+	  function scheduleChat() {
+
+		var exhibitorUid = document.getElementById("itemId").value;
+		var data = document.getElementById("day").value;
+		var time = document.getElementById("time").value;
+		var email =document.getElementById("email").value;
+
+		var data = {
+            uid : "", /** This uid will be refactored in server */
+            userUid: "",  /** This userUid will set in server */
+            exhibitorUid:  exhibitorUid,
+            day : data,
+            time : time,
+            email : email,
+            isHappened : false,
+            linkChat: "https://meet.google.com/zpd-jprv-vre", /** This link will be refactored in server */
+            name : ""
+        } 
+
+
+// 		.then(function(response) {
+//   if(response.ok) {
+//     response.blob().then(function(myBlob) {
+//       var objectURL = URL.createObjectURL(myBlob);
+//       myImage.src = objectURL;
+//     });
+//   } else {
+//     console.log('Network response was not ok.');
+//   }
+
+		fetch("/schedule-chat", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+              },
+              body: JSON.stringify(data),
+            }).then(function(res) {
+				if(res.ok){
+					window.location.href = "exhibitor-page?id="+data.exhibitorUid;
+					console.log("sucess");
+				}else {
+					window.location.href = "schedule-chat?id="+data.exhibitorUid;
+					alert("opss ocorreu uma falha");
+				}
+
+				console.log(res);
+				
+			})
+
+		console.log(data);
 
 	  }
 
