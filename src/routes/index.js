@@ -248,6 +248,9 @@ router.post("/sessionLogin", (req, res) => {
       );
   });
   
+router.get("/register_buyer" , (req, res) => {
+    res.render("pages/register-buyer.html");
+})
 
 
 router.get('/exhibitor' , (req , res) => {
@@ -400,6 +403,7 @@ router.get('/tables-schedule', (req , res) => {
     });
 
 })
+
 
 
 router.post('/openVideoChat' , urlencodedParser , (req ,res) => {
