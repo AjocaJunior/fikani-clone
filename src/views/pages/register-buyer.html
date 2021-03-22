@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html class="wide" lang="en">
+  <head>
+   <%- include('../partials/head.html') %>
+  </head>
+  <body>
+    <div class="ie-panel"><a href="http://windows.microsoft.com/en-US/internet-explorer/"><img src="images/ie8-panel/warning_bar_0000_us.jpg" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div>
+    <div class="preloader">
+      <div class="preloader-body">
+        <div class="cssload-container">
+          <div class="cssload-speeding-wheel"></div>
+        </div>
+        <p>Carregando...</p>
+      </div>
+    </div>
+    <div class="page">
+     
+      <!-- Section Who We are-->
+      <section class="section section-lg bg-default">
+        <div class="container">
+
+          <div class="row row-30 justify-content-center">
+
+            <div class="col-md-10 col-lg-6">
+                <!-- <div class="img-separated"> -->
+                    <img src="images/img-login.jpg" alt="" width="562" height="380"/>
+                <!-- </div> -->
+              </div>
+            <div class="col-md-10 col-lg-6">
+              <h6>fikani digital</h6>
+              <!-- <h3>Seja bem-vindo a fikani digital</h3> -->
+              <br>
+
+
+              <!-- form validation error -->
+              <% if(typeof alert != 'undefined') { %>
+                <% alert.forEach(function(error) { %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="background-color: #f8d7da; color:#721c24;">
+                        <%= error.msg %>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      </div>
+                <% }) %>
+              <% } %>
+
+
+              <!-- auth and database error -->      
+              <% if(typeof error != 'undefined') { %>         
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="background-color: #f8d7da; color:#721c24;">
+                        <%= error %>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      </div>
+              <% } %>
+                  
+                  
+                         
+              <form id="registerForm" method="POST">
+                <div class="contact_input_area">
+                    <div class="row">
+                        <!-- Form Group -->
+                        <div class="col-12 col-lg-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control mb-30" name="name" value="<%=data.name %>" id="name"
+                                    placeholder="Nome" required>
+                            </div>
+                        </div>
+
+                         <!-- Form Group -->
+                         <div class="col-12 col-lg-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control mb-30" name="last_name" value="<%= data.last_name%>" id="last_name"
+                                    placeholder="Apelido" required>
+                            </div>
+                        </div>
+
+                        
+                        <!-- Form Group -->
+                        <div class="col-12 col-lg-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control mb-30" name="position" id="position"
+                                    placeholder="Posição" required>
+                            </div>
+                        </div>
+
+                        
+                        <!-- Form Group -->
+                        <div class="col-12 col-lg-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control mb-30" value="<%= data.location %>" name="location"
+                                    id="location" placeholder="Localização" required>
+                            </div>
+                        </div>
+
+                      
+                        <input type="hidden" class="form-control mb-30" name="userUid"
+                               id="userUid" placeholder="userUid" value="<%= data.uid %>">
+                
+                               
+                        <input type="hidden" class="form-control mb-30" name="urlphoto"
+                        id="urlphoto" placeholder="urlphoto" value="<%= data.urlphoto %>">
+         
+
+                        
+                        <!-- Form Group -->
+                        <div class="col-12 col-lg-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control mb-30" name="contact"
+                                    id="contact" placeholder="Contacto" value="<%= data.contact %>" required>
+                            </div>
+                        </div>
+
+
+                        <!-- Form Group -->
+                        <div class="col-12 col-lg-6">
+                            <div class="form-group">
+                                <input type="email" class="form-control mb-30" value="<%= data.email %>" name="email" id="email"
+                                    placeholder="E-mail" required>
+                            </div>
+                        </div>
+                        
+                      
+                    </div>
+                </div>
+                <!-- Button -->
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Cadastrar</button>
+
+            </form>
+            
+                         
+             
+                 <li>
+                  <div class="unit">
+                    <div class="unit-left">
+                      <div class="icon-rect icon-rect-secodanry" data-triangle=".icon-rect-overlay">
+                        <div class="icon-rect-overlay"></div>
+                        <svg class="svg-icon-sm-1" role="img">
+                          <use xlink:href="images/svg/sprite.svg#tick"></use>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="unit-body">
+                      <h5>Seja bem-vindo a fikani <br> digital
+                      </h5>
+                    </div>
+                  </div>
+                </li> 
+              </ul>
+            </div>
+
+           
+
+          </div>
+        </div>
+      </section>
+      
+     
+      <footer class="section footer-classic context-dark">
+        <div class="container">
+          <p class="rights"><span>Copyright&nbsp;</span><span>&copy;&nbsp;</span><span class="copyright-year"></span><span>&nbsp;</span><span>by</span> <a href="">Fikani</a>
+          </p>
+        </div>
+      </footer>
+    </div>
+    <div class="snackbars" id="form-output-global"></div>
+    <div class="block-with-svg-gradients">
+      <svg xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <lineargradient id="svg-gradient-primary" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:rgb(130,46,168);stop-opacity:1"></stop>
+            <stop offset="100%" style="stop-color:rgb(217,14,144);stop-opacity:1"></stop>
+          </lineargradient>
+        </defs>
+      </svg>
+    </div>
+    <script src="js/core.min.js"></script>
+    <script src="js/script.js"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+    <!-- custom lib popup -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+
+
+    <script>
+
+        document.getElementById("registerForm")
+                .addEventListener("submit" , (event) => {
+                  event.preventDefault();
+             
+                  const name = event.target.name.value;
+                  const last_name = event.target.last_name.value;
+                  const location = event.target.location.value;
+                  const email = event.target.email.value;
+                  const contact = event.target.contact.value;
+                  const displayName = name.trim() +" "+last_name.trim();
+                  const userUid = event.target.userUid.value;
+                  const urlphoto = event.target.urlphoto.value;
+                  const position = event.target.position.value;
+
+                
+                  let data = {
+                        name: name,
+                        last_name: last_name,
+                        location : location,
+                        email: email,
+                        contact: contact,
+                        position: position,
+                        displayName : displayName,
+                        userUid: userUid,
+                        urlphoto: urlphoto,
+                      };
+
+
+                      fetch("/register_buyer", {
+                        method: "POST",
+                        headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json",
+                            "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+                        },
+                        body: JSON.stringify(data),
+                        }).then(function(res) {
+                            if(res.ok){
+                                window.location.href = "/perfil"
+                                console.log("success");
+                            }else {
+                                alert("Ocoreu uma falha");
+                                console.log("error");
+                            }
+                            
+                        })
+                                
+                });
+                
+        
+
+        
+    </script>
+  </body>
+</html>

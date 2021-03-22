@@ -168,44 +168,57 @@ router.get('/login' , (req , res)=> {
 });
 
 router.get('/buyers', (req, res) => {
-    res.locals.title = "Buyers";
-    res.render('pages/buyers.html')
+ 
+    var list = [];
+    db.collection('buyers').get().then((querySnapshot) => {
+        querySnapshot.forEach((buyersDoc) => {
+
+          list.push(buyersDoc.data());
+        })
+        
+        console.log(list);
+        res.locals.title = "Buyers";
+        res.render('pages/buyers.html' , {
+            list
+        })
+    })
+
 })
 
 router.get('/perfil' , (req , res) => {
-const sessionCookie = req.cookies.session || "";
-var data = [];
-var dataSchedule = [] ;
+    const sessionCookie = req.cookies.session || "";
+    var data = [];
+    var dataSchedule = [] ;
 
-  admin
-    .auth()
-    .verifySessionCookie(sessionCookie, true /** checkRevoked */)
-    .then((user) => {
+    admin
+        .auth()
+        .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+        .then((user) => {
 
-        db.collection('users').doc(user.uid).get().then(function(doc) {
-            data = doc.data()
-             
-        db.collection("users").doc(data.uid).collection("schedule").get()
-            .then(querySnapshot => {
-                querySnapshot.forEach(doc => {
-                    dataSchedule.push(doc.data())
+            db.collection('users').doc(user.uid).get().then(function(doc) {
+                data = doc.data()
+                
+            db.collection("users").doc(data.uid).collection("schedule").get()
+                .then(querySnapshot => {
+                    querySnapshot.forEach(doc => {
+                        dataSchedule.push(doc.data())
+                });
+
+                res.locals.title = data.name;
+                res.render('pages/perfil.html', {
+                    data,dataSchedule
+                });
+            
             });
 
-            res.locals.title = data.name;
-            res.render('pages/perfil.html', {
-                data,dataSchedule
-            });
-        
         });
 
-    });
-
-   
-    })
-    .catch((error) => {
-        console.log(error);
-      //res.redirect("/register");
-    });
+    
+        })
+        .catch((error) => {
+            console.log(error);
+        //res.redirect("/register");
+        });
 
 
    
@@ -249,7 +262,46 @@ router.post("/sessionLogin", (req, res) => {
   });
   
 router.get("/register_buyer" , (req, res) => {
-    res.render("pages/register-buyer.html");
+
+const sessionCookie = req.cookies.session || "";
+var data = [];
+var dataSchedule = [] ;
+
+  admin
+    .auth()
+    .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+    .then((user) => {
+
+        db.collection('users').doc(user.uid).get().then(function(doc) {
+            data = doc.data()
+            
+            res.locals.title = data.name;
+            res.render('pages/register-buyer.html', {
+                data
+            });           
+        });
+
+   
+    })
+    .catch((error) => {
+        console.log(error);
+      //res.redirect("/register");
+    });
+
+})
+
+router.post("/register_buyer",urlencodedParser, (req, res) => {
+   let data = req.body;
+   data["uid"] = uuid();
+  
+   db.collection("buyers").doc(data.uid).set(data)
+    .then(()=>{
+        res.end('{"success" : "Updated Successfully", "status" : 200}');
+        console.log("success");
+    })
+    .catch((error)=> {
+
+    })
 })
 
 
