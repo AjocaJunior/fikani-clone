@@ -40,7 +40,7 @@
                 <div class="col-sm-6 col-lg-3">
                   <!-- Speaker Classic-->
                   <div class="speaker-classic">
-                    <div class="speaker-classic-img"><a href="#"><img src="images/speaker-01-270x303.jpg" alt="" width="270" height="303"/></a>
+                    <div class="speaker-classic-img""><a href="#"><img  src="<%= buyer.urlphoto %>" alt="" width="270" height="303"  style="height: 270px; width: 303px;"/></a>
                       <ul class="speaker-classic-social-list">
                         <li><a class="icon icon-xs fa-phone" href="tel:<%= buyer.contact %>"></a></li>
                         <li><a class="icon icon-xs fa-envelope" href="mailto: <%= buyer.email %>"></a></li>
@@ -53,7 +53,6 @@
 
               <% }) %>
             <% } else { %>
-
               <!-- list is empty -->
             <% } %>
          

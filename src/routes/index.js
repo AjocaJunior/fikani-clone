@@ -173,11 +173,16 @@ router.get('/buyers', (req, res) => {
     db.collection('buyers').get().then((querySnapshot) => {
         querySnapshot.forEach((buyersDoc) => {
 
-          list.push(buyersDoc.data());
+            var data = buyersDoc.data()
+            if(data.urlphoto == "") {
+
+            }
+            data["urlphoto"] = "https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/perfil%2Funnamed.jpg?alt=media&token=234789f8-f514-4ef0-aee4-36f534f03507";
+          list.push(data);
         })
         
-        console.log(list);
         res.locals.title = "Buyers";
+
         res.render('pages/buyers.html' , {
             list
         })

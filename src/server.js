@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const port =  3000 || process.env.PORT;
 const session = require('express-session');
 
-
 // set static file
 app.use(express.static(__dirname + '/public'));
 
