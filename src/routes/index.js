@@ -24,11 +24,20 @@ const csrfMiddleware = csrf({ cookie: true });
 
 router.use(bodyParser.json());
 router.use(cookieParser());
-router.use(csrfMiddleware);
+
+router.use("/login" , csrfMiddleware);
+router.use("/register" , csrfMiddleware);
+// router.use(csrfMiddleware);
 
 router.all("*", (req, res, next) => {
-    res.cookie("XSRF-TOKEN", req.csrfToken());
-    next();
+    
+    if(req.path == "/login" || req.path == "/register") {
+        res.cookie("XSRF-TOKEN", req.csrfToken());
+        next();
+    }else {
+        next();
+    }
+ 
 });
 
 // middleware that checks if the user is logged in
@@ -513,6 +522,45 @@ router.get('/login-exhibitor' , (req , res) => {
 router.get("/upload-image", (req, res) => {
     res.render("pages/upload-image.html");
 })
+
+router.post("/upload-image",upload.single('file') , async (req, res) => {
+    let file = path.join(__dirname , "../../uploads/"+req.file.filename);
+    let destination = "exhibitor";
+    const ft = await uploadPhoto(path.normalize(file) , req.file.filename , destination);
+    
+    console.log(ft);
+})
+
+async function uploadPhoto(filepath , filename, destination) {
+    var bucket = admin.storage().bucket();
+    var token = uuid();
+    const metadata = {
+      metadata: {
+        // This line is very important. It's to create a download token.
+        firebaseStorageDownloadTokens: token
+      },
+      contentType: 'image/png',
+      cacheControl: 'public, max-age=31536000',
+    };
+
+    var imgUrl = "";
+    // Uploads a local file to the bucket
+    await bucket.upload(filepath, {
+      // Support for HTTP requests made with `Accept-Encoding: gzip`
+      gzip: true,
+      metadata: metadata,
+      destination: destination+"/"+filename
+    }).then((res)=>{
+
+        var imgName = res[0].name.replace("/" , "%2F");
+        imgUrl = "https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/"+imgName+"?alt=media&token="+token;
+
+    }).catch((err)=>{
+        return null;
+    })
+    return imgUrl;
+
+}
 
 router.get('/admin' , (req ,res) => {
 

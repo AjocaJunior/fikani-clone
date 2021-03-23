@@ -102,6 +102,8 @@
     <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js"  ></script>
     <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js" ></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
 
 
     <script>
@@ -143,13 +145,25 @@
                 });
               })
               .then(() => {
+                console.log("error");
                 return firebase.auth().signOut();
               })
               .then(() => {
                 window.location.assign("/");
-              });
+              })
+              .catch((error) => {
+                showError(error);
+              })
             return false;
           });
+
+          function showError(text) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: text,
+            })
+          }
 
     </script>
 
