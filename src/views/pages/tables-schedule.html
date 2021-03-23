@@ -280,7 +280,7 @@
                                             <td><%= schedule.day   %> </td>
                                             <td><%= schedule.time  %> </td>
                                             <td> 
-                                                <form class="form-call">  <!-- action="/openVideoChat" -->
+                                                <form class="form-call" method="GET" action="/openVideoChat" >  <!-- action="/openVideoChat" -->
                                                     <input type="hidden" name="uidSchedule"  value="<%= schedule.uid %>" />
                                                     <input type="hidden" name="uidExhibitor"  value="<%= data.uid %>" />
                                                     <input type="hidden" name="userUid"  value="<%= schedule.userUid %>" />
@@ -390,10 +390,13 @@
     window.addEventListener("DOMContentLoaded", () => {  });
 
         var form = document.querySelectorAll(".form-call");
-
+ 
         for(var i = 0; i < form.length; i++) {
         
+            
             form[i].addEventListener("submit", (event)=> {
+
+                
                 event.stopPropagation();
                 event.preventDefault;
                 const link =  event.target.link.value;
@@ -409,24 +412,25 @@
                 }
 
          
-                fetch("/openVideoChat", {
-                    method: "POST",
-                    headers: {
-                        Accept: "application/json",
-                        "Content-Type": "application/json",
-                        "CSRF-Token": Cookies.get("XSRF-TOKEN"),
-                    },
-                    body: JSON.stringify(data),
-                    }).then(function(res) {
-                        if(res.ok){
-                            console.log("success");
-                        }else {
-                            console.log("error");
-                        }
+                // fetch("/openVideoChat", {
+                //     method: "POST",
+                //     headers: {
+                //         Accept: "application/json",
+                //         "Content-Type": "application/json",
+                //         "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+                //     },
+                //     body: JSON.stringify(data),
+                //     }).then(function(res) {
+                //         if(res.ok){
+                //             console.log("success");
+                //         }else {
+                //             console.log("error");
+                //         }
 				
-		    	})
+		    	// })
               
 
+                
                 return false;
             })
         }

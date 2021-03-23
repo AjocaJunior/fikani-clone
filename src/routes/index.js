@@ -461,21 +461,29 @@ router.get('/tables-schedule', (req , res) => {
 
 })
 
-
-
-router.post('/openVideoChat' , urlencodedParser , (req ,res) => {
-    const sessionCookie = req.cookies.session || "";
-    console.log(req.body);
-   // openVideoChat( req.body.uidExhibitor, req.body.uidSchedule, req.body.link , res)
+router.get("/openVideoChat" , urlencodedParser, (req, res) => {
+    var uidExhibitor = req.query.uidExhibitor; 
+    var uidSchedule = req.query.uidSchedule;
+    var userUid = req.query.userUid;
+    var link = req.query.link;
+    console.log(userUid);
+    openVideoChat(uidExhibitor ,uidSchedule,userUid,link, res);
+ 
 })
 
+// router.post('/openVideoChat' , urlencodedParser , (req ,res) => {
+//     const sessionCookie = req.cookies.session || "";
+//     openVideoChat( req.body.uidExhibitor, req.body.uidSchedule, req.body.link , res)
+// })
 
-async function  openVideoChat( uidExhibitor, uidSchedule, link , res) {
+
+async function  openVideoChat( uidExhibitor, uidSchedule, userUid, link , res) {
     var isHappened = {
         isHappened : true
     }
 
-    const updateSchedule = await db.collection('institution').doc( uidExhibitor ).collection('schedule').doc( uidSchedule ).update(isHappened)
+     await db.collection('users').doc( userUid ).collection('schedule').doc( uidSchedule ).update(isHappened)
+     await db.collection('institution').doc( uidExhibitor ).collection('schedule').doc( uidSchedule ).update(isHappened)
     .then(function() {
         if(link != null && link != "") {
             res.redirect(link);       
@@ -500,6 +508,10 @@ async function  openVideoChat( uidExhibitor, uidSchedule, link , res) {
 
 router.get('/login-exhibitor' , (req , res) => {
     res.render('pages/login-exhibitor.html')
+})
+
+router.get("/upload-image", (req, res) => {
+    res.render("pages/upload-image.html");
 })
 
 router.get('/admin' , (req ,res) => {
