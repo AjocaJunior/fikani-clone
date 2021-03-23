@@ -526,9 +526,18 @@ router.get("/upload-image", (req, res) => {
 router.post("/upload-image",upload.single('file') , async (req, res) => {
     let file = path.join(__dirname , "../../uploads/"+req.file.filename);
     let destination = "exhibitor";
-    const ft = await uploadPhoto(path.normalize(file) , req.file.filename , destination);
-    
-    console.log(ft);
+    const url = await uploadPhoto(path.normalize(file) , req.file.filename , destination);
+
+    const uid = req.body.itemId;
+    const imgUid = uuid();
+   
+    const data = {
+        url:url,
+        uid:imgUid,
+        time:Date.now
+    }
+   //todo await db.collection('institution').doc( uid ).collection('gallery').doc( uidSchedule ).set(isHappened)
+
 })
 
 async function uploadPhoto(filepath , filename, destination) {
