@@ -280,11 +280,11 @@
                                             <td><%= schedule.day   %> </td>
                                             <td><%= schedule.time  %> </td>
                                             <td> 
-                                                <form method="POST" id="openChatForm" onsubmit="startMeeting()">  <!-- action="/openVideoChat" -->
-                                                    <input type="hidden"  name="uidSchedule" id="uidSchedule" value="<%= schedule.uid %>" />
-                                                    <input type="hidden" name="uidExhibitor" id="uidExhibitor" value="<%= data.uid %>" />
-                                                    <input type="hidden" name="userUid" id="userUid" value="<%= schedule.userUid %>" />
-                                                    <input type="hidden" name="link" id="link" value="<%= schedule.linkChat %>" />
+                                                <form class="form-call">  <!-- action="/openVideoChat" -->
+                                                    <input type="hidden" name="uidSchedule"  value="<%= schedule.uid %>" />
+                                                    <input type="hidden" name="uidExhibitor"  value="<%= data.uid %>" />
+                                                    <input type="hidden" name="userUid"  value="<%= schedule.userUid %>" />
+                                                    <input type="hidden" name="link"  value="<%= schedule.linkChat %>" />
                                                     <% if(schedule.isHappened != true){%>
                                                         <button type="submit"  class="btn btn-outline-primary waves-effect col-12">  <i class="fas  fa-video pr-2" aria-hidden="true"></i>Iniciar </button>
                                                     <% } else { %>
@@ -387,15 +387,61 @@
 
     <script>
 
-        document
-        .querySelector("#openChatForm")
-        .addEventListener("submit", (event) => {
-			event.preventDefault();
-			
-		});
+    window.addEventListener("DOMContentLoaded", () => {  });
+
+        var form = document.querySelectorAll(".form-call");
+
+        for(var i = 0; i < form.length; i++) {
+        
+            form[i].addEventListener("submit", (event)=> {
+                event.stopPropagation();
+                event.preventDefault;
+                const link =  event.target.link.value;
+                const uidSchedule = event.target.uidSchedule.value;
+                const uidExhibitor = event.target.uidExhibitor.value;
+                const userUid = event.target.userUid.value;
+
+                var data = {
+                    link: link,
+                    uidSchedule: uidSchedule,
+                    uidExhibitor: uidExhibitor,
+                    userUid: userUid
+                }
+
+         
+                fetch("/openVideoChat", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+                    },
+                    body: JSON.stringify(data),
+                    }).then(function(res) {
+                        if(res.ok){
+                            console.log("success");
+                        }else {
+                            console.log("error");
+                        }
+				
+		    	})
+              
+
+                return false;
+            })
+        }
+ 
+        // document
+        // .querySelectorAll(".form-call")
+        // .addEventListener("submit", (event) => {
+		// 	event.preventDefault();
+        //     alert("Hello Word");
+		// 	//startMeeting()
+		// });
 
         function startMeeting() {
-            openChat()
+
+          //  openChat()
            
             var link = document.getElementById("link").value;
             var uidSchedule = document.getElementById("uidSchedule").value;
@@ -410,22 +456,22 @@
             }
             console.log(data);
 
-            // fetch("/openVideoChat", {
-            // method: "POST",
-            // headers: {
-            //     Accept: "application/json",
-            //     "Content-Type": "application/json",
-            //     "CSRF-Token": Cookies.get("XSRF-TOKEN"),
-            //   },
-            //   body: JSON.stringify(data),
-            // }).then(function(res) {
-			// 	if(res.ok){
-            //         console.log("success");
-			// 	}else {
-			// 		console.log("error");
-			// 	}
+            fetch("/openVideoChat", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+              },
+              body: JSON.stringify(data),
+            }).then(function(res) {
+				if(res.ok){
+                    console.log("success");
+				}else {
+					console.log("error");
+				}
 				
-			// })
+			})
         }
 
         function openChat() {
