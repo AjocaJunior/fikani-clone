@@ -147,7 +147,9 @@ router.get('/' , (req , res)=> {
 
 });
 
-
+router.get('/forgot-password', (req, res) => {
+    res.render('pages/forgot-password.html');
+})
 
 
 router.get('/info' , (req , res) => {
