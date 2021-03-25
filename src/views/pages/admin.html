@@ -690,6 +690,55 @@
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
 
+    <script> 
+
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyBEJWJCm8OnSYYu2-VYqeRi03JprBcaUkg",
+          authDomain: "fikani.firebaseapp.com",
+          projectId: "fikani",
+          storageBucket: "fikani.appspot.com",
+          messagingSenderId: "146961453473",
+          appId: "1:146961453473:web:7fec98e5503384f08c7be0",
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+
+
+        getCurrentUser();
+        function getCurrentUser() {
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                var currentUserUid = user.uid;
+
+                var query = window.location.search.substring(1);
+                var vars = query.split("=");
+                var id = vars[1];
+
+                if(id != currentUserUid) {
+                    window.location.href = "/login-exhibitor";
+                }
+                
+                } else {
+                window.location.href = "/login-exhibitor";
+                }
+            });
+        
+        }
+
+        function signOut() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = "/login-exhibitor";
+            }).catch((error) => {
+             // todo show error message /
+            });
+        }
+
+
+
+    </script>
+
 </body>
 
 </html>
