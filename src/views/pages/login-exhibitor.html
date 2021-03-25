@@ -41,14 +41,14 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Login do expositor</h1>
                                     </div>
-                                    <form class="user">
+                                    <form class="user" id="login">
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user"
+                                            <input type="email" name="email" id="email" required class="form-control form-control-user"
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
                                                 placeholder="Digite o Email...">
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user"
+                                            <input type="password" name="password" required id="password" class="form-control form-control-user"
                                                 id="exampleInputPassword" placeholder="Password">
                                         </div>
                                         <div class="form-group">
@@ -58,9 +58,9 @@
                                                     Me</label>
                                             </div>
                                         </div>
-                                        <!-- <a href="index.html" class="btn btn-primary btn-user btn-block">
-                                            Login
-                                        </a>
+                                        <button class="btn btn-primary btn-user btn-block">Login</button>
+                                        
+                                        <!--
                                         <hr>
                                         <a href="index.html" class="btn btn-google btn-user btn-block">
                                             <i class="fab fa-google fa-fw"></i> Login with Google
@@ -97,6 +97,69 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js"  ></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+
+
+    <script> 
+    
+    const firebaseConfig = {
+          apiKey: "AIzaSyBEJWJCm8OnSYYu2-VYqeRi03JprBcaUkg",
+          authDomain: "fikani.firebaseapp.com",
+          projectId: "fikani",
+          storageBucket: "fikani.appspot.com",
+          messagingSenderId: "146961453473",
+          appId: "1:146961453473:web:7fec98e5503384f08c7be0",
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+
+        document
+          .getElementById("login")
+          .addEventListener("submit", (event) => {
+            event.preventDefault();
+            const login = event.target.email.value;
+            const password = event.target.password.value;
+
+            firebase
+              .auth()
+              .signInWithEmailAndPassword(login, password)
+              .then(({ user }) => {
+              
+                showSuccess();
+                window.location.href = "/admin?id="+user.uid;
+                
+              }) 
+              .catch((error) => {
+                var errorMessage = "A senha é inválida ou o usuário não possui uma conta";
+                showError(errorMessage);
+              })
+            return false;
+          });
+
+          function showError(text) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: text,
+            })
+          }
+
+          function showSuccess() {
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 1000
+            })
+          }
+
+    
+    </script>
 
 </body>
 

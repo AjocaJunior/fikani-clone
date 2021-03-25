@@ -148,6 +148,7 @@ router.get('/' , (req , res)=> {
 });
 
 router.get('/forgot-password', (req, res) => {
+    res.locals.title = "Esqueceu palavra-passe";
     res.render('pages/forgot-password.html');
 })
 
@@ -516,6 +517,11 @@ async function  openVideoChat( uidExhibitor, uidSchedule, userUid, link , res) {
 
 }
 
+
+router.post("/login-exhibitor", (req, res) => {
+
+    
+})
 
 router.get('/login-exhibitor' , (req , res) => {
     res.render('pages/login-exhibitor.html')
