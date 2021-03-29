@@ -109,7 +109,7 @@
         };
 
         firebase.initializeApp(firebaseConfig);
-        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+       // firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
 
         document
           .getElementById("login")
@@ -124,6 +124,11 @@
               .then(({ user }) => {
               
                 showSuccess();
+
+                if (typeof(Storage) !== "undefined") { 
+                    sessionStorage.setItem("uidExhibitor", user.uid);
+                }
+
                 window.location.href = "/admin?id="+user.uid;
                 
               }) 

@@ -541,7 +541,7 @@
                                 </div>
                                 <div class="card-body">
                                    
-                                    <form>
+                                    <form method="POST" action="/updateContact" >
 
                                         <div class="form-group row">
                                           <div class="col-sm-12">
@@ -568,7 +568,7 @@
                                           </div>
                                         </div>
                     
-                                        <button type="button" onClick="updateContact()" class="btn btn-primary btn-lg btn-block">Actualizar</button>
+                                        <button type="submit"  class="btn btn-primary btn-lg btn-block">Actualizar</button>
                     
                                       </form>
                     
@@ -643,7 +643,7 @@
                 <div class="modal-body">Selecione "Sair" abaixo se você estiver pronto para encerrar sua sessão atua.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="/">Sair</a>
+                    <button class="btn btn-primary" onclick="signOut()" >Sair</button>
                 </div>
             </div>
         </div>
@@ -690,6 +690,12 @@
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
 
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js"  ></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+
+
     <script> 
 
 
@@ -703,36 +709,27 @@
         };
 
         firebase.initializeApp(firebaseConfig);
-        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+       // firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
 
 
         getCurrentUser();
         function getCurrentUser() {
-            firebase.auth().onAuthStateChanged(function(user) {
-                if (user) {
-                var currentUserUid = user.uid;
+            var currentUserUid =  sessionStorage.getItem("uidExhibitor");
+            var query = window.location.search.substring(1);
+            var vars = query.split("=");
+            var id = vars[1];
 
-                var query = window.location.search.substring(1);
-                var vars = query.split("=");
-                var id = vars[1];
-
-                if(id != currentUserUid) {
-                    window.location.href = "/login-exhibitor";
-                }
-                
-                } else {
+            if(id == currentUserUid) {
+                console.log("Success");
+            } else {
                 window.location.href = "/login-exhibitor";
-                }
-            });
-        
+            }
         }
 
+      
         function signOut() {
-            firebase.auth().signOut().then(() => {
-                window.location.href = "/login-exhibitor";
-            }).catch((error) => {
-             // todo show error message /
-            });
+            sessionStorage.removeItem("uidExhibitor");
+            window.location.href = "/login-exhibitor";
         }
 
 

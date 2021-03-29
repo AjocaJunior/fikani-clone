@@ -108,6 +108,10 @@ router.get("/sessionLogout", (req, res) => {
     res.redirect("/login");
 });
 
+router.post("/updateContact", urlencodedParser ,(req, res) => {
+    console.log(req.body);
+})
+
 router.get('/confer' , (req , res)=> {
     res.locals.title = "Conferencia";
     res.render('pages/confer');
@@ -123,7 +127,6 @@ router.get('/' , (req , res)=> {
     var list = [];
     var count = 0;
 
-    //todo count
         instReference.get().then((querySnapshot) => {
             querySnapshot.forEach((instDoc) => {
                 var instDocData = instDoc.data()
@@ -514,6 +517,57 @@ async function  openVideoChat( uidExhibitor, uidSchedule, userUid, link , res) {
 
     });
 
+
+}
+
+
+// Create link
+
+router.get("/link", async (req, res) => {
+    var link = await getLink();
+    console.log(link);
+})
+router.post("/createLink" ,(req, res) => {
+    for(var i = 0; i < 10; i++) {
+        setLinks("https://meet.google.com/nqo-vbju-uvu");
+    }
+})
+
+
+async function getLink() {
+  
+    var link ;
+   await db.collection("links").orderBy("uid", "desc")
+    .limit(1)
+    .get()
+    .then(querySnapshot => {
+        if (!querySnapshot.empty) {
+            //We know there is one doc in the querySnapshot
+            const queryDocumentSnapshot = querySnapshot.docs[0];
+            link = queryDocumentSnapshot.data();
+            queryDocumentSnapshot.ref.delete()
+            return link;
+        } else {
+            console.log("No document corresponding to the query!");
+            return null;
+        }
+    });
+     
+    return link;
+}
+
+function setLinks(link) {
+
+    var data = {
+        uid: uuid(),
+        link: link
+    }
+
+    db.collection("links").doc(data.uid).set(data).then(() => {
+        console.log("Success");
+    }).catch((err) => {
+        console.log(err);
+    })
 
 }
 
