@@ -109,7 +109,18 @@ router.get("/sessionLogout", (req, res) => {
 });
 
 router.post("/updateContact", urlencodedParser ,(req, res) => {
-    console.log(req.body);
+    var data = req.body;
+
+    db.collection("institution").doc(data.uid).update(data).then(() => {
+        res.redirect("admin/"+data.uid);
+
+        // res.end('{"message" : "Updated Successfully", "status" : 200}');
+        // console.log("success");
+    }).catch((err) => {
+        res.end('{"message" : "Ocoreu uma falha" , "status" : 500}')
+        console.log(err);
+    })
+
 })
 
 router.get('/confer' , (req , res)=> {
@@ -141,6 +152,7 @@ router.get('/' , (req , res)=> {
                 list.push( instDocData);  
             })         
 
+            console.log(list);
             res.locals.title = "Seja bem vindo";   
             res.render('pages/index.html' , {
                 list
@@ -149,6 +161,16 @@ router.get('/' , (req , res)=> {
         })
 
 });
+
+
+function countVisits(uidExhibitor, currentNumber) {
+    var num =  parseInt(currentNumber);
+    num++
+    var data = { 
+        visits: num
+    }
+    //todo db.collection("institution").doc(uidExhibitor).
+}
 
 router.get('/forgot-password', (req, res) => {
     res.locals.title = "Esqueceu palavra-passe";
@@ -361,6 +383,8 @@ async function addSchedule(req , res) {
     var scheduleUid = uuid();
     var data = req.body;
     data["uid"] = scheduleUid;
+    var link = await getLink();
+    data["linkChat"] = link;
     const sessionCookie = req.cookies.session || "";
 
     admin
@@ -372,6 +396,7 @@ async function addSchedule(req , res) {
                 var userData = doc.data()  
                 data["userUid"] = userData.uid;
                 data["name"] = userData.name;
+                
 
                 scheduleChat(data, res);
             });
@@ -527,7 +552,7 @@ router.get("/link", async (req, res) => {
     var link = await getLink();
     console.log(link);
 })
-router.post("/createLink" ,(req, res) => {
+router.get("/createLink" ,(req, res) => {
     for(var i = 0; i < 10; i++) {
         setLinks("https://meet.google.com/nqo-vbju-uvu");
     }
@@ -544,7 +569,7 @@ async function getLink() {
         if (!querySnapshot.empty) {
             //We know there is one doc in the querySnapshot
             const queryDocumentSnapshot = querySnapshot.docs[0];
-            link = queryDocumentSnapshot.data();
+            link = queryDocumentSnapshot.data().link;
             queryDocumentSnapshot.ref.delete()
             return link;
         } else {
@@ -589,17 +614,33 @@ router.post("/upload-image",upload.single('file') , async (req, res) => {
     let file = path.join(__dirname , "../../uploads/"+req.file.filename);
     let destination = "exhibitor";
     const url = await uploadPhoto(path.normalize(file) , req.file.filename , destination);
-
+    
     const uid = req.body.itemId;
     const imgUid = uuid();
    
     const data = {
         url:url,
         uid:imgUid,
-        time:Date.now
+        time: ""
     }
-   //todo await db.collection('institution').doc( uid ).collection('gallery').doc( uidSchedule ).set(isHappened)
 
+    console.log(data)
+    //todo show progress//
+   db.collection('institution').doc( uid ).collection('gallery').doc( imgUid ).set(data).then(() => {
+      res.redirect('/admin?id='+uid);
+     console.log("Success")
+   }).catch((err) => {
+    console.log(err);
+    res.redirect('/upload-image?id='+uid);
+   })
+
+
+    
+})
+
+
+router.get("/exhibitor-gallery", (req, res) => {
+    res.render("pages/exhibitor-gallery");
 })
 
 async function uploadPhoto(filepath , filename, destination) {
@@ -625,10 +666,11 @@ async function uploadPhoto(filepath , filename, destination) {
 
         var imgName = res[0].name.replace("/" , "%2F");
         imgUrl = "https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/"+imgName+"?alt=media&token="+token;
-
+    
     }).catch((err)=>{
         return null;
     })
+ 
     return imgUrl;
 
 }
@@ -667,11 +709,25 @@ router.get('/exhibitor-page' , (req, res) => {
         if(data == null || data == undefined) {
             res.redirect('/404');
         }
-       
 
-        res.render('pages/exhibitor-page.html' , {
-            data
+
+        
+
+        var dataGallery = [];
+        db.collection("institution").doc(req.query.id).collection("gallery").get()
+        .then(querySnapshot => {
+            querySnapshot.forEach(doc => {
+                dataGallery.push(doc.data())
+            })
+
+            console.log(dataGallery);
+            res.render('pages/exhibitor-page.html' , {
+                data, dataGallery
+            });
+
         });
+        
+     
 
     });
  

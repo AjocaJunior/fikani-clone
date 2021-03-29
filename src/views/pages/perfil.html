@@ -62,8 +62,20 @@
                                   <td><%= schedule.day   %></td>
                                   <td><%= schedule.time  %></td>
                                   <td> 
-                                     <button type="submit" onclick="openChat()"  class="btn btn-outline-primary waves-effect col-12">  <i class="fas  fa-video pr-2" aria-hidden="true"></i>Iniciar </button>
-                                   </td>
+
+                                    <form class="form-call" method="GET" action="/openVideoChat" >  <!-- action="/openVideoChat" -->
+                                      <input type="hidden" name="uidSchedule"  value="<%= schedule.uid %>" />
+                                      <input type="hidden" name="uidExhibitor"  value="<%= data.uid %>" />
+                                      <input type="hidden" name="userUid"  value="<%= schedule.userUid %>" />
+                                      <input type="hidden" name="link"  value="<%= schedule.linkChat %>" />
+                                      <% if(schedule.isHappened != true){%>
+                                          <button type="submit"  class="btn btn-outline-primary waves-effect col-12">  <i class="fas  fa-video pr-2" aria-hidden="true"></i>Iniciar </button>
+                                      <% } else { %>
+                                          <button type="submit" class="btn btn-outline-info waves-effect col-12">  <i class="fas  fa-check pr-2" aria-hidden="true"></i>Iniciado </button>
+                                      <% }%>
+                                     
+                                  </form>
+                                  </td>
                                 </tr>
 
                               <% }) %>

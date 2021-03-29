@@ -77,8 +77,8 @@
                 data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Minha galeria:</h6>
-                    <a class="collapse-item" href="utilities-color.html"> Ver fotos </a>
-                    <a class="collapse-item" href="utilities-border.html"> Publicar fotos</a>
+                    <a class="collapse-item" href="/exhibitor-gallery?id=<%=data.uid %>"> Ver fotos </a>
+                    <a class="collapse-item" href="/upload-image?id=<%=data.uid %>"> Publicar fotos</a>
                 </div>
             </div>
             </li>
@@ -545,28 +545,31 @@
 
                                         <div class="form-group row">
                                           <div class="col-sm-12">
-                                            <input type="email" class="form-control" id="inputEmail" value=" <%=data.email %> " placeholder="Email">
+                                            <input type="email" class="form-control" name="email" id="inputEmail" value=" <%=data.email %> " placeholder="Email">
                                           </div>
                                         </div>
                     
                                         <div class="form-group row">
                                           <div class="col-sm-12">
-                                            <input type="contact" class="form-control" id="inputContact" value="<%=data.contact %>" placeholder="Contacto">
+                                            <input type="contact" class="form-control"   name="contact"  id="inputContact" value="<%=data.contact %>" placeholder="Contacto">
                                           </div>
                                         </div>
 
                                                     
                                         <div class="form-group row">
                                             <div class="col-sm-12">
-                                              <input type="site" class="form-control" id="inputContact" value="<%=data.website %>" placeholder="Website">
+                                              <input type="site" class="form-control" name="website" id="inputContact" value="<%=data.website %>" placeholder="Website">
                                             </div>
                                           </div>
                     
                                         <div class="form-group row">
                                           <div class="col-sm-12">
-                                            <input type="text" class="form-control" id="inputLocalization" value="<%=data.location %>" placeholder="Localização">
+                                            <input type="text" class="form-control" name="location" id="inputLocalization" value="<%=data.location %>" placeholder="Localização">
                                           </div>
                                         </div>
+
+                                        <input type="hidden" class="form-control" name="uid" id="uid" value="<%=data.uid %>" >
+                                       
                     
                                         <button type="submit"  class="btn btn-primary btn-lg btn-block">Actualizar</button>
                     
