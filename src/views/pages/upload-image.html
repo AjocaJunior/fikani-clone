@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Fikani- Login</title>
+    <title>Fikani- publicar fotos</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -41,7 +41,7 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Publicar imagem</h1>
                                     </div>
-                                    <form class="user" action="upload-image"  method="POST"  enctype="multipart/form-data">
+                                    <form class="user" id="upload" action="upload-image"  method="POST"  enctype="multipart/form-data">
                                         <div class="form-group">
                                          
                                             <div class="custom-file">
@@ -83,12 +83,53 @@
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+
     <script>
         var query = window.location.search.substring(1);
         var vars = query.split("=");
         var id = vars[1];
         var itemId =  document.getElementById("itemId");
-        itemId.value = id;   
+        itemId.value = id;  
+        
+        document
+          .getElementById("upload")
+          .addEventListener("submit", (event) => {
+            uploadProgress();
+        })
+        
+
+        function uploadProgress() {
+            let timerInterval
+            Swal.fire({
+            title: 'Publicando',
+            html: '<b></b>',
+            timer: 5000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                timerInterval = setInterval(() => {
+                const content = Swal.getContent()
+                if (content) {
+                    const b = content.querySelector('b')
+                    if (b) {
+                    b.textContent = Swal.getTimerLeft()
+                    }
+                }
+                }, 100)
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+            }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log('I was closed by the timer')
+            }
+            })
+        }
+
     </script>
 
 </body>

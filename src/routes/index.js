@@ -653,7 +653,7 @@ router.post("/upload-image",upload.single('file') , async (req, res) => {
     console.log(data)
     //todo show progress//
    db.collection('institution').doc( uid ).collection('gallery').doc( imgUid ).set(data).then(() => {
-      res.redirect('/admin?id='+uid);
+      res.redirect('/exhibitor-gallery?id='+uid);
      console.log("Success")
    }).catch((err) => {
     console.log(err);
@@ -666,7 +666,19 @@ router.post("/upload-image",upload.single('file') , async (req, res) => {
 
 
 router.get("/exhibitor-gallery", (req, res) => {
-    res.render("pages/exhibitor-gallery");
+    var  dataGallery = [];
+
+    db.collection("institution").doc(req.query.id).collection("gallery").get()
+    .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+            dataGallery.push(doc.data())
+        })
+        console.log(dataGallery);
+        res.render("pages/exhibitor-gallery", {
+            dataGallery
+        });
+    })
+   
 })
 
 async function uploadPhoto(filepath , filename, destination) {
@@ -748,7 +760,6 @@ router.get('/exhibitor-page' , (req, res) => {
                 dataGallery.push(doc.data())
             })
 
-            console.log(dataGallery);
             res.render('pages/exhibitor-page.html' , {
                 data, dataGallery
             });
