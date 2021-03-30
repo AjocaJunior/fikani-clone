@@ -649,17 +649,20 @@ router.post("/upload-image",upload.single('file') , async (req, res) => {
         uid:imgUid,
         time: ""
     }
-
-    console.log(data)
     //todo show progress//
-   db.collection('institution').doc( uid ).collection('gallery').doc( imgUid ).set(data).then(() => {
-      res.redirect('/exhibitor-gallery?id='+uid);
-     console.log("Success")
-   }).catch((err) => {
-    console.log(err);
-    res.redirect('/upload-image?id='+uid);
-   })
 
+    if(url != null && url != "") {
+        db.collection('institution').doc( uid ).collection('gallery').doc( imgUid ).set(data).then(() => {
+            res.redirect('/exhibitor-gallery?id='+uid);
+         }).catch((err) => {
+          res.redirect('/upload-image?id='+uid);
+         })
+      
+    } else {
+        console.log("is empty");
+        res.redirect('/upload-image?id='+uid);
+    }
+   
 
     
 })
@@ -735,6 +738,14 @@ router.get('/admin' , (req ,res) => {
     if(req.query.id == null) {
         res.redirect('/login-exhibitor');
     } 
+
+    var scheduleCount = 0;
+
+    db.collection("institution").doc(req.query.id).collection("schedule").get()
+    .then(querySnapshot => {
+       scheduleCount = querySnapshot.size;
+     });
+
     var data = null;
     db.collection('institution').doc(''+req.query.id).get().then(function(doc) {
         data = doc.data()
@@ -742,6 +753,10 @@ router.get('/admin' , (req ,res) => {
         if(data == null || data == undefined) {
             res.redirect('/login-exhibitor');
         }
+
+        data["scheduleCount"] = scheduleCount;
+
+        console.log(data);
 
         res.render('pages/admin.html' , {
             data
