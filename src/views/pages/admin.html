@@ -652,16 +652,62 @@
         </div>
     </div>
 
+
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+  
     <script> 
+
+    
     
     var description = document.getElementById("about");
     var fullDescription = document.getElementById("fullDescription").textContent;
     var btnEdit = document.getElementById("btnEdit");
     var btnUpdate = document.getElementById("btnUpdate");
     var fullDescriptionUpdated = false;
+    var uid = document.getElementById("uid").value;
+ 
 
+    btnUpdate.addEventListener('click', updateDescription);
     btnEdit.addEventListener('click' , setFullDescription);
     description.addEventListener("click" , setFullDescription);
+
+    function updateDescription() {
+        var descriptionText = description.innerText;
+
+        var data = {
+            description: descriptionText,
+            uid: uid
+        }
+        fetch("/updateDescription", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+              },
+              body: JSON.stringify(data),
+            }).then(function(res) {
+				if(res.ok){
+					showSucess("Actualizado com sucesso" , "success");
+				}else {
+                    showSucess("Actualizado com sucesso" , "error");
+				}
+
+				
+			})
+    }
+
+    function showSucess(message, status) {
+      Swal.fire({
+        position: 'bottom-end',
+        icon: status,
+        title: message,
+        showConfirmButton: false,
+        timer: 1000
+      })
+    }
 
     function setFullDescription() {
         description.focus();

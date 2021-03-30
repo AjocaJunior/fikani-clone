@@ -664,6 +664,22 @@ router.post("/upload-image",upload.single('file') , async (req, res) => {
     
 })
 
+router.post("/updateDescription", urlencodedParser, (req, res) => {
+    var description = req.body.description;
+    var uid = req.body.uid;
+
+    var data = {
+        description: description
+    }
+
+    db.collection("institution").doc(uid).update(data).then(()=> {
+        res.end(JSON.stringify({ status: 200, message : "Actualizado com sucesso" }));
+    }).catch((err) => {
+        res.end(JSON.stringify({ status: 501, message : "Actualizado com sucesso" }));
+    })
+
+})
+
 
 router.get("/exhibitor-gallery", (req, res) => {
     var  dataGallery = [];
@@ -680,6 +696,7 @@ router.get("/exhibitor-gallery", (req, res) => {
     })
    
 })
+
 
 async function uploadPhoto(filepath , filename, destination) {
     var bucket = admin.storage().bucket();
