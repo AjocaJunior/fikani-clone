@@ -163,14 +163,38 @@ router.get('/' , (req , res)=> {
 });
 
 
-function countVisits(uidExhibitor, currentNumber) {
+async function countVisits(uidExhibitor, currentNumber) {
     var num =  parseInt(currentNumber);
     num++
     var data = { 
         visits: num
     }
-    //todo db.collection("institution").doc(uidExhibitor).
+
+    db.collection("institution").doc(uidExhibitor).update(data).then(()=> {
+        console.log(uidExhibitor, num);
+    })
+
 }
+
+
+async function countContact(uidExhibitor) {
+
+    db.collection('institution').doc(uidExhibitor).get().then(function(doc) {
+       var dataDoc = doc.data()
+
+        var num = parseInt(dataDoc.countContact);
+        num++;
+        var data = {
+            countContact: num
+        }
+        db.collection("institution").doc(uidExhibitor).update(data).then(() => {
+            console.log(uidExhibitor);
+        })
+
+    });
+  
+}
+
 
 router.get('/forgot-password', (req, res) => {
     res.locals.title = "Esqueceu palavra-passe";
@@ -379,7 +403,8 @@ router.post('/schedule-chat', urlencodedParser , (req , res) => {
 
 
 async function addSchedule(req , res) {
-
+    
+   
     var scheduleUid = uuid();
     var data = req.body;
     data["uid"] = scheduleUid;
@@ -442,6 +467,7 @@ async function scheduleChatUsers(data, res) {
 
 
 router.get('/schedule-chat' , (req , res) => {
+countContact(req.query.id);
  const sessionCookie = req.cookies.session || "";
   admin
     .auth()
@@ -710,10 +736,12 @@ router.get('/exhibitor-page' , (req, res) => {
             res.redirect('/404');
         }
 
-
+         // count exhibitor visit 
+         countVisits(req.query.id, data.visits);
         
 
         var dataGallery = [];
+        console.log(dataGallery);
         db.collection("institution").doc(req.query.id).collection("gallery").get()
         .then(querySnapshot => {
             querySnapshot.forEach(doc => {
@@ -725,9 +753,8 @@ router.get('/exhibitor-page' , (req, res) => {
                 data, dataGallery
             });
 
+           
         });
-        
-     
 
     });
  
@@ -780,8 +807,7 @@ async function uploadFile(filepath , filename , req, res ) {
   const newInstitution = await db.collection('institution').doc(req.body.itemId).update(instData)
          .then(function() {
              // todo redirect to dashboard //
-
-            res.redirect('/');               
+            res.redirect('/admin?id='+req.body.itemId);              
         })
         .catch(function(error) {
             //reload page and show error

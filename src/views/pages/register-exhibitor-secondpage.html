@@ -105,11 +105,16 @@
 
     <script>
       
-      var query = window.location.search.substring(1);
+        var query = window.location.search.substring(1);
         var vars = query.split("=");
         var id = vars[1];
         var itemId =  document.getElementById("itemId");
         itemId.value = id;
+
+        // create session
+        if (typeof(Storage) !== "undefined") { 
+            sessionStorage.setItem("uidExhibitor", id);
+        }
         
 
         var btnSubmit = document.getElementById("submit");
