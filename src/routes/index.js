@@ -632,7 +632,39 @@ router.get('/login-exhibitor' , (req , res) => {
     res.render('pages/login-exhibitor.html')
 })
 
-router.get("/upload-image", (req, res) => {
+
+router.get("/add-video",  (req, res) => {
+    res.render('pages/add-video.html');
+})
+
+router.post("/upload-video", upload.single('file') , async  (req, res) => {
+    let file = path.join(__dirname , "../../uploads/"+req.file.filename);
+    let destination = "exhibitor";
+    console.log(req.file +" - "+ file);
+    const url = await uploadVideo(path.normalize(file) , req.file.filename , destination, req.file);
+
+    const uid = req.body.itemId;
+
+    if(url != null && url != "") {
+
+        var data = {
+            videoUrl: url
+        }
+
+
+        db.collection('institution').doc( uid ).update(data).then(() => {
+            res.redirect('/admin?id='+uid);
+         }).catch((err) => {
+          res.redirect('/add-video?id='+uid);
+         })
+
+
+    }
+    
+
+})
+
+router.get("/upload-image",  (req, res) => {
     res.render("pages/upload-image.html");
 })
 
@@ -701,6 +733,48 @@ router.get("/exhibitor-gallery", (req, res) => {
 })
 
 
+
+
+
+async function uploadVideo(filepath , filename, destination, file) {
+    var bucket = admin.storage().bucket();
+    var token = uuid();
+    const metadata = {
+      metadata: {
+        // This line is very important. It's to create a download token.
+        firebaseStorageDownloadTokens: token
+      },
+      contentType: file.mimetype,
+      cacheControl: 'public, max-age=31536000',
+    };
+
+    var videoUrl = "";
+    // Uploads a local file to the bucket
+    await bucket.upload(filepath, {
+      // Support for HTTP requests made with `Accept-Encoding: gzip`
+      gzip: true,
+      metadata: metadata,
+      destination: destination+"/"+filename
+    }).then((res)=>{
+
+        var videoName = res[0].name.replace("/" , "%2F");
+        videoUrl = "https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/"+videoName+"?alt=media&token="+token;
+    
+    }).catch((err)=>{
+        return null;
+    })
+ 
+    return videoUrl;
+
+}
+
+
+
+
+
+
+
+
 async function uploadPhoto(filepath , filename, destination) {
     var bucket = admin.storage().bucket();
     var token = uuid();
@@ -732,6 +806,8 @@ async function uploadPhoto(filepath , filename, destination) {
     return imgUrl;
 
 }
+
+
 
 router.get('/admin' , (req ,res) => {
 
