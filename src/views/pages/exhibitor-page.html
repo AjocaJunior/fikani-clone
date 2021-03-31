@@ -38,7 +38,34 @@
               <article class="post-single">
                 <div class="post-single-img">
 
+                <% if(data.videoUrl == "") { %>
                 <iframe width="770" height="472" src="https://www.youtube.com/embed/K1QICrgxTjA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"  allowfullscreen></iframe>
+                <% } else {%>
+
+                <video
+                id="my-video"
+                class="video-js"
+                controls
+                preload="auto"
+                width="770"
+                height="472"
+                poster="MY_VIDEO_POSTER.jpg"
+                data-setup="{}"
+                >
+                <source src="<%= data.videoUrl %>" type="video/mp4" />
+                <source src=" <%= data.videoUrl%> " type="video/webm" />
+                <p class="vjs-no-js vjs-theme-city">
+                  To view this video please enable JavaScript, and consider upgrading to a
+                  web browser that
+                  <a href="https://videojs.com/html5-video-support/" target="_blank"
+                    >supports HTML5 video</a
+                  >
+                </p>
+              </video>
+
+
+                <% } %>
+                
 
                 </div>
                 <!-- <ul class="post-single-meta">
@@ -250,5 +277,6 @@
     </div>
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
+    <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
   </body>
 </html>

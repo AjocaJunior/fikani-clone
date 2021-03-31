@@ -11,6 +11,8 @@
 
     <title>Admin</title>
 
+    
+    <link href="https://vjs.zencdn.net/7.11.4/video-js.css" rel="stylesheet" />
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
@@ -513,16 +515,45 @@
                                 aria-labelledby="dropdownMenuLink">
                                 <div class="dropdown-header">Video de apresentação:</div>
                                 <a class="dropdown-item" href="#">Excluir</a>
-                                <a class="dropdown-item" href="#">Adicionar outro video</a>
+                                <a class="dropdown-item" href="/add-video?id=<%= data.videoUrl %>">Adicionar video</a>
                                
                             </div>
                         </div>
                     </div>
+                    
                   <!-- Card Body -->
                   <div class="card-body">
-                    <div class="embed-responsive embed-responsive-16by9">
+
+                    <% if(data.videoUrl == "" ) { %>
+
                         <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/K1QICrgxTjA" allowfullscreen></iframe>
-                      </div>  
+
+                    <% } else {%>
+
+                  <video
+                    id="my-video"
+                    class="video-js"
+                    controls
+                    preload="auto"
+                    width="300"
+                    height="165"
+                    poster="MY_VIDEO_POSTER.jpg"
+                    data-setup="{}"
+                    >
+                    <source src="<%= data.videoUrl %>" type="video/mp4" />
+                    <source src=" <%= data.videoUrl%> " type="video/webm" />
+                    <p class="vjs-no-js vjs-theme-city">
+                      To view this video please enable JavaScript, and consider upgrading to a
+                      web browser that
+                      <a href="https://videojs.com/html5-video-support/" target="_blank"
+                        >supports HTML5 video</a
+                      >
+                    </p>
+                  </video>
+
+                    <%}%>
+                    
+                  
                   </div>
                 </div>
               </div>
@@ -784,7 +815,7 @@
 
 
     </script>
-
+    <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
 </body>
 
 </html>
