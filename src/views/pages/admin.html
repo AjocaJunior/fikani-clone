@@ -514,7 +514,7 @@
                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                 aria-labelledby="dropdownMenuLink">
                                 <div class="dropdown-header">Video de apresentação:</div>
-                                <a class="dropdown-item" href="#">Excluir</a>
+                                <button class="dropdown-item" onclick="removeVideo()" >Excluir</button>
                                 <a class="dropdown-item" href="/add-video?id=<%= data.videoUrl %>">Adicionar video</a>
                                
                             </div>
@@ -703,6 +703,25 @@
     btnUpdate.addEventListener('click', updateDescription);
     btnEdit.addEventListener('click' , setFullDescription);
     description.addEventListener("click" , setFullDescription);
+
+    function removeVideo() {
+        var data = {uid: uid}
+        fetch("/removeVideo", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+            },
+            body: JSON.stringify(data),
+        }).then((function(res) {
+            if(res.ok) {
+                showSucess("Removido com sucesso" , "success");
+            } else {
+                showSucess("Ocoreu uma falha" , "error");
+            }
+        }))
+    }
 
     function updateDescription() {
         var descriptionText = description.innerText;

@@ -102,6 +102,14 @@ const storageMulter = multer.diskStorage({
 const upload = multer({ storage: storageMulter });
 
 
+router.post("/removeVideo", urlencodedParser , (req, res) => {
+    var data = { videoUrl: ""}
+    var success = '{"message" : "Atualizado com sucesso", "status" : "200"}'
+    var uid = req.body.uid;
+
+    db.collection('institution').doc( uid ).update(data).then(() => {  res.end(success)   }).catch((err) => {  res.status(500).send('Something broke!')   })
+})
+
 
 router.get("/sessionLogout", (req, res) => {
     res.clearCookie("session");
@@ -710,7 +718,7 @@ router.post("/updateDescription", urlencodedParser, (req, res) => {
     db.collection("institution").doc(uid).update(data).then(()=> {
         res.end(JSON.stringify({ status: 200, message : "Actualizado com sucesso" }));
     }).catch((err) => {
-        res.end(JSON.stringify({ status: 501, message : "Actualizado com sucesso" }));
+        res.end(JSON.stringify({ status: 500, message : "Ocoreu uma falha" }));
     })
 
 })
