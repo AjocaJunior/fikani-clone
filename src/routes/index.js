@@ -153,6 +153,7 @@ router.get('/confer-live' , (req , res)=> {
     res.render('pages/confer-live');
 });
 
+
 router.post("/sendEmail", urlencodedParser ,(req, res) => {
     var email = req.body.email;
     var name = req.body.name;
@@ -680,6 +681,31 @@ router.post("/login-exhibitor", (req, res) => {
 
 router.get('/login-exhibitor' , (req , res) => {
     res.render('pages/login-exhibitor.html')
+})
+
+
+router.post("/uploadPerfil", upload.single('file') , async(req, res) => {
+    
+    let file = path.join(__dirname , "../../uploads/"+req.file.filename);
+    let destination = "profiles";
+    let userUid = req.body.uid;
+
+    if(userUid == null || userUid == "") {
+        return;
+    }
+
+    const url = await uploadPhoto(path.normalize(file) , req.file.filename , destination);
+
+    var data = {urlphoto: url}
+    if(url != null && url != "") {
+        db.collection('users').doc( userUid ).update(data).then(() => {
+            res.end();
+        })
+    } else {
+        // todo send error
+        res.status(500).send('Opps ocoreu uma falha!')  
+    }
+    
 })
 
 
