@@ -19,12 +19,14 @@ const { render } = require('ejs');
 const cookieParser = require("cookie-parser");
 const csrf = require("csurf");
 const express = require("express");
+var nodemailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport');
+require('dotenv').config()
 
 const csrfMiddleware = csrf({ cookie: true });
 
 router.use(bodyParser.json());
 router.use(cookieParser());
-
 router.use("/login" , csrfMiddleware);
 router.use("/register" , csrfMiddleware);
 // router.use(csrfMiddleware);
@@ -60,6 +62,16 @@ function authChecker(req, res, next) {
 }
 
 router.use(authChecker)
+
+// Email config
+let transporter = nodemailer.createTransport(smtpTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    auth: {
+        user:  process.env.EMAIL,
+        pass:  process.env.PASSWORD
+    }
+}));
 
 // Initialize Firebase admin
 admin.initializeApp({
@@ -140,6 +152,36 @@ router.get('/confer-live' , (req , res)=> {
     res.locals.title = "live";
     res.render('pages/confer-live');
 });
+
+router.post("/sendEmail", urlencodedParser ,(req, res) => {
+    var email = req.body.email;
+    var name = req.body.name;
+    var message = req.body.message + " enviado por "+ name + " email: "+email;
+    var subject = "Formulario de contacto fikani"
+    sendEmail(message, email, subject);
+    res.redirect("/contact");
+})
+
+
+function sendEmail(message, user_email, subject) {
+
+    var mailOptions = {
+        from: user_email,
+        to: process.env.EMAIL,
+        subject: subject,
+        text: message
+      };
+      
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+         
+          console.log('Email sent: ' + info.response);
+        }
+      });
+
+}
 
 router.get('/' , (req , res)=> {
     var instReference = db.collection("institution");
