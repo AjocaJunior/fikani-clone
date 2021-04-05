@@ -151,7 +151,11 @@ router.get('/confer' , (req , res)=> {
 
 router.get('/confer-live' , (req , res)=> {
     res.locals.title = "live";
-    res.render('pages/confer-live');
+    db.collection("event").doc("live").get().then((query) => {
+        var liveData = query.data()
+        res.render('pages/confer-live', {liveData});
+    })
+  
 });
 
 
@@ -580,6 +584,20 @@ function returnEmbedLink(link) {
     return embedLink
 }
 
+router.get("/add-live", (req, res) => {
+    res.render("pages/add-live")
+})
+
+router.post("/add-live",urlencodedParser, (req, res) => {
+    var data = req.body
+    data["link"] = returnEmbedLink(data["link"])
+    
+    db.collection("event").doc("live").set(data).then(()=> {
+        res.redirect("/admin-main")
+    }).then((err)=> {
+        res.status(500).send("Ocorreu uma falha")
+    })
+})
 
 router.get('/tables-schedule', (req , res) => {
 
