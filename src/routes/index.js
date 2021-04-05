@@ -343,7 +343,9 @@ router.get('/perfil' , (req , res) => {
 
 })
 
-
+router.get("/admin-main", (req, res) => {
+    res.render('pages/admin-main');
+})
 
 router.get('/about' , (req , res) => {
     res.render('pages/about.html');
@@ -713,7 +715,6 @@ router.post("/uploadPerfil", upload.single('file') , async(req, res) => {
 function removeFile(path) {
     try{
         fs.unlinkSync(path)
-        console.log("Success")
     } catch(err) {
         console.log(err)
     }
