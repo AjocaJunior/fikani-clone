@@ -208,11 +208,15 @@ router.get('/' , (req , res)=> {
                 list.push( instDocData);  
             })         
 
-            console.log(list);
             res.locals.title = "Seja bem vindo";   
-            res.render('pages/index.html' , {
-                list
-            });
+
+            db.collection("event").doc("live").get().then((query) => {
+                var liveData = query.data()
+                res.render('pages/index.html' , {
+                    list, liveData
+                });
+            })
+          
 
         })
 
@@ -345,11 +349,67 @@ router.get('/perfil' , (req , res) => {
 })
 
 router.get("/admin-main", (req, res) => {
-    res.render('pages/admin-main');
+    db.collection("event").doc("live").get().then((query) => {
+        var liveData = query.data()
+        res.render('pages/admin-main', {liveData});
+    })
+   
+})
+
+router.get("/add-ads", (req, res) => {
+    res.render("pages/add-ads")
 })
 
 router.get("/add-webinares", (req, res) => {
     res.render('pages/add-webinares')
+})
+
+router.post("/add-ads",upload.single('file'), async(req, res) => {
+
+    let file = path.join(__dirname , "../../uploads/"+req.file.filename);
+    let destination = "ads";
+    let uid = uuid();
+    let linkRedirect = req.body.link
+    let category = req.body.category
+
+    const url = await uploadPhoto(path.normalize(file) , req.file.filename , destination);
+
+    var data = {
+        urlphoto: url,
+        uid: uid,
+        linkRedirect: linkRedirect,
+        category: category
+    }
+
+    console.log(data)
+    if(url != null && url != "") {
+        db.collection('ads').doc( uid ).set(data).then(() => {
+            res.redirect("/admin-main")
+        })
+    } else {
+        // todo send error
+        res.status(500).send('Opps ocoreu uma falha!')  
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    console.log(req.body)
 })
 
 router.post("/add-webinar",urlencodedParser ,(req, res) => {
