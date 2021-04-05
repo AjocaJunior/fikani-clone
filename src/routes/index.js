@@ -21,6 +21,7 @@ const csrf = require("csurf");
 const express = require("express");
 var nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
+const fs = require('fs');
 require('dotenv').config()
 
 const csrfMiddleware = csrf({ cookie: true });
@@ -709,6 +710,15 @@ router.post("/uploadPerfil", upload.single('file') , async(req, res) => {
 })
 
 
+function removeFile(path) {
+    try{
+        fs.unlinkSync(path)
+        console.log("Success")
+    } catch(err) {
+        console.log(err)
+    }
+}
+
 router.get("/add-video",  (req, res) => {
     res.render('pages/add-video.html');
 })
@@ -879,6 +889,7 @@ async function uploadPhoto(filepath , filename, destination) {
         return null;
     })
  
+    removeFile(filepath)
     return imgUrl;
 
 }
@@ -999,6 +1010,7 @@ async function uploadFile(filepath , filename , req, res ) {
     imgUrl: imgUrl 
   }
 
+  removeFile(filepath);
   const newInstitution = await db.collection('institution').doc(req.body.itemId).update(instData)
          .then(function() {
              // todo redirect to dashboard //
