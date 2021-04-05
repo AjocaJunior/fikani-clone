@@ -338,13 +338,24 @@ router.get('/perfil' , (req , res) => {
         //res.redirect("/register");
         });
 
-
-   
-
 })
 
 router.get("/admin-main", (req, res) => {
     res.render('pages/admin-main');
+})
+
+router.get("/add-webinares", (req, res) => {
+    res.render('pages/add-webinares')
+})
+
+router.post("/add-webinar",urlencodedParser ,(req, res) => {
+    var data = req.body;
+    var uid = uuid()
+    db.collection("webinars").doc(uid).set(data).then(() => {
+       res.redirect("/webinar")
+    }).catch((error) => {
+        res.redirect("/webinar")
+    })
 })
 
 router.get('/about' , (req , res) => {
@@ -547,9 +558,27 @@ router.get('/schedule' , (req ,res) => {
     res.render('pages/schedule.html');
 })
 
-router.get('/webinar', (req , res) => {
-    res.render('pages/webinar.html');
+router.get('/webinar', async(req , res) => {
+    var dataWebinars = []
+    db.collection('webinars').get()
+    .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+            var data = doc.data()
+            data["link"] = returnEmbedLink(data["link"])
+            dataWebinars.push(data)
+        })
+        console.log(dataWebinars)
+        res.render('pages/webinar.html', {dataWebinars})
+    })
+
 })
+
+function returnEmbedLink(link) {
+    var vars = link.split("=");
+    var linkId = vars[1];
+    var embedLink = "https://www.youtube.com/embed/"+linkId
+    return embedLink
+}
 
 
 router.get('/tables-schedule', (req , res) => {
