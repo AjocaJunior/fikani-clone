@@ -391,7 +391,6 @@ router.post("/add-ads",upload.single('file'), async(req, res) => {
         category: category
     }
 
-    console.log(data)
     if(url != null && url != "") {
         db.collection('ads').doc( uid ).set(data).then(() => {
             res.redirect("/admin-main")
@@ -868,6 +867,14 @@ router.post("/upload-video", upload.single('file') , async  (req, res) => {
 
 })
 
+router.get("add-photo-main", (req, res) => {
+    res.render("pages/add-photo-main")
+})
+
+router.post("add-photo-main", upload.single('file') ,(req, res) => {
+    console.log(req.body)
+})
+
 router.get("/upload-image",  (req, res) => {
     res.render("pages/upload-image.html");
 })
@@ -1213,6 +1220,8 @@ router.post('/login' , urlencodedParser, [
 
    }
 })
+
+
 
 // register post
 router.post('/register' , (req, res) => { 

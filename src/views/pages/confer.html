@@ -154,7 +154,7 @@
                   </div>
                 </div>
                 <div class="col-sm-7 col-md-6 col-lg-12">
-                  <a href="<%= adsList[position[0]].linkRedirect %>"><img src="<%= adsList[position[0]].urlphoto %>" alt="" style="width:100%;height:100%;"></a>
+                  <img src="<%= adsList[position[0]].urlphoto %>" onclick="openLink('<%= adsList[position[0]].linkRedirect %>','<%= adsList[position[0]].category %>')" alt="" style="width:100%;height:100%;">
                 </div>
                 <div class="col-sm-5 col-md-6 col-lg-12">
                   <div class="post-aside">
@@ -189,7 +189,11 @@
      function openLink(link, category) {
         switch(category) {
           case "Website":
-            location.href = link;
+            if(link.includes("http")){
+              window.open(link)
+            }else {
+              window.open("https://"+link)
+            }
             break;
           case "Telefone":
             window.open("tel:"+link);
