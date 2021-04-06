@@ -145,8 +145,18 @@ router.post("/updateContact", urlencodedParser ,(req, res) => {
 })
 
 router.get('/confer' , (req , res)=> {
-    res.locals.title = "Conferencia";
-    res.render('pages/confer');
+    var adsList = []
+  
+    db.collection("ads").get().then((query)=> {
+        query.forEach(function(result){
+            adsList.push(result.data())
+        })
+        var position =[ Math.floor(Math.random() * adsList.length) + 0,  Math.floor(Math.random() * adsList.length) + 0]
+               
+        res.locals.title = "Conferencia";
+        res.render('pages/confer',{adsList, position});
+    }) 
+
 });
 
 router.get('/confer-live' , (req , res)=> {
