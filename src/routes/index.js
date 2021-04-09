@@ -89,12 +89,17 @@ const storageMulter = multer.diskStorage({
 const upload = multer({ storage: storageMulter });
 
 
-router.post("/removeVideo", urlencodedParser , (req, res) => {
+router.post("/removeVideo", urlencodedParser , async(req, res) => {
     var data = { videoUrl: ""}
-    var success = '{"message" : "Atualizado com sucesso", "status" : "200"}'
     var uid = req.body.uid;
+    var status = await providers.removeVideo(uid, data);
 
-    db.collection('institution').doc( uid ).update(data).then(() => {  res.end(success)   }).catch((err) => {  res.status(500).send('Something broke!')   })
+    if(status) {
+        res.status(200).send("Deletado com sucesso!");
+    } else {
+        res.status(500).send("Ocoreu uma falha!!!");
+    }
+   
 })
 
 
@@ -103,43 +108,31 @@ router.get("/sessionLogout", (req, res) => {
     res.redirect("/login");
 });
 
-router.post("/updateContact", urlencodedParser ,(req, res) => {
+router.post("/updateContact", urlencodedParser ,async (req, res) => {
     var data = req.body;
-
-    db.collection("institution").doc(data.uid).update(data).then(() => {
+    var status = await providers.removeVideo(data);
+   
+    if(status) {
         res.redirect("admin/"+data.uid);
-
-        // res.end('{"message" : "Updated Successfully", "status" : 200}');
-        // console.log("success");
-    }).catch((err) => {
-        res.end('{"message" : "Ocoreu uma falha" , "status" : 500}')
-        console.log(err);
-    })
+    } else {
+        res.status(500).send("Ocoreu uma falha")
+    }
 
 })
 
-router.get('/confer' , (req , res)=> {
-    var adsList = []
-  
-    db.collection("ads").get().then((query)=> {
-        query.forEach(function(result){
-            adsList.push(result.data())
-        })
-        var position =[ Math.floor(Math.random() * adsList.length) + 0,  Math.floor(Math.random() * adsList.length) + 0]
+router.get('/confer' , async(req , res)=> {
+    var adsList = await providers.getAdsList()
+    var position =[ Math.floor(Math.random() * adsList.length) + 0,  Math.floor(Math.random() * adsList.length) + 0]
                
-        res.locals.title = "Conferencia";
-        res.render('pages/confer',{adsList, position});
-    }) 
-
+    res.locals.title = "Conferencia";
+    res.render('pages/confer',{adsList, position});
 });
 
-router.get('/confer-live' , (req , res)=> {
+router.get('/confer-live' , async(req , res)=> {
     res.locals.title = "live";
-    db.collection("event").doc("live").get().then((query) => {
-        var liveData = query.data()
-        res.render('pages/confer-live', {liveData});
-    })
-  
+
+    var liveData = await providers.getLive
+    res.render('pages/confer-live', {liveData});  
 });
 
 
@@ -174,44 +167,16 @@ function sendEmail(message, user_email, subject) {
 }
 
 // home page
-router.get('/' , (req , res)=> {
-    var instReference = db.collection("institution");
-    var list = [];
-    var count = 0;
-    var listGallery = []
-
-        instReference.get().then((querySnapshot) => {
-            querySnapshot.forEach((instDoc) => {
-                var instDocData = instDoc.data()
-                count++;
-                if(instDocData.imgUrl == null || instDocData.imgUrl == '' ) {
-                    instDocData.imgUrl = 'https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/perfil%2Funnamed.jpg?alt=media&token=234789f8-f514-4ef0-aee4-36f534f03507';
-                }
-                // todo random 
-                if(count == 7) {
-                   return
-                }
-                list.push( instDocData);  
-            })         
-
-            res.locals.title = "Seja bem vindo"; 
-            db.collection("gallery").get().then((query) => {
-                query.forEach((dataGallery) => {
-                    listGallery.push(dataGallery.data())
-                })
-
-                db.collection("event").doc("live").get().then((query) => {
-                    var liveData = query.data()
-                    res.render('pages/index.html' , {
-                        list, liveData, listGallery
-                    });
-                })
-
-          
-            })  
-
-
-        })
+router.get('/' , async(req , res)=> {
+    res.locals.title = "Seja bem vindo"; 
+    var exhitorList = await providers.getExhibitors()
+    var list = exhitorList.slice(0, 8);
+    var listGallery = await providers.getGallery()
+    var liveData = await providers.getLive()
+             
+    res.render('pages/index.html' , {
+        list, liveData, listGallery
+    });
 
 });
 
