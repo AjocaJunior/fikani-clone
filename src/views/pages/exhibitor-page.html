@@ -169,12 +169,7 @@
 
 
                 <div class="col-sm-7 col-md-6 col-lg-12">
-                  <div class="post-aside">
-                    <h5 class="post-aside-title">Publicidade</h5>
-                    <div class="post-aside-content" style="height: 180px;">
-                      
-                    </div>
-                  </div>
+                  <img src="<%= adsList[position[1]].urlphoto %>" onclick="openLink('<%= adsList[position[1]].linkRedirect %>','<%= adsList[position[1]].category %>')" alt="" style="width:100%;height:100%;">
                 </div>
                
                 </div>
@@ -278,5 +273,27 @@
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
     <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
+
+    <script> 
+      function openLink(link, category) {
+         switch(category) {
+           case "Website":
+             if(link.includes("http")){
+               window.open(link)
+             }else {
+               window.open("https://"+link)
+             }
+             break;
+           case "Telefone":
+             window.open("tel:"+link);
+             break
+           case "Whatsapp":
+             location.href = "https://wa.me/"+link
+             break;
+           case "Estatico":
+           break;
+         }
+      }
+     </script>
   </body>
 </html>

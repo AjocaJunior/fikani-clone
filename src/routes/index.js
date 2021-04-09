@@ -199,10 +199,12 @@ function sendEmail(message, user_email, subject) {
 
 }
 
+// home page
 router.get('/' , (req , res)=> {
     var instReference = db.collection("institution");
     var list = [];
     var count = 0;
+    var listGallery = []
 
         instReference.get().then((querySnapshot) => {
             querySnapshot.forEach((instDoc) => {
@@ -212,21 +214,28 @@ router.get('/' , (req , res)=> {
                     instDocData.imgUrl = 'https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/perfil%2Funnamed.jpg?alt=media&token=234789f8-f514-4ef0-aee4-36f534f03507';
                 }
                 // todo random 
-                if(count == 6) {
+                if(count == 7) {
                    return
                 }
                 list.push( instDocData);  
             })         
 
-            res.locals.title = "Seja bem vindo";   
+            res.locals.title = "Seja bem vindo"; 
+            db.collection("gallery").get().then((query) => {
+                query.forEach((dataGallery) => {
+                    listGallery.push(dataGallery.data())
+                })
 
-            db.collection("event").doc("live").get().then((query) => {
-                var liveData = query.data()
-                res.render('pages/index.html' , {
-                    list, liveData
-                });
-            })
+                db.collection("event").doc("live").get().then((query) => {
+                    var liveData = query.data()
+                    res.render('pages/index.html' , {
+                        list, liveData, listGallery
+                    });
+                })
+
           
+            })  
+
 
         })
 
@@ -400,25 +409,6 @@ router.post("/add-ads",upload.single('file'), async(req, res) => {
         res.status(500).send('Opps ocoreu uma falha!')  
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    console.log(req.body)
 })
 
 router.post("/add-webinar",urlencodedParser ,(req, res) => {
@@ -867,12 +857,29 @@ router.post("/upload-video", upload.single('file') , async  (req, res) => {
 
 })
 
-router.get("add-photo-main", (req, res) => {
+router.get("/add-photo-main", (req, res) => {
     res.render("pages/add-photo-main")
 })
 
-router.post("add-photo-main", upload.single('file') ,(req, res) => {
-    console.log(req.body)
+router.post("/add-photo-main", upload.single('file') ,async(req, res) => {
+    let file = path.join(__dirname , "../../uploads/"+req.file.filename);
+    let destination = "exhibitor";
+    const url = await uploadPhoto(path.normalize(file) , req.file.filename , destination);
+    const uid = uuid();
+
+    const data = {
+        uid: uid,
+        url: url
+    }
+
+    if(url != null && url != "") {
+        db.collection("gallery").doc(uid).set(data).then(()=> {
+            res.redirect("/admin-main")
+        }).catch((err)=> {
+            res.redirect("/add-photo-main")
+        })
+    }
+
 })
 
 router.get("/upload-image",  (req, res) => {
@@ -980,12 +987,6 @@ async function uploadVideo(filepath , filename, destination, file) {
 }
 
 
-
-
-
-
-
-
 async function uploadPhoto(filepath , filename, destination) {
     var bucket = admin.storage().bucket();
     var token = uuid();
@@ -1061,6 +1062,7 @@ router.get('/exhibitor-page' , (req, res) => {
     if(req.query.id == null) {
         res.redirect('/404');
     } 
+    var adsList = []
     var data = null;
     db.collection('institution').doc(''+req.query.id).get().then(function(doc) {
         data = doc.data()
@@ -1080,9 +1082,19 @@ router.get('/exhibitor-page' , (req, res) => {
                 dataGallery.push(doc.data())
             })
 
-            res.render('pages/exhibitor-page.html' , {
-                data, dataGallery
-            });
+            db.collection("ads").get().then((query)=> {
+                query.forEach(function(result){
+                    adsList.push(result.data())
+                })
+                var position =[ Math.floor(Math.random() * adsList.length) + 0,  Math.floor(Math.random() * adsList.length) + 0]
+                           
+                res.render('pages/exhibitor-page.html' , {
+                    data, dataGallery, adsList, position
+                });
+                    
+
+            }) 
+
 
            
         });

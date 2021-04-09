@@ -683,19 +683,25 @@
         </div>
       </section>
       <!-- Section Photo Gallery-->
-      <section class="parallax-container section" data-parallax-img="images/bg-parallax-03-1894x1662.jpg">
+      <section class="parallax-container section" data-parallax-img="images/bg-parallax-03-1894x1662.jpg" id="gallery">
         <div class="parallax-content section-lg context-dark text-center parallax-overlay-gradient-primary-1">
           <div class="container container-wide">
             <h6>álbum de eventos</h6>
             <h3>Galeria de fotos</h3>
             <div class="row row-ten row-narrow row-30 row-lg-50 justify-content-center" data-lightgallery="group">
-              <div class="col-sm-4 col-md-3 col-lg-2">
-                <div class="wow">
-                  <div>
-                    <!-- Gallery Thumbnail--><a class="thumbnail" href="images/expo/Expositor-Parque Nacional da Gorongosa.jpg" data-lightgallery="item" data-triangle=".thumbnail-overlay"><span class="thumbnail-overlay"></span><span class="thumbnail-icon"></span><img src="images/expo/Expositor-Parque Nacional da Gorongosa.jpg" alt="" width="298" height="343"/></a>
+              
+              <%listGallery.forEach(function(gallery) { %>
+                <div class="col-sm-4 col-md-3 col-lg-2">
+                  <div class="wow">
+                    <div>
+                      <!-- Gallery Thumbnail--><a class="thumbnail" href="<%%>" data-lightgallery="item" data-triangle=".thumbnail-overlay"><span class="thumbnail-overlay"></span><span class="thumbnail-icon"></span><img src="images/expo/Expositor-Parque Nacional da Gorongosa.jpg" alt="" width="298" height="343"/></a>
+                    </div>
                   </div>
                 </div>
-              </div>
+              <%})%>
+              
+
+
               <div class="col-sm-4 col-md-3 col-lg-2">
                 <div class="wow">
                   <div>
