@@ -176,6 +176,48 @@ async function addWebinar(data) {
      })
 }
 
+async function addBuyer(data) {
+    db.collection("buyers").doc(data.uid).set(data)
+    .then(()=>{
+        return true
+    })
+    .catch((error)=> {
+        return false
+    })
+}
+
+async function addScheduleChat(data) {
+    await db.collection('institution').doc(data.exhibitorUid).collection('schedule').doc( data.uid ).set(data)
+    .then(function() {
+       return true         
+    })
+    .catch(function(error) {   
+       return false
+    });
+
+}
+
+async function scheduleChatUsers(data) {
+    await db.collection('institution').doc(data.exhibitorUid).get().then(function(doc) {
+        var instData = doc.data();
+        data["name"] = instData.name;
+    })
+    await db.collection('users').doc(data.userUid).collection('schedule').doc( data.uid ).set(data)
+        .then(function() {
+           return true           
+        })
+        .catch(function(error) {
+          return false
+        })
+}
+
+async function addLive(data) {
+    db.collection("event").doc("live").set(data).then(()=> {
+        return true
+    }).then((err)=> {
+        return false
+    })
+}
   
 
   module.exports = {
@@ -192,5 +234,9 @@ async function addWebinar(data) {
       getUserById,
       getUserSchedule,
       addAds,
-      addWebinar
+      addWebinar,
+      addBuyer,
+      addScheduleChat,
+      scheduleChatUsers,
+      addLive
   }

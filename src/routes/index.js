@@ -1,5 +1,6 @@
 const bodyParser = require('body-parser');
 const providers = require("../utils/providers")
+const utils = require("../utils/utils")
 const {db, bucket,admin} = require("../utils/databaseConfing")
 const {check , validationResult} = require('express-validator');
 const { Router} = require('express');
@@ -170,7 +171,13 @@ function sendEmail(message, user_email, subject) {
 router.get('/' , async(req , res)=> {
     res.locals.title = "Seja bem vindo"; 
     var exhitorList = await providers.getExhibitors()
-    var list = exhitorList.slice(0, 8);
+    var list = []
+    if(exhitorList.length > 8) {
+        list = exhitorList.slice(0, 8);
+    }else {
+        list = exhitorList
+    }
+    
     var listGallery = await providers.getGallery()
     var liveData = await providers.getLive()
              
@@ -359,43 +366,28 @@ var dataSchedule = [] ;
 
 })
 
-router.post("/register_buyer",urlencodedParser, (req, res) => {
+router.post("/register_buyer",urlencodedParser, async(req, res) => {
    let data = req.body;
    data["uid"] = uuid();
-  
-   db.collection("buyers").doc(data.uid).set(data)
-    .then(()=>{
-        res.end('{"success" : "Updated Successfully", "status" : 200}');
-        console.log("success");
-    })
-    .catch((error)=> {
-
-    })
+   var status = await providers.addBuyer(data);
+   if(status) {
+       res.status(200).send("Adicionado com sucesso")
+   }else {
+       res.status(500).send("Ocoreu uma falha")
+   }
 })
 
 
-router.get('/exhibitor' , (req , res) => {
-  
-    var instReference = db.collection("institution");
-            //Get them
-        var list = [];
-        instReference.get().then((querySnapshot) => {
-            //querySnapshot is "iteratable" itself
-            querySnapshot.forEach((instDoc) => {
-                var instDocData = instDoc.data()
-                if(instDocData.imgUrl == null || instDocData.imgUrl == '' ) {
-                    console.log(instDocData.imgUrl);
-                    instDocData.imgUrl = 'https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/perfil%2Funnamed.jpg?alt=media&token=234789f8-f514-4ef0-aee4-36f534f03507';
-                }
-                list.push( instDocData);
-    
-            })         
+router.get('/exhibitor' , async(req , res) => {
+ 
+    var list = await providers.getExhibitors();
+    if(list.length > 8) {
+        list = list.slice(0, 8)
+    }
 
-            res.render('pages/exhibitor.html' , {
-                list
-            });
-
-        })
+    res.render('pages/exhibitor.html' , {
+        list
+    });
 
 }); 
 
@@ -407,7 +399,6 @@ router.post('/schedule-chat', urlencodedParser , (req , res) => {
 
 async function addSchedule(req , res) {
     
-   
     var scheduleUid = uuid();
     var data = req.body;
     data["uid"] = scheduleUid;
@@ -437,35 +428,23 @@ async function addSchedule(req , res) {
 }
 
 async function scheduleChat(data, res) {
-    console.log(data);
-    await db.collection('institution').doc(data.exhibitorUid).collection('schedule').doc( data.uid ).set(data)
-        .then(function() {
-            console.log("GooD")
-            scheduleChatUsers(data, res);          
-        })
-        .catch(function(error) {   
-            res.render('pages/schedule-chat?id='+data.exhibitorUid , {
-                error
-        })
-    });
+    var status = await providers.addScheduleChat(data);
 
+    if(status) {
+        scheduleChatUsers(data, res); 
+    } else {
+        res.render('pages/schedule-chat?id='+data.exhibitorUid , { error })
+    }
+    
 }
 
 async function scheduleChatUsers(data, res) {
-
-    await db.collection('institution').doc(data.exhibitorUid).get().then(function(doc) {
-        var instData = doc.data();
-        data["name"] = instData.name;
-    })
-    await db.collection('users').doc(data.userUid).collection('schedule').doc( data.uid ).set(data)
-        .then(function() {
-            res.end(JSON.stringify({ status: "success" }));             
-        })
-        .catch(function(error) {
-            res.end(JSON.stringify({ status: "error" }));
-        })
-
-
+    var status = await providers.scheduleChatUsers(data);
+    if(status) {
+        res.end(JSON.stringify({ status: "success" }));    
+    } else {
+        res.end(JSON.stringify({ status: "error" }));
+    }
 }
 
 
@@ -502,7 +481,7 @@ router.get('/webinar', async(req , res) => {
     .then(querySnapshot => {
         querySnapshot.forEach(doc => {
             var data = doc.data()
-            data["link"] = returnEmbedLink(data["link"])
+            data["link"] = utils.returnEmbedLink(data["link"])
             dataWebinars.push(data)
         })
         console.log(dataWebinars)
@@ -511,12 +490,6 @@ router.get('/webinar', async(req , res) => {
 
 })
 
-function returnEmbedLink(link) {
-    var vars = link.split("=");
-    var linkId = vars[1];
-    var embedLink = "https://www.youtube.com/embed/"+linkId
-    return embedLink
-}
 
 router.get("/add-live", (req, res) => {
     res.render("pages/add-live")
@@ -524,7 +497,7 @@ router.get("/add-live", (req, res) => {
 
 router.post("/add-live",urlencodedParser, (req, res) => {
     var data = req.body
-    data["link"] = returnEmbedLink(data["link"])
+    data["link"] = utils.returnEmbedLink(data["link"])
     
     db.collection("event").doc("live").set(data).then(()=> {
         res.redirect("/admin-main")
