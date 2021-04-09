@@ -1,14 +1,11 @@
 const bodyParser = require('body-parser');
+const providers = require("../utils/providers")
+const {db, bucket,admin} = require("../utils/databaseConfing")
 const {check , validationResult} = require('express-validator');
 const { Router} = require('express');
 const router = Router();
-const firebase = require("firebase/app");
-const admin = require("firebase-admin");
-require("firebase/auth");
-require("firebase/storage")
-require("firebase/firestore");
-//const googleStorage = require('@google-cloud/storage');
-const {Storage} = require('@google-cloud/storage');
+
+
 const multer = require('multer');
 const path = require('path');
 const { uuid } = require('uuidv4');
@@ -24,6 +21,7 @@ var smtpTransport = require('nodemailer-smtp-transport');
 const fs = require('fs');
 require('dotenv').config()
 
+
 const csrfMiddleware = csrf({ cookie: true });
 
 router.use(bodyParser.json());
@@ -31,6 +29,8 @@ router.use(cookieParser());
 router.use("/login" , csrfMiddleware);
 router.use("/register" , csrfMiddleware);
 // router.use(csrfMiddleware);
+
+providers.getTotalValue()
 
 router.all("*", (req, res, next) => {
     
@@ -74,32 +74,6 @@ let transporter = nodemailer.createTransport(smtpTransport({
     }
 }));
 
-// Initialize Firebase admin
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  storageBucket: "gs://fikani.appspot.com"
-});
-
-var firebaseConfig = {
-    apiKey: "AIzaSyBEJWJCm8OnSYYu2-VYqeRi03JprBcaUkg",
-    authDomain: "fikani.firebaseapp.com",
-    projectId: "fikani",
-    storageBucket: "fikani.appspot.com",
-    messagingSenderId: "146961453473",
-    appId: "1:146961453473:web:7fec98e5503384f08c7be0"
-};
-  
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = admin.firestore();
-
-// storage
-const storage  = new Storage({
-    projectId: "fikani",
-    keyFilename: serviceAccount 
-  });
-
-const bucket = storage.bucket("fikani.appspot.com");
 
 
 // Multer config
