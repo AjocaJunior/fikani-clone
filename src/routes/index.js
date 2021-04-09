@@ -495,42 +495,28 @@ router.get("/add-live", (req, res) => {
     res.render("pages/add-live")
 })
 
-router.post("/add-live",urlencodedParser, (req, res) => {
+router.post("/add-live",urlencodedParser, async(req, res) => {
     var data = req.body
     data["link"] = utils.returnEmbedLink(data["link"])
-    
-    db.collection("event").doc("live").set(data).then(()=> {
+    var status = await providers.addLive(data);
+    if(status) {
         res.redirect("/admin-main")
-    }).then((err)=> {
+    } else {
         res.status(500).send("Ocorreu uma falha")
-    })
+    }
 })
 
-router.get('/tables-schedule', (req , res) => {
+router.get('/tables-schedule', async(req , res) => {
 
     if(req.query.id == null) {
         res.redirect('/login-exhibitor');
     } 
 
-    var data = [];
-    var dataSchedule = [] ;
-
-    console.log(dataSchedule.length);
-
-    db.collection('institution').doc(''+req.query.id).get().then(function(doc) {
-        data = doc.data()
-    });
-
-    db.collection("institution").doc(req.query.id).collection("schedule").get()
-        .then(querySnapshot => {
-            querySnapshot.forEach(doc => {
-                dataSchedule.push(doc.data())
-        });
-
-        res.render('pages/tables-schedule.html', {
-              data,dataSchedule
-        });
-      
+    var data = await providers.getExhibitorById(req.query.id)
+    var dataSchedule = await  providers.getExhibitorSchedule(req.query.id)
+  
+    res.render('pages/tables-schedule.html', {
+        data,dataSchedule
     });
 
 })

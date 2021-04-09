@@ -212,11 +212,25 @@ async function scheduleChatUsers(data) {
 }
 
 async function addLive(data) {
-    db.collection("event").doc("live").set(data).then(()=> {
+   await db.collection("event").doc("live").set(data).then(()=> {
         return true
     }).then((err)=> {
         return false
     })
+}
+
+async function getExhibitorById(uid) {
+    var data = await db.collection('institution').doc(uid).get().then(function(doc) {
+       return doc.data()
+    });
+    return data
+}
+
+async function getExhibitorSchedule(uid) {
+    var data = await db.collection('institution').doc(''+req.query.id).get().then(function(doc) {
+       return doc.data()
+    });
+    return data
 }
   
 
@@ -238,5 +252,7 @@ async function addLive(data) {
       addBuyer,
       addScheduleChat,
       scheduleChatUsers,
-      addLive
+      addLive,
+      getExhibitorById,
+      getExhibitorSchedule
   }
