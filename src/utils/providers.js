@@ -91,6 +91,91 @@ const {db} = require("./databaseConfing")
     })
     return listGallery
   }
+
+  async function countVisits(uidExhibitor, currentNumber) {
+    var num =  parseInt(currentNumber);
+    num++
+    var data = { 
+        visits: num
+    }
+
+    db.collection("institution").doc(uidExhibitor).update(data).then(()=> {
+        console.log(uidExhibitor, num);
+    })
+
+}
+
+
+async function countContact(uidExhibitor) {
+
+    db.collection('institution').doc(uidExhibitor).get().then(function(doc) {
+       var dataDoc = doc.data()
+
+        var num = parseInt(dataDoc.countContact);
+        num++;
+        var data = {
+            countContact: num
+        }
+        db.collection("institution").doc(uidExhibitor).update(data).then(() => {
+            console.log(uidExhibitor);
+        })
+
+    });
+  
+}
+
+async function getBuyers() {
+    var list = []
+    await db.collection('buyers').get().then((querySnapshot) => {
+        querySnapshot.forEach((buyersDoc) => {
+
+            var data = buyersDoc.data()
+            if(data.urlphoto == "") {
+                data["urlphoto"] = "https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/perfil%2Funnamed.jpg?alt=media&token=234789f8-f514-4ef0-aee4-36f534f03507";
+            }
+            list.push(data);
+        })
+    })
+    return list
+}
+
+async function getUserById(uid) {
+   var data = await db.collection('users').doc(uid).get().then(function(doc) {
+        return data = doc.data()
+   })
+
+   return data
+}
+
+
+async function getUserSchedule(uid) {
+    var dataSchedule = await db.collection("users").doc(uid).collection("schedule").get().then(querySnapshot => {
+        var momentoData = []    
+        querySnapshot.forEach(doc => {
+            momentoData.push(doc.data())
+        });
+        return momentoData
+    });
+ 
+    return dataSchedule
+}
+
+async function addAds(data) {
+    await db.collection('ads').doc( data.uid ).set(data).then(() => {
+       return true
+    }).catch((err) => {
+        return false
+    })
+}
+
+async function addWebinar(data) {
+    db.collection("webinars").doc(data.uid).set(data).then(() => {
+        return true
+     }).catch((error) => {
+         return true
+     })
+}
+
   
 
   module.exports = {
@@ -100,5 +185,12 @@ const {db} = require("./databaseConfing")
       getAdsList,
       getLive,
       getExhibitors,
-      getGallery
+      getGallery,
+      countVisits,
+      countContact,
+      getBuyers,
+      getUserById,
+      getUserSchedule,
+      addAds,
+      addWebinar
   }

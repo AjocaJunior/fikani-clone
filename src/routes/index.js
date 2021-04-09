@@ -181,39 +181,6 @@ router.get('/' , async(req , res)=> {
 });
 
 
-async function countVisits(uidExhibitor, currentNumber) {
-    var num =  parseInt(currentNumber);
-    num++
-    var data = { 
-        visits: num
-    }
-
-    db.collection("institution").doc(uidExhibitor).update(data).then(()=> {
-        console.log(uidExhibitor, num);
-    })
-
-}
-
-
-async function countContact(uidExhibitor) {
-
-    db.collection('institution').doc(uidExhibitor).get().then(function(doc) {
-       var dataDoc = doc.data()
-
-        var num = parseInt(dataDoc.countContact);
-        num++;
-        var data = {
-            countContact: num
-        }
-        db.collection("institution").doc(uidExhibitor).update(data).then(() => {
-            console.log(uidExhibitor);
-        })
-
-    });
-  
-}
-
-
 router.get('/forgot-password', (req, res) => {
     res.locals.title = "Esqueceu palavra-passe";
     res.render('pages/forgot-password.html');
@@ -246,72 +213,41 @@ router.get('/login' , (req , res)=> {
     res.render('pages/login');
 });
 
-router.get('/buyers', (req, res) => {
- 
-    var list = [];
-    db.collection('buyers').get().then((querySnapshot) => {
-        querySnapshot.forEach((buyersDoc) => {
-
-            var data = buyersDoc.data()
-            if(data.urlphoto == "") {
-
-            }
-            data["urlphoto"] = "https://firebasestorage.googleapis.com/v0/b/fikani.appspot.com/o/perfil%2Funnamed.jpg?alt=media&token=234789f8-f514-4ef0-aee4-36f534f03507";
-          list.push(data);
-        })
-        
-        res.locals.title = "Buyers";
-
-        res.render('pages/buyers.html' , {
-            list
-        })
-    })
-
+router.get('/buyers', async(req, res) => {
+    var list = await providers.getBuyers()
+    res.locals.title = "Buyers";
+    res.render('pages/buyers.html' , {list})  
 })
 
-router.get('/perfil' , (req , res) => {
+router.get('/perfil' , async(req , res) => {
     const sessionCookie = req.cookies.session || "";
-    var data = [];
-    var dataSchedule = [] ;
-
+   
     admin
         .auth()
         .verifySessionCookie(sessionCookie, true /** checkRevoked */)
-        .then((user) => {
+        .then(async(user) => {
 
-            db.collection('users').doc(user.uid).get().then(function(doc) {
-                data = doc.data()
-                
-            db.collection("users").doc(data.uid).collection("schedule").get()
-                .then(querySnapshot => {
-                    querySnapshot.forEach(doc => {
-                        dataSchedule.push(doc.data())
-                });
+            var data = await providers.getUserById(user.uid);
+            var dataSchedule = await providers.getUserSchedule(user.uid)
 
-                res.locals.title = data.name;
-                res.render('pages/perfil.html', {
-                    data,dataSchedule
-                });
-            
+            res.locals.title = data.name;
+            res.render('pages/perfil.html', {
+                data,dataSchedule
             });
-
-        });
-
     
         })
         .catch((error) => {
             console.log(error);
-        //res.redirect("/register");
+        res.redirect("/register");
         });
 
 })
 
-router.get("/admin-main", (req, res) => {
-    db.collection("event").doc("live").get().then((query) => {
-        var liveData = query.data()
-        res.render('pages/admin-main', {liveData});
-    })
-   
+router.get("/admin-main", async(req, res) => {
+    var liveData = await providers.getLive();
+    var totalData = await providers.getTotalValue();
+    var liveData = query.data()
+    res.render('pages/admin-main', {liveData, totalData});
 })
 
 router.get("/add-ads", (req, res) => {
@@ -340,24 +276,28 @@ router.post("/add-ads",upload.single('file'), async(req, res) => {
     }
 
     if(url != null && url != "") {
-        db.collection('ads').doc( uid ).set(data).then(() => {
-            res.redirect("/admin-main")
-        })
+      var status =  providers.addAds(data)
+      if(status) {
+        res.redirect("/admin-main")
+      }else {
+        res.status(500).send('Opps ocoreu uma falha!')  
+      }
     } else {
-        // todo send error
         res.status(500).send('Opps ocoreu uma falha!')  
     }
 
 })
 
-router.post("/add-webinar",urlencodedParser ,(req, res) => {
+router.post("/add-webinar",urlencodedParser ,async(req, res) => {
     var data = req.body;
     var uid = uuid()
-    db.collection("webinars").doc(uid).set(data).then(() => {
-       res.redirect("/webinar")
-    }).catch((error) => {
+    data["uid"] = uid;
+    let status = await providers.addWebinar(data);
+    if(status) {
         res.redirect("/webinar")
-    })
+    } else {
+        res.redirect("/webinar")
+    }
 })
 
 router.get('/about' , (req , res) => {
@@ -394,7 +334,7 @@ router.post("/sessionLogin", (req, res) => {
       );
   });
   
-router.get("/register_buyer" , (req, res) => {
+router.get("/register_buyer" , async(req, res) => {
 
 const sessionCookie = req.cookies.session || "";
 var data = [];
@@ -403,17 +343,13 @@ var dataSchedule = [] ;
   admin
     .auth()
     .verifySessionCookie(sessionCookie, true /** checkRevoked */)
-    .then((user) => {
+    .then(async(user) => {
 
-        db.collection('users').doc(user.uid).get().then(function(doc) {
-            data = doc.data()
-            
-            res.locals.title = data.name;
+        var data = await providers.getUserById(user.uid);
+        res.locals.title = data.name;
             res.render('pages/register-buyer.html', {
                 data
-            });           
-        });
-
+            });  
    
     })
     .catch((error) => {
@@ -1010,7 +946,7 @@ router.get('/exhibitor-page' , (req, res) => {
         }
 
          // count exhibitor visit 
-         countVisits(req.query.id, data.visits);
+         providers.countVisits(req.query.id, data.visits);
         
 
         var dataGallery = [];
