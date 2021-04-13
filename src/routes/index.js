@@ -252,8 +252,11 @@ router.get('/perfil' , async(req , res) => {
 
 })
 
-router.get("/news", (req, res) => {
-    res.render("pages/news-full")
+router.get("/news", async(req, res) => {
+    var uid = req.query.id
+    var data = await providers.getPublicationById(uid)
+
+    res.render("pages/news-full", {data})
 })
 
 router.post("/add-info", upload.single('file'), async(req, res) => {

@@ -294,5 +294,6 @@ async function getPublicationById(uid) {
       getExhibitorById,
       getExhibitorSchedule,
       setPublication,
-      getPublication
+      getPublication,
+      getPublicationById
   }

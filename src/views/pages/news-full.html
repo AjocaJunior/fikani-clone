@@ -36,15 +36,18 @@
                 <div class="post-img"><img src="images/news-01-770x472.jpg" alt="" width="770" height="472"/>
                 </div>
                 <ul class="post-meta">
-                  <li class="post-meta-author"><span>by</span> <a href="#">Dan Fisher</a>
+                  <li class="post-meta-author"><span>por</span> <a href="#"> <%= data.author %> </a>
                   </li>
                   <li class="post-meta-date">
-                    <time datetime="2019-01-16">19 Aug, 2019</time>
+                    <time datetime="2019-01-16">  <%= data.date %> </time>
                   </li>
-                  <li class="post-meta-comments"><span>2 Comments</span></li>
+                  <!-- <li class="post-meta-comments"><span>2 Comments</span></li> -->
                 </ul>
-                <h3 class="post-title"><a href="single-news.html">Building a room detector for hot devices</a></h3>
-                <p class="post-excerpt">Sed quia conse quuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><a class="news-link" href="single-news.html">Read More</a>
+                <h3 class="post-title"><a href="single-news.html">  <%= data.title %> </a></h3>
+                <p class="post-excerpt">
+                    <%= data.description %>
+                </p>
+                <!-- <a class="news-link" href="single-news.html">Read More</a> -->
               </article>
 
 
