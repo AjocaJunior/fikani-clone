@@ -252,6 +252,10 @@ router.get('/perfil' , async(req , res) => {
 
 })
 
+router.get("/news", (req, res) => {
+    res.render("pages/news-full")
+})
+
 router.post("/add-info", upload.single('file'), async(req, res) => {
 
     let file = path.join(__dirname , "../../uploads/"+req.file.filename);

@@ -7,8 +7,9 @@ function returnEmbedLink(link) {
 
 function getDescription(description) {
     let newDescription = ""
+    var regex = /(<([^>]+)>)/ig
     if(description.length > 80) {
-        newDescription = description.substring(0, 80)
+        newDescription = description.substring(0, 80).replace(regex, "").trim()+".."
     } else {
         newDescription = description
     }

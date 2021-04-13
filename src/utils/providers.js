@@ -254,12 +254,21 @@ async function getPublication() {
         querySnapshot.forEach((publicationDoc) => {
             var data = publicationDoc.data()
             data["description"] =  utils.getDescription(data["description"])
-            console.log(data)
+           
             publicationList.push(data)
         })
     })
 
     return publicationList
+}
+
+async function getPublicationById(uid) {
+    var data = await db.collection("publication").doc(uid).get().then((doc) => {
+       
+        return doc.data()
+    }) 
+
+    return data
 }
 
 
