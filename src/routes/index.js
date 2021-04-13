@@ -194,9 +194,11 @@ router.get('/forgot-password', (req, res) => {
 })
 
 
-router.get('/info' , (req , res) => {
+router.get('/info' , async(req , res) => {
+    var listInfo = await providers.getPublication();
+
     res.locals.title = "Informações";
-    res.render('pages/info')
+    res.render('pages/info', { listInfo })
 })
 
 router.get('/contact' , (req , res) => {
@@ -250,10 +252,44 @@ router.get('/perfil' , async(req , res) => {
 
 })
 
+router.post("/add-info", upload.single('file'), async(req, res) => {
+
+    let file = path.join(__dirname , "../../uploads/"+req.file.filename);
+    let destination = "publication";
+    let uid = uuid();
+    let title = req.body.title;
+    let author = req.body.author;
+    let description = req.body.description;
+    let date = (new Date()).toISOString().split('T')[0];
+    let url = await uploadPhoto(path.normalize(file) , req.file.filename , destination);
+
+    var data = {
+        urlphoto: url,
+        uid: uid,
+        title: title,
+        author: author,
+        date: date,
+        description: description
+    }
+
+    console.log(data)
+    var status =  await  providers.setPublication(data);
+    if(status) {
+        res.redirect("/admin-main")        
+    } else {
+        res.status(500).send("Error")
+    }
+})
+
+router.get("/add-info", (req, res) => {
+    res.render('pages/add-info')
+})
+
 router.get("/admin-main", async(req, res) => {
     var liveData = await providers.getLive();
     var totalData = await providers.getTotalValue();
-    var liveData = query.data()
+    console.log(totalData)
+    // var liveData = query.data()
     res.render('pages/admin-main', {liveData, totalData});
 })
 

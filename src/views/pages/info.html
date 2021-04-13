@@ -30,16 +30,25 @@
       <section class="section section-lg bg-default text-center">
         <div class="container">
           <div class="row row-30 row-lg-50">
-            <div class="col-md-4">
-              <div class="news">
-                <div class="news-img"><a href="#" data-triangle=".news-img-overlay"><span class="news-img-overlay"></span><img src="images/news-01-370x284.jpg" alt="" width="370" height="284"/></a></div>
-                <p class="news-meta">por <a class="news-author" href="#">Agostinho dos santos</a> <span>-</span> <a class="news-time" href="#">
-                    <time datetime="2021-01-18">18 Set, 2021</time></a>
-                </p>
-                <h4 class="news-title"><a href="#">Muitas marcas importantes nos deram sua confiança.</a></h4>
-                <p class="news-text">Sed quia conse quuntur magni dolores eos qui ratione voluptatem sequi nesciunt. </p><a class="news-link" href="#">Ler Mais</a>
-              </div>
-            </div>
+
+            <% if(listInfo != 'undefined') {  %>
+              <% listInfo.forEach(function(info) { %>
+
+                <div class="col-md-4">
+                  <div class="news">
+                    <div class="news-img"><a href="#" data-triangle=".news-img-overlay"><span class="news-img-overlay"></span><img src="<%= info.urlphoto %>" alt="" width="370" height="284"/></a></div>
+                    <p class="news-meta">por <a class="news-author" href="#"><%= info.author %></a> <span>-</span> <a class="news-time" href="#">
+                        <time datetime="2021-01-18"><%= info.date %></time></a>
+                    </p>
+                    <h4 class="news-title"><a href="#"> <%= info.title %> </a></h4>
+                    <p class="news-text"> <%= info.description %> </p><a class="news-link" href="#">Ler Mais</a>
+                  </div>
+                </div>
+    
+              <%})%>
+            <%}%>
+            
+
             <div class="col-md-4">
               <div class="news">
                 <div class="news-img"><a href="#" data-triangle=".news-img-overlay"><span class="news-img-overlay"></span><img src="images/news-02-370x284.jpg" alt="" width="370" height="284"/></a></div>

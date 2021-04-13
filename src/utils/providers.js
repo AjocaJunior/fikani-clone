@@ -1,4 +1,5 @@
 const {db} = require("./databaseConfing")
+const utils = require("./utils")
 
   async function getTotalValue() {
     let data = {
@@ -232,7 +233,35 @@ async function getExhibitorSchedule(uid) {
     });
     return data
 }
-  
+
+
+async function setPublication(data) {
+  var status = await db.collection('publication').doc(data.uid).set(data).then(()=> {
+       return true
+    }).catch((err) => {
+        console.log("error")
+        return false
+    })
+    return status
+}
+
+
+
+async function getPublication() {
+
+    var publicationList = []
+    await db.collection("publication").get().then((querySnapshot) => {
+        querySnapshot.forEach((publicationDoc) => {
+            var data = publicationDoc.data()
+            data["description"] =  utils.getDescription(data["description"])
+            console.log(data)
+            publicationList.push(data)
+        })
+    })
+
+    return publicationList
+}
+
 
   module.exports = {
       getTotalValue,
@@ -254,5 +283,7 @@ async function getExhibitorSchedule(uid) {
       scheduleChatUsers,
       addLive,
       getExhibitorById,
-      getExhibitorSchedule
+      getExhibitorSchedule,
+      setPublication,
+      getPublication
   }
