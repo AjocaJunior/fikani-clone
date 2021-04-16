@@ -3,7 +3,8 @@ const app = express();
 const path = require('path');
 const bodyParser = require('body-parser');
 const port =  3000 || process.env.PORT;
-const session = require('express-session');
+
+// const session = require('cookie-session');
 
 // set static file
 app.use(express.static(__dirname + '/public'));
@@ -20,17 +21,17 @@ app.engine('html',require('ejs').renderFile);
 //     saveUninitialized: false,
 // }));
 
-app.use(
-    session({
-        resave: false,
-        saveUninitialized: true,
-        secret: "anyrandomstring",
-        cookie: { secure: true},
-      })
-    );
+// app.use(
+//     session({
+//         resave: false,
+//         saveUninitialized: true,
+//         secret: "anyrandomstring",
+//         cookie: { secure: true},
+//       })
+//     );
     
 
 app.use(require('./routes/index.js'));
 
-app.listen(3000);
+app.listen( process.env.PORT || 3000 );
 console.log('3000 is the magic port');
