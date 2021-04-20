@@ -264,6 +264,8 @@
                         urlphoto : ""
                       };
 
+                      console.log(data)
+
                       fetch("/register", {
                           method: "POST",
                           headers: {
@@ -272,6 +274,13 @@
                             "CSRF-Token": Cookies.get("XSRF-TOKEN"),
                           },
                           body: JSON.stringify(data),
+                      }).then((res) => {
+                         if(res.ok) {
+                            window.location.assign("/");
+                         }else {
+                            window.location.assign("/register");
+                         }
+                        
                       });
                           
                     });
@@ -284,7 +293,7 @@
                   Swal.fire({
                     title: 'Cadastrando!',
                     html: '',
-                    timer: 3000,
+                    timer: 6000,
                     timerProgressBar: true,
                     didOpen: () => {
                       Swal.showLoading()

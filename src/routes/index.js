@@ -1113,16 +1113,19 @@ router.post('/login' , urlencodedParser, [
 
 
 // register post
-router.post('/register' , (req, res) => { 
+router.post('/register' , async(req, res) => { 
     const sessionCookie = req.cookies.session || "";
     var data = req.body;
 
     admin
     .auth()
     .verifySessionCookie(sessionCookie, true /** checkRevoked */)
-    .then((user) => {
+    .then(async(user) => {
         data["uid"] = user.uid;
-        addUser(data ,res);
+        console.log(data)
+        var state = await addUser(data);
+       
+        res.status(200).send({status:200, message: "Cadastrado com sucesso"})
     })
     .catch((error) => {
         res.redirect("/register" , {
@@ -1133,17 +1136,14 @@ router.post('/register' , (req, res) => {
 });
 
 // add user to the database //
-async function addUser(data , res) {
-    const newUser = await db.collection('users').doc(data.uid).set(data)
-    .then(function() {
-        // todo redirect to home
-       res.redirect('/');            
+async function addUser(data) {
+    await db.collection('users').doc(data.uid).set(data)
+    .then(function() {     
+      return true    
     })
    .catch(function(error) {
-    console.log("errpr")
-       res.render('pages/register' , {
-           error
-       })
+        console.log(error)
+        return false
    });
 
 }
