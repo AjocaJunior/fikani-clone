@@ -476,6 +476,7 @@ async function scheduleChat(data, res) {
     if(status) {
         scheduleChatUsers(data, res); 
     } else {
+        
         res.render('pages/schedule-chat?id='+data.exhibitorUid , { error })
     }
     
@@ -492,7 +493,8 @@ async function scheduleChatUsers(data, res) {
 
 
 router.get('/schedule-chat' , (req , res) => {
-countContact(req.query.id);
+ providers.countContact(req.query.id)
+
  const sessionCookie = req.cookies.session || "";
   admin
     .auth()
@@ -557,6 +559,8 @@ router.get('/tables-schedule', async(req , res) => {
 
     var data = await providers.getExhibitorById(req.query.id)
     var dataSchedule = await  providers.getExhibitorSchedule(req.query.id)
+
+    console.log(dataSchedule)
   
     res.render('pages/tables-schedule.html', {
         data,dataSchedule
@@ -899,7 +903,7 @@ async function uploadPhoto(filepath , filename, destination) {
 
 
 
-router.get('/admin' , (req ,res) => {
+router.get('/admin' , async(req ,res) => {
 
     if(req.query.id == null) {
         res.redirect('/login-exhibitor');
@@ -907,10 +911,13 @@ router.get('/admin' , (req ,res) => {
 
     var scheduleCount = 0;
 
-    db.collection("institution").doc(req.query.id).collection("schedule").get()
+    await db.collection("institution").doc(req.query.id).collection("schedule").get()
     .then(querySnapshot => {
        scheduleCount = querySnapshot.size;
      });
+
+     console.log(scheduleCount)
+
 
     var data = null;
     db.collection('institution').doc(''+req.query.id).get().then(function(doc) {
@@ -921,8 +928,6 @@ router.get('/admin' , (req ,res) => {
         }
 
         data["scheduleCount"] = scheduleCount;
-
-        console.log(data);
 
         res.render('pages/admin.html' , {
             data

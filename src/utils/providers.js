@@ -228,8 +228,13 @@ async function getExhibitorById(uid) {
 }
 
 async function getExhibitorSchedule(uid) {
-    var data = await db.collection('institution').doc(''+req.query.id).get().then(function(doc) {
-       return doc.data()
+    var data = await db.collection('institution').doc(''+uid).collection("schedule").get().then(function(querySnapshot) {
+        var momentoData = []    
+        // console.log(querySnapshot)
+        querySnapshot.forEach(doc => {
+            momentoData.push(doc.data())
+        });
+        return momentoData
     });
     return data
 }
