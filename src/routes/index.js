@@ -435,13 +435,9 @@ router.get('/exhibitor' , async(req , res) => {
 }); 
 
 
-router.post('/schedule-chat', urlencodedParser , (req , res) => {
-   addSchedule(req , res);
-})
+router.post('/schedule-chat', urlencodedParser , async(req , res) => {
+  
 
-
-async function addSchedule(req , res) {
-    
     var scheduleUid = uuid();
     var data = req.body;
     data["uid"] = scheduleUid;
@@ -449,17 +445,18 @@ async function addSchedule(req , res) {
     data["linkChat"] = link;
     const sessionCookie = req.cookies.session || "";
 
+    console.log(data)
     admin
         .auth()
         .verifySessionCookie(sessionCookie, true )
-        .then((user) => {
+        .then(async(user) => {
 
             db.collection('users').doc(user.uid).get().then(function(doc) {
                 var userData = doc.data()  
                 data["userUid"] = userData.uid;
                 data["name"] = userData.name;
                 
-
+            
                 scheduleChat(data, res);
             });
     
@@ -468,28 +465,27 @@ async function addSchedule(req , res) {
         res.redirect("/register");
     });
  
-}
+
+
+})
+
 
 async function scheduleChat(data, res) {
+   
     var status = await providers.addScheduleChat(data);
-
-    if(status) {
-        scheduleChatUsers(data, res); 
-    } else {
-        
-        res.render('pages/schedule-chat?id='+data.exhibitorUid , { error })
-    }
+    var status2 = await providers.scheduleChatUsers(data);
     
+    res.status(200).send({status: 200, message: "success"})
 }
 
-async function scheduleChatUsers(data, res) {
-    var status = await providers.scheduleChatUsers(data);
-    if(status) {
-        res.end(JSON.stringify({ status: "success" }));    
-    } else {
-        res.end(JSON.stringify({ status: "error" }));
-    }
-}
+// async function scheduleChatUsers(data, res) {
+//     var status = await providers.scheduleChatUsers(data);
+//     if(status) {
+//         res.end(JSON.stringify({ status: "success" }));    
+//     } else {
+//         res.end(JSON.stringify({ status: "error" }));
+//     }
+// }
 
 
 router.get('/schedule-chat' , (req , res) => {

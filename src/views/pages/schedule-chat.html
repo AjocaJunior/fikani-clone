@@ -94,8 +94,9 @@
             .getElementById("booking-form")
             .addEventListener("submit", (event) => {
 				event.preventDefault();
-				showSucess();
+			
 				scheduleChat();
+				uploadProgress()
 			 });
 	  function showSucess() {
  
@@ -108,6 +109,37 @@
 		})
 
 	  }
+
+
+	  function uploadProgress() {
+            let timerInterval
+            Swal.fire({
+            title: '',
+            html: '',
+            timer: 9000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                timerInterval = setInterval(() => {
+                const content = Swal.getContent()
+                if (content) {
+                    const b = content.querySelector('b')
+                    if (b) {
+                    b.textContent = Swal.getTimerLeft()
+                    }
+                }
+                }, 100)
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+            }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log('I was closed by the timer')
+            }
+            })
+        }
 
 	  function scheduleChat() {
 
@@ -128,7 +160,8 @@
             name : ""
         } 
 
-
+		console.log(data)
+		
 		fetch("/schedule-chat", {
             method: "POST",
             headers: {
@@ -138,18 +171,14 @@
               },
               body: JSON.stringify(data),
             }).then(function(res) {
-				if(res.ok){
-					window.location.href = "exhibitor-page?id="+data.exhibitorUid;
-					console.log("sucess");
-				}else {
-					window.location.href = "schedule-chat?id="+data.exhibitorUid;
-					alert("opss ocorreu uma falha");
-				}
-
-				
+				showSucess();
+				window.location.href = "exhibitor-page?id="+data.exhibitorUid;
+			}).catch((err) => {
+				alert("opss ocorreu uma falha");
 			})
 
 	  }
+
 
   </script>
 

@@ -188,14 +188,14 @@ async function addBuyer(data) {
 }
 
 async function addScheduleChat(data) {
-    await db.collection('institution').doc(data.exhibitorUid).collection('schedule').doc( data.uid ).set(data)
+    var res = await db.collection('institution').doc(data.exhibitorUid).collection('schedule').doc( data.uid ).set(data)
     .then(function() {
        return true         
     })
     .catch(function(error) {   
        return false
     });
-
+    return res
 }
 
 async function scheduleChatUsers(data) {
@@ -203,21 +203,24 @@ async function scheduleChatUsers(data) {
         var instData = doc.data();
         data["name"] = instData.name;
     })
-    await db.collection('users').doc(data.userUid).collection('schedule').doc( data.uid ).set(data)
+   
+  var res =  await db.collection('users').doc(data.userUid).collection('schedule').doc( data.uid ).set(data)
         .then(function() {
            return true           
         })
         .catch(function(error) {
           return false
         })
+        return res
 }
 
 async function addLive(data) {
-   await db.collection("event").doc("live").set(data).then(()=> {
+  var res = await db.collection("event").doc("live").set(data).then(()=> {
         return true
     }).then((err)=> {
         return false
     })
+    return res
 }
 
 async function getExhibitorById(uid) {
