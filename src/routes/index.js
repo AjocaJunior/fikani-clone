@@ -1162,8 +1162,8 @@ function registerExhibitor(body , res) {
        description: '',
        email : body.email,
        password : body.password,
-       visits: 33,
-       countContact: 120
+       visits: 0,
+       countContact: 0
    }
 
 
