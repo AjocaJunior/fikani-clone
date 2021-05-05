@@ -33,12 +33,12 @@
 			<div class="container">
 				<div class="row">
 					<div class="booking-form">
-						<form method="POST" action="/schedule-chat">
+					<form id="booking-form" method="POST"> 	<!--  action="/schedule-chat" -->
 							<div class="row no-margin">
 								<div class="col-md-3">
 									<div class="form-group">
 										<span class="form-label">Email</span>
-										<input class="form-control" type="text" id="email" name="email" placeholder="Digite seu email">
+										<input class="form-control" type="text" id="email" name="email" value="<%= data.email %>" placeholder="Digite seu email">
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -79,6 +79,7 @@
 <!-- custom lib popup -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
 
 
 <script>
@@ -88,11 +89,14 @@
 	  var id = vars[1];
 	  var itemId =  document.getElementById("itemId");
 	  itemId.value = id;
-	  
+
 	  document
-            .getElementById("booking")
+            .getElementById("booking-form")
             .addEventListener("submit", (event) => {
-				showSucess();
+				event.preventDefault();
+			
+				scheduleChat();
+				uploadProgress()
 			 });
 	  function showSucess() {
  
@@ -101,10 +105,80 @@
 		icon: 'success',
 		title: 'Agendado com sucesso',
 		showConfirmButton: false,
-		timer: 1500
+		timer: 2200
 		})
 
 	  }
+
+
+	  function uploadProgress() {
+            let timerInterval
+            Swal.fire({
+            title: '',
+            html: '',
+            timer: 9000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading()
+                timerInterval = setInterval(() => {
+                const content = Swal.getContent()
+                if (content) {
+                    const b = content.querySelector('b')
+                    if (b) {
+                    b.textContent = Swal.getTimerLeft()
+                    }
+                }
+                }, 100)
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+            }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+                console.log('I was closed by the timer')
+            }
+            })
+        }
+
+	  function scheduleChat() {
+
+		var exhibitorUid = document.getElementById("itemId").value;
+		var data = document.getElementById("day").value;
+		var time = document.getElementById("time").value;
+		var email =document.getElementById("email").value;
+
+		var data = {
+            uid : "", /** This uid will be refactored in server */
+            userUid: "",  /** This userUid will set in server */
+            exhibitorUid:  exhibitorUid,
+            day : data,
+            time : time,
+            email : email,
+            isHappened : false,
+            linkChat: "https://meet.google.com/zpd-jprv-vre", /** This link will be refactored in server */
+            name : ""
+        } 
+
+		console.log(data)
+		
+		fetch("/schedule-chat", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+              },
+              body: JSON.stringify(data),
+            }).then(function(res) {
+				showSucess();
+				window.location.href = "exhibitor-page?id="+data.exhibitorUid;
+			}).catch((err) => {
+				alert("opss ocorreu uma falha");
+			})
+
+	  }
+
 
   </script>
 

@@ -33,37 +33,21 @@
         <div class="container">
           <h4 class="font-weight-bold">Categoria aqui Lorem ipsum</h4>
           <div class="row row-30">
-            <div class="col-md-6 col-lg-4">
-              <!-- Speaker-->
-              <div class="speaker">
-                <div class="speaker-img" >
-                    <iframe width="330" height="354" src="https://www.youtube.com/embed/L8y6SdxgfUo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                <h5 class="speaker-title"><a href="/exhibitor-page.html">Lorem ipsum dolor sit amet</a></h5>
-                <p class="speaker-position"></p>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-              <!-- Speaker-->
-              <div class="speaker">
-                <div class="speaker-img">
-                    <iframe width="330" height="354" src="https://www.youtube.com/embed/zIwLWfaAg-8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                <h5 class="speaker-title"><a href="/exhibitor-page.html">Sed ut perspiciatis unde omnis</a></h5>
-                <p class="speaker-position"> </p>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-4">
-              <!-- Speaker-->
-              <div class="speaker">
-                <div class="speaker-img">
-                    <iframe width="330" height="354" src="https://www.youtube.com/embed/5MgBikgcWnY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                <h5 class="speaker-title"><a href="/exhibitor-page.html">At vero eos et accusamus et iusto</a></h5>
-                <p class="speaker-position"></p>
-              </div>
-            </div>
-                 
+           
+              <%if(typeof dataWebinars != 'undefined') {%>
+                <%dataWebinars.forEach(function(webinar) { %>
+                  <div class="col-md-6 col-lg-4">
+                    <!-- Speaker-->
+                    <div class="speaker">
+                      <div class="speaker-img" >
+                          <iframe width="330" height="354" src="<%= webinar.link%>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                      </div>
+                      <h5 class="speaker-title"><a href=""> <%= webinar.title %> </a></h5>
+                      <p class="speaker-position"></p>
+                    </div>
+                  </div>
+                <%})%>
+              <%}%>   
 
           </div>
         </div>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html class="wide" lang="en">
+  <head>
+    <%- include('../partials/head.html'); %>
+   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+   <link
+   href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+   rel="stylesheet">
+
+<!-- Custom styles for this template-->
+<link href="css/sb-admin-2.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="ie-panel"><a href="http://windows.microsoft.com/en-US/internet-explorer/"><img src="images/ie8-panel/warning_bar_0000_us.jpg" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div>
+    <div class="preloader">
+      <div class="preloader-body">
+        <div class="cssload-container">
+          <div class="cssload-speeding-wheel"></div>
+        </div>
+        <p>Carregando...</p>
+      </div>
+    </div>
+    <div class="page">
+      <!-- Section Header Default-->
+      <%- include('../partials/header.html'  , {currentMenu: 'perfil'}); %>
+      <!-- Breadcrumbs-->
+      <section class="breadcrumbs-custom bg-image context-dark" style="background-image: url(images/bg-breadcrumbs-01-1894x424.jpg); height: 100px;">
+      
+      </section>
+      <!-- Section Our News-->
+      <section class="section section-lg bg-default">
+        <div class="container">
+          <div class="row row-50">
+            <div class="col-lg-7 col-xl-8 order-last">
+              <article class="post">
+                <div class="post-img" style="background-color: #0275d8;">
+                  <img src="images/chat.jpg" alt=""  width="770" height="472" style="height: 350px; margin: 1px;"/>
+                </div>
+
+
+                <section>
+                  <section class="section" style="margin-top: 40px;">
+                    <h3>Agenda</h3>
+                    <div >
+                      <div class="table-custom-responsive">
+                        <table class="table-custom table-custom-bordered">
+                          <thead>
+                            <tr>
+                              <th>Expositor</th>
+                              <th>Data</th>
+                              <th>Hora</th>
+                              <th>Chat</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+
+                            <% if(typeof dataSchedule != 'undefined' && dataSchedule.length != 0 ) { %>
+                              <% dataSchedule.forEach(function(schedule) { %>
+                                
+                                <tr>
+                                  <td><%= schedule.name  %></td>
+                                  <td><%= schedule.day   %></td>
+                                  <td><%= schedule.time  %></td>
+                                  <td> 
+
+                                    <form class="form-call" method="GET" action="/openVideoChat" >  <!-- action="/openVideoChat" -->
+                                      <input type="hidden" name="uidSchedule"  value="<%= schedule.uid %>" />
+                                      <input type="hidden" name="uidExhibitor"  value="<%= data.uid %>" />
+                                      <input type="hidden" name="userUid"  value="<%= schedule.userUid %>" />
+                                      <input type="hidden" name="link"  value="<%= schedule.linkChat %>" />
+                                      <% if(schedule.isHappened != true){%>
+                                          <button type="submit"  class="btn btn-outline-primary waves-effect col-12">  <i class="fas  fa-video pr-2" aria-hidden="true"></i>Iniciar </button>
+                                      <% } else { %>
+                                          <button type="submit" class="btn btn-outline-info waves-effect col-12">  <i class="fas  fa-check pr-2" aria-hidden="true"></i>Iniciado </button>
+                                      <% }%>
+                                     
+                                  </form>
+                                  </td>
+                                </tr>
+
+                              <% }) %>
+                            <% } else {%>  
+                              <td class="text-danger">Agenda vazia</td>
+                            <% } %>
+                          </tbody>
+                          <!-- <tfoot>
+                            <tr>
+                              <td>Expositor</td>
+                              <td>Data</td>
+                              <td>Hora</td>
+                              <td>Chat</td>
+                            </tr>
+                          </tfoot> -->
+                        </table>
+                      </div>
+                    </div>
+                  </section>
+
+              </article>
+          
+     
+            
+         
+            </div>
+            <div class="col-lg-5 col-xl-4 order-first">
+              <div class="row row-30">
+                <div class="col-lg-12">
+                 
+                    <!-- Speaker Classic-->
+                    <div class="speaker-classic">
+                      <div class="speaker-classic-img " >  <!--rounded-circle style="background-color: #eff0f0;" -->
+                      
+                        <form method="POST" id="form" action="uploadPerfil" enctype="multipart/form-data" > 
+                          <input type="file" id="file" name="file" style="display: none;" >
+                          <input type="hidden" id="uid" name="uid" value="<%= data.uid %>" style="display: none;" >
+                          <button id="uploadBtn" type="submit" style="display: none;">button</button>
+                        </form>
+                     
+                       <label for="file">
+                       <%if(data.urlphoto != "") {%>
+                        <img src="<%= data.urlphoto %>" id="#photo" class="rounded-circle img-perfil" alt="" width="270" height="270" style="height: 270px; margin:2px; background-color: white; position: center;"/>
+                       <%} else {%>
+                        <img src="images/no_profile.jpg" id="#photo" class="rounded-circle img-perfil" alt="" width="270" height="270" style="height: 270px; margin:2px; background-color: white; position: center;"/>
+                       <%}%>
+                      
+                       </label>
+
+                      </div>
+                      <h5 class="speaker-classic-title text-center" > <%= data.name %> </h5>
+                      <p class="text-center text-primary">Editar</p>
+                    </div>
+             
+
+                </div>
+                <div class="col-sm-7 col-md-6 col-lg-12">
+                  <div class="post-aside">
+                    <h5 class="post-aside-title">Meus dados</h5>
+                    <div class="post-aside-content">
+                      <div class="post-mini">
+                        <div class="unit">
+                       
+                          <div class="unit-body">
+                            <p class="post-mini-author"> <a href="#">Localização</a>
+                            </p>
+                            <p class="post-mini-title"> <%= data.location %> </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="post-mini">
+                        <div class="unit">
+                          <!-- <div class="unit-left"><img src="images/single-news-06-59x59.jpg" alt="" width="59" height="59"/>
+                          </div> -->
+                          <div class="unit-body">
+                            <p class="post-mini-author"> <a href="#">Contacto</a>
+                            </p>
+                            <p class="post-mini-title"> <%= data.contact %> </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="post-mini">
+                        <div class="unit">
+                          <!-- <div class="unit-left"><img src="images/single-news-07-59x59.jpg" alt="" width="59" height="59"/>
+                          </div> -->
+                          <div class="unit-body">
+                            <p class="post-mini-author"><a href="#">E-mail</a>
+                            </p>
+                            <p class="post-mini-title"> <%= data.email %> </p>
+                          </div>
+                        </div>
+                      </div>
+                      <a href="/sessionLogout" class="btn btn-outline-primary waves-effect col-12">  <i class="fas  fa-sign-out pr-2" aria-hidden="true"></i>Terminar sessão</a>
+              
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Section Pre Footer-->
+      <%- include('../partials/footer.html'); %>
+    <script src="https://use.fontawesome.com/b33dbc2f9b.js"></script>
+    <script src="js/core.min.js"></script>
+    <script src="js/script.js"></script>
+    <script> 
+
+
+    document
+      .getElementById("form")
+      .addEventListener("submit", (event) => {
+        event.preventDefault();
+    })
+
+    const img = document.querySelector('.img-perfil'); 
+    const file = document.querySelector('#file');
+    const uploadBtn = document.querySelector('#uploadBtn');
+
+
+    
+    file.addEventListener('change', function() {
+        // this refers to file
+        const choosedFile = this.files[0];
+
+        if(choosedFile) {
+
+            const reader = new FileReader();
+            reader.addEventListener('load', function() {
+                img.setAttribute('src', reader.result)
+            });
+
+            reader.readAsDataURL(choosedFile);
+
+            console.log(choosedFile);
+            uploadBtn.form.submit();
+        }
+      
+    })
+
+
+      function sessionLogout() {
+        window.location.href("/sessionLogout");
+      }
+      
+    </script>
+  </body>
+</html>

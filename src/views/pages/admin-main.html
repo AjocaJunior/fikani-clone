@@ -33,7 +33,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="admin?id=<%=data.uid%>">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/admin-main">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <img src="/images/logo-default.png" alt="" width="30" height="30">
                 </div>
@@ -60,12 +60,34 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="/tables-schedule?id=<%=data.uid %>" >
+                <a class="nav-link collapsed" href="/add-webinares" >
                     <i class="fas fa-fw fa-calendar"></i>
-                    <span>Agenda</span>
+                    <span>Webinares</span>
                 </a>
                
             </li>
+
+            
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="/add-ads" >
+                    <i class="fas fa-fw fa-calendar"></i>
+                    <span>Anúncios</span>
+                </a>
+               
+            </li>
+
+            
+            
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="/add-info" >
+                    <i class="fas fa-fw fa-calendar"></i>
+                    <span>Publicar noticias</span>
+                </a>
+               
+            </li>
+
 
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item">
@@ -79,8 +101,8 @@
                 data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Minha galeria:</h6>
-                    <a class="collapse-item" href="/exhibitor-gallery?id=<%=data.uid %>"> Ver fotos </a>
-                    <a class="collapse-item" href="/upload-image?id=<%=data.uid %>"> Publicar fotos</a>
+                    <a class="collapse-item" href="/#gallery"> Ver fotos </a>
+                    <a class="collapse-item" href="/add-photo-main"> Publicar fotos</a>
                 </div>
             </div>
             </li>
@@ -94,7 +116,7 @@
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item" on>
+            <li class="nav-item">
                 <a class="nav-link collapsed" href="/" data-toggle="collapse" data-target="#collapsePages"
                     aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-home"></i>
@@ -143,19 +165,7 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <!-- Topbar Search -->
-                    <!-- <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form> -->
+              
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -172,7 +182,7 @@
                                 <form class="form-inline mr-auto w-100 navbar-search">
                                     <div class="input-group">
                                         <input type="text" class="form-control bg-light border-0 small"
-                                            placeholder="Search for..." aria-label="Search"
+                                        adsList                      placeholder="Search for..." aria-label="Search"
                                             aria-describedby="basic-addon2">
                                         <div class="input-group-append">
                                             <button class="btn btn-primary" type="button">
@@ -185,14 +195,14 @@
                         </li>
 
                         <!-- Nav Item - Alerts -->
-                        <li class="nav-item dropdown no-arrow mx-1">
+                        <!-- <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw"></i>
-                                <!-- Counter - Alerts -->
+                                 Counter - Alerts 
                                 <span class="badge badge-danger badge-counter">3+</span>
                             </a>
-                            <!-- Dropdown - Alerts -->
+                            Dropdown - Alerts
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="alertsDropdown">
                                 <h6 class="dropdown-header">
@@ -233,17 +243,17 @@
                                 </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
                             </div>
-                        </li>
+                        </li> -->
 
-                        <!-- Nav Item - Messages -->
+                        <!-- Nav Item - Messages 
                         <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
-                                <!-- Counter - Messages -->
+                                 Counter - Messages
                                 <span class="badge badge-danger badge-counter">7</span>
                             </a>
-                            <!-- Dropdown - Messages -->
+                            Dropdown - Messages 
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="messagesDropdown">
                                 <h6 class="dropdown-header">
@@ -301,27 +311,16 @@
                             </div>
                         </li>
 
-                        <div class="topbar-divider d-none d-sm-block"></div>
-
-                        <% 
-
-                        name = "";
-                        if(data.name.length > 13) {
-                            name = data.name.substring(0, 13).trim()+"..";
-                        } else {
-                            name = data.name;
-                        }
-                        
-                        %>
+                        <div class="topbar-divider d-none d-sm-block"></div> -->
                         
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"> <%= name %> </span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"> name </span>
                                 <img class="img-profile rounded-circle"
-                                    src="<%= data.imgUrl %>">
+                                    src="images/bg-parallax-01-1894x778.jpg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -366,8 +365,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Agendas (chat)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"> <%= data.scheduleCount %> </div>
+                                                Expositores</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"> <%= totalData.totalExhibitor %> </div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -384,8 +383,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Visitas </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"> <%=data.visits %> </div>
+                                                Utilizadores </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"> <%= totalData.totalUsers %> </div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-eye fa-2x text-gray-300"></i>
@@ -401,11 +400,11 @@
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Contactos
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Buyers
                                             </div>
                                             <div class="row no-gutters align-items-center">
                                                 <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"> <%=data.countContact %></div>
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">  <%= totalData.totalBuyers %> </div>
                                                 </div>
                                                 <div class="col">
                                                     <!-- <div class="progress progress-sm mr-2">
@@ -431,8 +430,8 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Comentarios</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+                                                Anúncios</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"> <%= totalData.totalAds %> </div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -473,21 +472,11 @@
                                 <div class="card-body">
                                    
                                     <div>
-                                        <h3> <%= data.name %> </h3>
+                                        <h3> Lorem ipsum dolor </h3>
 
-                                        <% 
-
-                                        description = "";
-                                        if(data.description.length > 230) {
-                                            description = data.description.substring(0, 230)+"..";
-                                        } else {
-                                            description = data.description;
-                                        }
                                         
-                                        %>
-                                        
-                                        <p id="fullDescription" style="visibility: hidden; display:none;">  <%= data.description %>  </p>
-                                        <p style="white-space: pre-line"  contentEditable="true" id="about"> <%= description %> </p>
+                                        <p id="fullDescription" style="visibility: hidden; display:none;">    </p>
+                                        <p style="white-space: pre-line"  contentEditable="true" id="about"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip </p>
                                        
                                         <button type="button" id="btnEdit" class="btn btn-outline-default waves-effect"><i class="fas fa-edit pr-2" aria-hidden="true"></i>Editar</button>                
                                         <button type="button" id="btnUpdate" class="btn btn-outline-primary waves-effect" style="visibility: hidden;"><i class="fas fa-check pr-2" aria-hidden="true"></i>Actualizar</button>
@@ -505,7 +494,7 @@
                     <!-- Card Header - Dropdown -->
                     <div
                         class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Video de apresentação</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">LIVE</h6>
                         <div class="dropdown no-arrow">
                             <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -513,9 +502,9 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                 aria-labelledby="dropdownMenuLink">
-                                <div class="dropdown-header">Video de apresentação:</div>
+                                <div class="dropdown-header">Live:</div>
                                 <button class="dropdown-item" onclick="removeVideo()" >Excluir</button>
-                                <a class="dropdown-item" href="/add-video?id=<%= data.uid %>">Adicionar video</a>
+                                <a class="dropdown-item" href="/add-live">Publicar Live</a>
                                
                             </div>
                         </div>
@@ -523,37 +512,7 @@
                     
                   <!-- Card Body -->
                   <div class="card-body">
-
-                    <% if(data.videoUrl == "" ) { %>
-
-                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/K1QICrgxTjA" allowfullscreen></iframe>
-
-                    <% } else {%>
-
-                  <video
-                    id="my-video"
-                    class="video-js"
-                    controls
-                    preload="auto"
-                    width="300"
-                    height="165"
-                    poster="MY_VIDEO_POSTER.jpg"
-                    data-setup="{}"
-                    >
-                    <source src="<%= data.videoUrl %>" type="video/mp4" />
-                    <source src=" <%= data.videoUrl%> " type="video/webm" />
-                    <p class="vjs-no-js vjs-theme-city">
-                      To view this video please enable JavaScript, and consider upgrading to a
-                      web browser that
-                      <a href="https://videojs.com/html5-video-support/" target="_blank"
-                        >supports HTML5 video</a
-                      >
-                    </p>
-                  </video>
-
-                    <%}%>
-                    
-                  
+                    <iframe class="embed-responsive-item" src="<%= liveData.link %>" allowfullscreen></iframe>
                   </div>
                 </div>
               </div>
@@ -572,34 +531,34 @@
                                 </div>
                                 <div class="card-body">
                                    
-                                    <form method="POST" action="/updateContact" >
+                                    <form method="POST" action="" >
 
                                         <div class="form-group row">
                                           <div class="col-sm-12">
-                                            <input type="email" class="form-control" name="email" id="inputEmail" value=" <%=data.email %> " placeholder="Email">
+                                            <input type="email" class="form-control" name="email" id="inputEmail" value="  " placeholder="Email">
                                           </div>
                                         </div>
                     
                                         <div class="form-group row">
                                           <div class="col-sm-12">
-                                            <input type="contact" class="form-control"   name="contact"  id="inputContact" value="<%=data.contact %>" placeholder="Contacto">
+                                            <input type="contact" class="form-control"   name="contact"  id="inputContact" value="" placeholder="Contacto">
                                           </div>
                                         </div>
 
                                                     
                                         <div class="form-group row">
                                             <div class="col-sm-12">
-                                              <input type="site" class="form-control" name="website" id="inputContact" value="<%=data.website %>" placeholder="Website">
+                                              <input type="site" class="form-control" name="website" id="inputContact" value="" placeholder="Website">
                                             </div>
                                           </div>
                     
                                         <div class="form-group row">
                                           <div class="col-sm-12">
-                                            <input type="text" class="form-control" name="location" id="inputLocalization" value="<%=data.location %>" placeholder="Localização">
+                                            <input type="text" class="form-control" name="location" id="inputLocalization" value="" placeholder="Localização">
                                           </div>
                                         </div>
 
-                                        <input type="hidden" class="form-control" name="uid" id="uid" value="<%=data.uid %>" >
+                                        <input type="hidden" class="form-control" name="uid" id="uid" value="" >
                                        
                     
                                         <button type="submit"  class="btn btn-primary btn-lg btn-block">Actualizar</button>
@@ -688,90 +647,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
   
-    <script> 
-
-    
-    
-    var description = document.getElementById("about");
-    var fullDescription = document.getElementById("fullDescription").textContent;
-    var btnEdit = document.getElementById("btnEdit");
-    var btnUpdate = document.getElementById("btnUpdate");
-    var fullDescriptionUpdated = false;
-    var uid = document.getElementById("uid").value;
- 
-
-    btnUpdate.addEventListener('click', updateDescription);
-    btnEdit.addEventListener('click' , setFullDescription);
-    description.addEventListener("click" , setFullDescription);
-
-    function removeVideo() {
-        var data = {uid: uid}
-        fetch("/removeVideo", {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                "CSRF-Token": Cookies.get("XSRF-TOKEN"),
-            },
-            body: JSON.stringify(data),
-        }).then((function(res) {
-            if(res.ok) {
-                showSucess("Removido com sucesso" , "success");
-            } else {
-                showSucess("Ocoreu uma falha" , "error");
-            }
-        }))
-    }
-
-    function updateDescription() {
-        var descriptionText = description.innerText;
-
-        var data = {
-            description: descriptionText,
-            uid: uid
-        }
-        fetch("/updateDescription", {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                "CSRF-Token": Cookies.get("XSRF-TOKEN"),
-              },
-              body: JSON.stringify(data),
-            }).then(function(res) {
-				if(res.ok){
-					showSucess("Actualizado com sucesso" , "success");
-				}else {
-                    showSucess("Actualizado com sucesso" , "error");
-				}
-
-				
-			})
-    }
-
-    function showSucess(message, status) {
-      Swal.fire({
-        position: 'bottom-end',
-        icon: status,
-        title: message,
-        showConfirmButton: false,
-        timer: 1000
-      })
-    }
-
-    function setFullDescription() {
-        description.focus();
-        btnEdit.style.display = "none";
-        btnUpdate.style.visibility = "visible";
-        if(fullDescriptionUpdated == false) {
-            description.innerHTML = fullDescription;
-            fullDescriptionUpdated = true;
-        } 
-      
-    }
-    
-    </script>
-
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -796,42 +671,6 @@
 
 
     <script> 
-
-
-        const firebaseConfig = {
-          apiKey: "AIzaSyBEJWJCm8OnSYYu2-VYqeRi03JprBcaUkg",
-          authDomain: "fikani.firebaseapp.com",
-          projectId: "fikani",
-          storageBucket: "fikani.appspot.com",
-          messagingSenderId: "146961453473",
-          appId: "1:146961453473:web:7fec98e5503384f08c7be0",
-        };
-
-        firebase.initializeApp(firebaseConfig);
-       // firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
-
-
-        getCurrentUser();
-        function getCurrentUser() {
-            var currentUserUid =  sessionStorage.getItem("uidExhibitor");
-            var query = window.location.search.substring(1);
-            var vars = query.split("=");
-            var id = vars[1];
-
-            if(id == currentUserUid) {
-                console.log("Success");
-            } else {
-                window.location.href = "/login-exhibitor";
-            }
-        }
-
-      
-        function signOut() {
-            sessionStorage.removeItem("uidExhibitor");
-            window.location.href = "/login-exhibitor";
-        }
-
-
 
     </script>
     <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>

@@ -2,6 +2,7 @@
 <html class="wide" lang="en">
   <head>
     <%- include('../partials/head.html') %>
+
   </head>
   <body>
     <div class="ie-panel"><a href="http://windows.microsoft.com/en-US/internet-explorer/"><img src="images/ie8-panel/warning_bar_0000_us.jpg" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div>
@@ -54,7 +55,7 @@
                   </div>
               <% } %>
 
-              <form action="/login" method="POST">
+              <form id="login" method="POST">
                 <div class="contact_input_area">
                     <div class="row">
                         <!-- Form Group -->
@@ -85,25 +86,87 @@
                 </div>
 
             </form>
+          
+             <button  class="btn btn-info btn-lg btn-block" onclick="location.href='/register';">CADASTRAR</button>
 
-            
-                 <!-- Button -->
-                 <button  class="btn btn-info btn-lg btn-block" onclick="location.href='/register';">CADASTRAR</button>
-
-              
-              
             </div>
-
 
           </div>
         </div>
       </section>
       
 
-
-
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js"  ></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+  
+
+
+    <script>
+     
+      const firebaseConfig = {
+          apiKey: "AIzaSyBEJWJCm8OnSYYu2-VYqeRi03JprBcaUkg",
+          authDomain: "fikani.firebaseapp.com",
+          projectId: "fikani",
+          storageBucket: "fikani.appspot.com",
+          messagingSenderId: "146961453473",
+          appId: "1:146961453473:web:7fec98e5503384f08c7be0",
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+
+        document
+          .getElementById("login")
+          .addEventListener("submit", (event) => {
+            event.preventDefault();
+            const login = event.target.email.value;
+            const password = event.target.password.value;
+
+            firebase
+              .auth()
+              .signInWithEmailAndPassword(login, password)
+              .then(({ user }) => {
+              
+                return user.getIdToken().then((idToken) => {
+                  return fetch("/sessionLogin", {
+                    method: "POST",
+                    headers: {
+                      Accept: "application/json",
+                      "Content-Type": "application/json",
+                      "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+                    },
+                    body: JSON.stringify({ idToken }),
+                  });
+                });
+              })
+              .then(() => {
+                console.log("error");
+                return firebase.auth().signOut();
+              })
+              .then(() => {
+                window.location.assign("/");
+              })
+              .catch((error) => {
+                showError(error);
+              })
+            return false;
+          });
+
+          function showError(text) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: text,
+            })
+          }
+
+    </script>
 
   </body>
 </html>
