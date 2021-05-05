@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html class="wide" lang="en">
+  <head>
+    <%- include('../partials/head.html') %>
+  </head>
+  <body>
+    <div class="ie-panel"><a href="http://windows.microsoft.com/en-US/internet-explorer/"><img src="images/ie8-panel/warning_bar_0000_us.jpg" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today."></a></div>
+    <div class="preloader">
+      <div class="preloader-body">
+        <div class="cssload-container">
+          <div class="cssload-speeding-wheel"></div>
+        </div>
+        <p>Carregando...</p>
+      </div>
+    </div>
+    <div class="page">
+      <!-- Section Header Default-->
+      <%- include('../partials/header.html' , {currentMenu: 'buyers'}) %>
+        
+      <!-- Breadcrumbs-->
+      <section class="breadcrumbs-custom bg-image context-dark" style="background-image: url(images/bg-breadcrumbs-01-1894x424.jpg);">
+        <div class="container">
+          <ul class="breadcrumbs-custom-path">
+            <li><a href="index.html">Home</a></li>
+            <li class="active">Buyers</li>
+          </ul>
+
+        </div>
+      </section>
+      <!-- Section Senior Speakers-->
+   
+      <!-- Section All other speakers-->
+      <section class="section section-lg bg-default text-center">
+        <div class="container">
+          <h4 class="font-weight-bold">Buyers</h4>
+          <div class="row row-30">
+  
+            <% if(typeof list != 'undefined') { %>
+              <% list.forEach(function(buyer) { %>
+                <div class="col-sm-6 col-lg-3">
+                  <!-- Speaker Classic-->
+                  <div class="speaker-classic">
+                    <div class="speaker-classic-img""><a href="#"><img  src="<%= buyer.urlphoto %>" alt="" width="270" height="303"  style="height: 270px; width: 303px;"/></a>
+                      <ul class="speaker-classic-social-list">
+                        <li><a class="icon icon-xs fa-phone" href="tel:<%= buyer.contact %>"></a></li>
+                        <li><a class="icon icon-xs fa-envelope" href="mailto: <%= buyer.email %>"></a></li>
+                      </ul>
+                    </div>
+                    <h5 class="speaker-classic-title"><a href="#"> <%= buyer.name %> </a></h5>
+                    <p class="speaker-classic-position"> <%= buyer.position %> </p>
+                  </div>
+                </div>
+
+              <% }) %>
+            <% } else { %>
+              <!-- list is empty -->
+            <% } %>
+         
+          </div>
+        </div>
+      </section>
+      <!-- Section Pre Footer-->
+      <%- include('../partials/footer.html') %>
+    <script src="js/core.min.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>

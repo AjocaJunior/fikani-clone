@@ -4249,6 +4249,7 @@ textarea.form-input {
 	font-size: 14px;
 	line-height: 1.2;
 	font-weight: 600;
+	text-transform: uppercase;
 }
 
 .post-mini-author > a {
@@ -4267,7 +4268,6 @@ textarea.form-input {
 	font-size: 16px;
 	line-height: 1.2;
 	font-weight: 600;
-	text-transform: uppercase;
 }
 
 * + .post-mini-title {

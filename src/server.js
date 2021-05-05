@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const port =  3000 || process.env.PORT;
 const session = require('express-session');
 
-
 // set static file
 app.use(express.static(__dirname + '/public'));
 
@@ -13,8 +12,6 @@ app.use(express.static(__dirname + '/public'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 app.engine('html',require('ejs').renderFile);
-
-const urlencodedParser = bodyParser.urlencoded({extended:false})
 
 // routes
 // app.use(session({
@@ -35,5 +32,5 @@ app.use(
 
 app.use(require('./routes/index.js'));
 
-app.listen(3000);
+app.listen(port);
 console.log('3000 is the magic port');

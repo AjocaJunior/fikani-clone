@@ -38,7 +38,34 @@
               <article class="post-single">
                 <div class="post-single-img">
 
+                <% if(data.videoUrl == "") { %>
                 <iframe width="770" height="472" src="https://www.youtube.com/embed/K1QICrgxTjA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"  allowfullscreen></iframe>
+                <% } else {%>
+
+                <video
+                id="my-video"
+                class="video-js"
+                controls
+                preload="auto"
+                width="770"
+                height="472"
+                poster="MY_VIDEO_POSTER.jpg"
+                data-setup="{}"
+                >
+                <source src="<%= data.videoUrl %>" type="video/mp4" />
+                <source src=" <%= data.videoUrl%> " type="video/webm" />
+                <p class="vjs-no-js vjs-theme-city">
+                  To view this video please enable JavaScript, and consider upgrading to a
+                  web browser that
+                  <a href="https://videojs.com/html5-video-support/" target="_blank"
+                    >supports HTML5 video</a
+                  >
+                </p>
+              </video>
+
+
+                <% } %>
+                
 
                 </div>
                 <!-- <ul class="post-single-meta">
@@ -142,12 +169,7 @@
 
 
                 <div class="col-sm-7 col-md-6 col-lg-12">
-                  <div class="post-aside">
-                    <h5 class="post-aside-title">Publicidade</h5>
-                    <div class="post-aside-content" style="height: 180px;">
-                      
-                    </div>
-                  </div>
+                  <img src="<%= adsList[position[1]].urlphoto %>" onclick="openLink('<%= adsList[position[1]].linkRedirect %>','<%= adsList[position[1]].category %>')" alt="" style="width:100%;height:100%;">
                 </div>
                
                 </div>
@@ -164,45 +186,28 @@
             <h6><%= data.name %></h6>
             <h3> Nossa galeria</h3>
             <div class="row row-ten row-narrow row-30 row-lg-50 justify-content-center" data-lightgallery="group">
-              <div class="col-sm-4 col-md-3 col-lg-2">
-                <div class="wow">
-                  <div>
-                    <!-- Gallery Thumbnail--><a class="thumbnail" href="images/expo/Expositor-Parque Nacional da Gorongosa.jpg" data-lightgallery="item" data-triangle=".thumbnail-overlay"><span class="thumbnail-overlay"></span><span class="thumbnail-icon"></span><img src="images/expo/Expositor-Parque Nacional da Gorongosa.jpg" alt="" width="298" height="343"/></a>
+              
+              <% if(dataGallery.length > 0) { %>
+                <% dataGallery.forEach(function(gallery) { %>
+
+                  <div class="col-sm-4 col-md-3 col-lg-2">
+                    <div class="wow">
+                      <div>
+                        <!-- Gallery Thumbnail--><a class="thumbnail" href="<%= gallery.url %>" data-lightgallery="item" data-triangle=".thumbnail-overlay"><span class="thumbnail-overlay"></span><span class="thumbnail-icon"></span><img src="<%= gallery.url %>" alt="" width="298" height="343"/></a>
+                      </div>
+                    </div>
                   </div>
+                     
+                <% }) %>
+              <% } else {%>
+
+                <div class="col-xl-12">
+                  <p class="font-weight-sbold font-secondary "><span class="text-danger">Galeria vazia</span> <a class="link-inline" href=""> </a>
+                  </p>
                 </div>
-              </div>
-              <div class="col-sm-4 col-md-3 col-lg-2">
-                <div class="wow">
-                  <div>
-                    <!-- Gallery Thumbnail--><a class="thumbnail" href="images/expo/Expositor-Hotel Maputo.jpg" data-lightgallery="item" data-triangle=".thumbnail-overlay"><span class="thumbnail-overlay"></span><span class="thumbnail-icon"></span><img src="images/expo/Expositor-Hotel Maputo.jpg" alt="" width="298" height="343"/></a>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-4 col-md-3 col-lg-2">
-                <div class="wow">
-                  <div>
-                    <!-- Gallery Thumbnail--><a class="thumbnail" href="images/expo/Expositor-Southern Sun Maputo.jpg" data-lightgallery="item" data-triangle=".thumbnail-overlay"><span class="thumbnail-overlay"></span><span class="thumbnail-icon"></span><img src="images/expo/Expositor-Southern Sun Maputo.jpg" alt="" width="298" height="343"/></a>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-4 col-md-3 col-lg-2">
-                <div class="wow">
-                  <div>
-                    <!-- Gallery Thumbnail--><a class="thumbnail" href="images/expo/Expositor- reserva do Niassa.jpg" data-lightgallery="item" data-triangle=".thumbnail-overlay"><span class="thumbnail-overlay"></span><span class="thumbnail-icon"></span><img src="images/expo/Expositor- reserva do Niassa.jpg" alt="" width="298" height="343"/></a>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-4 col-md-3 col-lg-2">
-                <div class="wow">
-                  <div>
-                    <!-- Gallery Thumbnail--><a class="thumbnail" href="images/expo/Expositor-Ilha de ilha de benguerra.jpg" data-lightgallery="item" data-triangle=".thumbnail-overlay"><span class="thumbnail-overlay"></span><span class="thumbnail-icon"></span><img src="images/expo/Expositor-Ilha de ilha de benguerra.jpg" alt="" width="298" height="343"/></a>
-                  </div>
-                </div>
-              </div>
-              <div class="col-xl-12">
-                <p class="font-weight-sbold font-secondary"><span>Não hesite, entre em contato conosco para melhor ajuda e serviços.</span> <a class="link-inline" href="/contact-exhibitor.html">contactar agora</a>
-                </p>
-              </div>
+
+              <%}%>
+          
             </div>
           </div>
         </div>
@@ -267,5 +272,28 @@
     </div>
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
+    <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
+
+    <script> 
+      function openLink(link, category) {
+         switch(category) {
+           case "Website":
+             if(link.includes("http")){
+               window.open(link)
+             }else {
+               window.open("https://"+link)
+             }
+             break;
+           case "Telefone":
+             window.open("tel:"+link);
+             break
+           case "Whatsapp":
+             location.href = "https://wa.me/"+link
+             break;
+           case "Estatico":
+           break;
+         }
+      }
+     </script>
   </body>
 </html>

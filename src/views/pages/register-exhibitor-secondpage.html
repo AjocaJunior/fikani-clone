@@ -92,7 +92,7 @@
              </div>
 
               <!-- Button -->
-              <button type="submit" class="btn btn-primary btn-lg btn-block">Proximo</button>
+              <button type="submit" id="submit" class="btn btn-primary btn-lg btn-block">Proximo</button>
             </form>
 
 
@@ -105,20 +105,60 @@
 
     <script>
       
-      var query = window.location.search.substring(1);
+        var query = window.location.search.substring(1);
         var vars = query.split("=");
         var id = vars[1];
         var itemId =  document.getElementById("itemId");
         itemId.value = id;
-        console.log(itemId.value);
+
+        // create session
+        if (typeof(Storage) !== "undefined") { 
+            sessionStorage.setItem("uidExhibitor", id);
+        }
+        
+
+        var btnSubmit = document.getElementById("submit");
+        btnSubmit.addEventListener("submit" , ()=> {
+          showProgress();
+        });
+
+        function showProgress() {
+          let timerInterval
+          Swal.fire({
+            title: '',
+            html: '',
+            position: 'bottom-start',
+            timer: 5000,
+            timerProgressBar: true,
+            didOpen: () => {
+              Swal.showLoading()
+              // timerInterval = setInterval(() => {
+              //   const content = Swal.getContent()
+              //   if (content) {
+              //     const b = content.querySelector('b')
+              //     if (b) {
+              //       b.textContent = Swal.getTimerLeft()
+              //     }
+              //   }
+              // }, 100)
+            },
+            willClose: () => {
+              clearInterval(timerInterval)
+            }
+          }).then((result) => {
+            /* Read more about handling dismissals below */
+            if (result.dismiss === Swal.DismissReason.timer) {
+              console.log('I was closed by the timer')
+            }
+          })
+        }
 
     </script>
     <script src="js/core.min.js"></script>
     <script src="js/script.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places" defer></script>
-
-  
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
 
   </body>
 </html>

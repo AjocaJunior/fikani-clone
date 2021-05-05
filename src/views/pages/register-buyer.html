@@ -23,12 +23,12 @@
 
             <div class="col-md-10 col-lg-6">
                 <!-- <div class="img-separated"> -->
-                    <iframe width="562" height="540" src="https://www.youtube.com/embed/WVi7gR3-_V8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <img src="images/img-login.jpg" alt="" width="562" height="380"/>
                 <!-- </div> -->
               </div>
             <div class="col-md-10 col-lg-6">
               <h6>fikani digital</h6>
-              <h3>Seja bem-vindo a fikani digital</h3>
+              <!-- <h3>Seja bem-vindo a fikani digital</h3> -->
               <br>
 
 
@@ -63,7 +63,7 @@
                         <!-- Form Group -->
                         <div class="col-12 col-lg-6">
                             <div class="form-group">
-                                <input type="text" class="form-control mb-30" name="name" id="name"
+                                <input type="text" class="form-control mb-30" name="name" value="<%=data.name %>" id="name"
                                     placeholder="Nome" required>
                             </div>
                         </div>
@@ -71,17 +71,8 @@
                          <!-- Form Group -->
                          <div class="col-12 col-lg-6">
                             <div class="form-group">
-                                <input type="text" class="form-control mb-30" name="last_name" id="last_name"
+                                <input type="text" class="form-control mb-30" name="last_name" value="<%= data.last_name%>" id="last_name"
                                     placeholder="Apelido" required>
-                            </div>
-                        </div>
-
-                        <!-- Form Group -->
-                        <div class="col-12 col-lg-6">
-                            <div class="form-group">
-                                <input type="text" class="form-control mb-30 textbox-n"
-                                    onfocus="(this.type='date')" name="date_of_birth" id="date_of_birth"
-                                    placeholder="Data de nascimento" required>
                             </div>
                         </div>
 
@@ -89,18 +80,35 @@
                         <!-- Form Group -->
                         <div class="col-12 col-lg-6">
                             <div class="form-group">
-                                <input type="text" class="form-control mb-30" name="residence"
-                                    id="residence" placeholder="Residência" required>
+                                <input type="text" class="form-control mb-30" name="position" id="position"
+                                    placeholder="Posição" required>
                             </div>
                         </div>
 
+                        
+                        <!-- Form Group -->
+                        <div class="col-12 col-lg-6">
+                            <div class="form-group">
+                                <input type="text" class="form-control mb-30" value="<%= data.location %>" name="location"
+                                    id="location" placeholder="Localização" required>
+                            </div>
+                        </div>
 
+                      
+                        <input type="hidden" class="form-control mb-30" name="userUid"
+                               id="userUid" placeholder="userUid" value="<%= data.uid %>">
+                
+                               
+                        <input type="hidden" class="form-control mb-30" name="urlphoto"
+                        id="urlphoto" placeholder="urlphoto" value="<%= data.urlphoto %>">
+         
 
+                        
                         <!-- Form Group -->
                         <div class="col-12 col-lg-6">
                             <div class="form-group">
                                 <input type="text" class="form-control mb-30" name="contact"
-                                    id="contact" placeholder="Contacto" required>
+                                    id="contact" placeholder="Contacto" value="<%= data.contact %>" required>
                             </div>
                         </div>
 
@@ -108,44 +116,22 @@
                         <!-- Form Group -->
                         <div class="col-12 col-lg-6">
                             <div class="form-group">
-                                <input type="email" class="form-control mb-30" name="email" id="email"
+                                <input type="email" class="form-control mb-30" value="<%= data.email %>" name="email" id="email"
                                     placeholder="E-mail" required>
                             </div>
                         </div>
-                        <!-- Form Group -->
-                        <div class="col-12 col-lg-6">
-                            <div class="form-group">
-                                <input type="password" class="form-control mb-30" name="password"
-                                    id="password" placeholder="Password" required>
-                            </div>
-                        </div>
-
-                         <!-- Form Group -->
-                         <div class="col-12 col-lg-6">
-                          <div class="form-group">
-                              <input type="password" class="form-control mb-30" name="confirme-password"
-                                  id="confirme-password" placeholder="Confirmar password" required>
-                          </div>
-                      </div>
+                        
                       
                     </div>
                 </div>
                 <!-- Button -->
                 <button type="submit" class="btn btn-primary btn-lg btn-block">Cadastrar</button>
-               
 
             </form>
             
-            <div class="row d-flex justify-content-center " style="margin: 2px;">
-              <p class="text-info">Ja tens uma conta?</p>
-            </div>
-          <!-- Button -->
-           <button  class="btn btn-info btn-lg btn-block" onclick="location.href='/login';">Login</button>
-
-              
-              
+                         
              
-                <!-- <li>
+                 <li>
                   <div class="unit">
                     <div class="unit-left">
                       <div class="icon-rect icon-rect-secodanry" data-triangle=".icon-rect-overlay">
@@ -156,11 +142,11 @@
                       </div>
                     </div>
                     <div class="unit-body">
-                      <h5>The biggest conference for all types of<br> businesses.
+                      <h5>Seja bem-vindo a fikani <br> digital
                       </h5>
                     </div>
                   </div>
-                </li> -->
+                </li> 
               </ul>
             </div>
 
@@ -170,11 +156,6 @@
         </div>
       </section>
       
-
-
-
-
-
      
       <footer class="section footer-classic context-dark">
         <div class="container">
@@ -207,116 +188,58 @@
 
     <script>
 
-        var firebaseConfig = {
-            apiKey: "AIzaSyBEJWJCm8OnSYYu2-VYqeRi03JprBcaUkg",
-            authDomain: "fikani.firebaseapp.com",
-            projectId: "fikani",
-            storageBucket: "fikani.appspot.com",
-            messagingSenderId: "146961453473",
-            appId: "1:146961453473:web:7fec98e5503384f08c7be0",
-        };
-
-        firebase.initializeApp(firebaseConfig);
-
-        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
-
         document.getElementById("registerForm")
                 .addEventListener("submit" , (event) => {
                   event.preventDefault();
-                  progress();
+             
                   const name = event.target.name.value;
                   const last_name = event.target.last_name.value;
-                  const residence = event.target.residence.value;
+                  const location = event.target.location.value;
                   const email = event.target.email.value;
                   const contact = event.target.contact.value;
-                  const password = event.target.password.value;
                   const displayName = name.trim() +" "+last_name.trim();
-                  const urlphoto = "";
+                  const userUid = event.target.userUid.value;
+                  const urlphoto = event.target.urlphoto.value;
+                  const position = event.target.position.value;
 
-                  firebase
-                    .auth()
-                    .createUserWithEmailAndPassword(email, password)
-                    .then(({ user }) => {
-                      return user.getIdToken().then((idToken) => {
-                        return fetch("/sessionLogin", {
-                          method: "POST",
-                          headers: {
-                            Accept: "application/json",
-                            "Content-Type": "application/json",
-                            "CSRF-Token": Cookies.get("XSRF-TOKEN"),
-                          },
-                          body: JSON.stringify({ idToken}),
-                        });
-                      });
-                    })
-                    .then(() => {
-                      return firebase.auth().signOut();
-                    })
-                    .then(() => {
-
-                      let data = {
+                
+                  let data = {
                         name: name,
                         last_name: last_name,
-                        location : residence,
+                        location : location,
                         email: email,
                         contact: contact,
+                        position: position,
                         displayName : displayName,
-                        urlphoto : ""
+                        userUid: userUid,
+                        urlphoto: urlphoto,
                       };
 
-                      console.log(data)
 
-                      fetch("/register", {
-                          method: "POST",
-                          headers: {
+                      fetch("/register_buyer", {
+                        method: "POST",
+                        headers: {
                             Accept: "application/json",
                             "Content-Type": "application/json",
                             "CSRF-Token": Cookies.get("XSRF-TOKEN"),
-                          },
-                          body: JSON.stringify(data),
-                      }).then((res) => {
-                         if(res.ok) {
-                            window.location.assign("/");
-                         }else {
-                            window.location.assign("/register");
-                         }
-                        
-                      });
-                          
-                    });
-                  return false;
+                        },
+                        body: JSON.stringify(data),
+                        }).then(function(res) {
+                            if(res.ok){
+                                window.location.href = "/perfil"
+                                console.log("success");
+                            }else {
+                                alert("Ocoreu uma falha");
+                                console.log("error");
+                            }
+                            
+                        })
+                                
                 });
+                
+        
 
-
-                function progress() {
-                  let timerInterval
-                  Swal.fire({
-                    title: 'Cadastrando!',
-                    html: '',
-                    timer: 6000,
-                    timerProgressBar: true,
-                    didOpen: () => {
-                      Swal.showLoading()
-                      timerInterval = setInterval(() => {
-                        const content = Swal.getContent()
-                        if (content) {
-                          // const b = content.querySelector('b')
-                          // if (b) {
-                          //   b.textContent = Swal.getTimerLeft()
-                          // }
-                        }
-                      }, 200)
-                    },
-                    willClose: () => {
-                      clearInterval(timerInterval)
-                    }
-                  }).then((result) => {
-                    /* Read more about handling dismissals below */
-                    if (result.dismiss === Swal.DismissReason.timer) {
-                      console.log('I was closed by the timer')
-                    }
-                  })
-                }
+        
     </script>
   </body>
 </html>

@@ -35,7 +35,7 @@
              <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
                 <!-- Sidebar - Brand -->
-                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="admin?id=<%=data.uid%>">
                     <div class="sidebar-brand-icon rotate-n-15">
                         <img src="/images/logo-default.png" alt="" width="30" height="30">
                     </div>
@@ -47,7 +47,7 @@
     
                 <!-- Nav Item - Dashboard -->
                 <li class="nav-item active">
-                    <a class="nav-link" href="index.html">
+                    <a class="nav-link" href="admin?id=<%=data.uid%>">
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         <span>Fikani Dashboard</span></a>
                 </li>
@@ -82,7 +82,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Minha galeria:</h6>
                         <a class="collapse-item" href="/gallery"> Ver fotos </a>
-                        <a class="collapse-item" href="utilities-border.html"> Publicar fotos</a>
+                        <a class="collapse-item" href="/upload-image?id=<%=data.uid%>"> Publicar fotos</a>
                     </div>
                 </div>
                 </li>
@@ -280,14 +280,15 @@
                                             <td><%= schedule.day   %> </td>
                                             <td><%= schedule.time  %> </td>
                                             <td> 
-                                                <form method="POST" id="openChatForm" action="/openVideoChat">
-                                                    <input type="hidden"  name="uidSchedule" value="<%= schedule.uid %>" />
-                                                    <input type="hidden" name="uidExhibitor" value="<%= data.uid %>" />
-                                                    <input type="hidden" name="link" value="<%= schedule.linkChat %>" />
+                                                <form class="form-call" method="GET" action="/openVideoChat" >  <!-- action="/openVideoChat" -->
+                                                    <input type="hidden" name="uidSchedule"  value="<%= schedule.uid %>" />
+                                                    <input type="hidden" name="uidExhibitor"  value="<%= data.uid %>" />
+                                                    <input type="hidden" name="userUid"  value="<%= schedule.userUid %>" />
+                                                    <input type="hidden" name="link"  value="<%= schedule.linkChat %>" />
                                                     <% if(schedule.isHappened != true){%>
-                                                        <button type="submit" onclick="openChat()"  class="btn btn-outline-primary waves-effect col-12">  <i class="fas  fa-video pr-2" aria-hidden="true"></i>Iniciar </button>
+                                                        <button type="submit"  class="btn btn-outline-primary waves-effect col-12">  <i class="fas  fa-video pr-2" aria-hidden="true"></i>Iniciar </button>
                                                     <% } else { %>
-                                                        <button type="submit" onclick="openChat()"  class="btn btn-outline-info waves-effect col-12">  <i class="fas  fa-check pr-2" aria-hidden="true"></i>Iniciado </button>
+                                                        <button type="submit" class="btn btn-outline-info waves-effect col-12">  <i class="fas  fa-check pr-2" aria-hidden="true"></i>Iniciado </button>
                                                     <% }%>
                                                    
                                                 </form>
@@ -297,13 +298,13 @@
                                     <% } else { %>
                                         
                                        
-                                        <tr>
+                                        <!-- <tr>
                                             <td>Tiger Nixon</td>
-                                            <!-- <td> ff </td>
+                                             <td> ff </td>
                                             <td><%= schedule.day   %> </td>
-                                            <td><%= schedule.time  %> </td> -->
+                                            <td><%= schedule.time  %> </td> 
                                         
-                                        </tr>
+                                        </tr> -->
                                         
                                     <% } %>
                                   
@@ -381,8 +382,101 @@
 
     <!-- Page level custom scripts -->
     <script src="js/demo/datatables-demo.js"></script>
+     <!-- Cookie -->
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
 
     <script>
+
+    window.addEventListener("DOMContentLoaded", () => {  });
+
+        var form = document.querySelectorAll(".form-call");
+ 
+        for(var i = 0; i < form.length; i++) {
+        
+            
+            form[i].addEventListener("submit", (event)=> {
+
+                
+                event.stopPropagation();
+                event.preventDefault;
+                const link =  event.target.link.value;
+                const uidSchedule = event.target.uidSchedule.value;
+                const uidExhibitor = event.target.uidExhibitor.value;
+                const userUid = event.target.userUid.value;
+
+                var data = {
+                    link: link,
+                    uidSchedule: uidSchedule,
+                    uidExhibitor: uidExhibitor,
+                    userUid: userUid
+                }
+
+         
+                // fetch("/openVideoChat", {
+                //     method: "POST",
+                //     headers: {
+                //         Accept: "application/json",
+                //         "Content-Type": "application/json",
+                //         "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+                //     },
+                //     body: JSON.stringify(data),
+                //     }).then(function(res) {
+                //         if(res.ok){
+                //             console.log("success");
+                //         }else {
+                //             console.log("error");
+                //         }
+				
+		    	// })
+              
+
+                
+                return false;
+            })
+        }
+ 
+        // document
+        // .querySelectorAll(".form-call")
+        // .addEventListener("submit", (event) => {
+		// 	event.preventDefault();
+        //     alert("Hello Word");
+		// 	//startMeeting()
+		// });
+
+        function startMeeting() {
+
+          //  openChat()
+           
+            var link = document.getElementById("link").value;
+            var uidSchedule = document.getElementById("uidSchedule").value;
+            var uidExhibitor =document.getElementById("uidExhibitor").value;
+            var userUid = document.getElementById("userUid").value;
+
+            var data = {
+                link: link,
+                uidSchedule: uidSchedule,
+                uidExhibitor: uidExhibitor,
+                userUid: userUid
+            }
+            console.log(data);
+
+            fetch("/openVideoChat", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+              },
+              body: JSON.stringify(data),
+            }).then(function(res) {
+				if(res.ok){
+                    console.log("success");
+				}else {
+					console.log("error");
+				}
+				
+			})
+        }
 
         function openChat() {
 
